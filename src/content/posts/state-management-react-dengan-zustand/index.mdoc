@@ -1,0 +1,150 @@
+---
+title: "State Management React dengan Zustand"
+featured_image: https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=2070&auto=format&fit=crop
+category: tutorial
+description: "Redux terlalu ribet? Zustand menawarkan state management ringan dengan API sederhana. Pelajari cara implementasi state management React menggunakan Zustand."
+publishDate: 2026-07-15
+featured: false
+---
+
+State management adalah salah satu konsep paling krusial di ekosistem React. Selama bertahun-tahun, Redux menjadi pilihan utama, tapi banyak developer merasa setup-nya terlalu rumit untuk project skala kecil hingga menengah.
+
+Zustand hadir sebagai alternatif minimalis: tanpa boilerplate, tanpa provider, tanpa action type. Cukup store, state, dan aksi.
+
+## Apa itu Zustand?
+
+Zustand (bahasa Jerman untuk "state") adalah library state management untuk React yang mengedepankan kesederhanaan. Dengan API berbasis hook, kamu bisa membuat global store dalam hitungan menit.
+
+```bash
+npm install zustand
+```
+
+## Membuat Store Pertama
+
+Buat file `src/store/counter.ts`:
+
+```typescript
+import { create } from 'zustand';
+
+interface CounterState {
+  count: number;
+  increment: () => void;
+  decrement: () => void;
+  reset: () => void;
+}
+
+export const useCounterStore = create<CounterState>((set) => ({
+  count: 0,
+  increment: () => set((state) => ({ count: state.count + 1 })),
+  decrement: () => set((state) => ({ count: state.count - 1 })),
+  reset: () => set({ count: 0 }),
+}));
+```
+
+Tidak ada `Provider`, tidak ada `reducer`, tidak ada `action creator`. Cukup fungsi `create` yang menerima callback dengan parameter `set`.
+
+## Menggunakan Store di Komponen
+
+```tsx
+import { useCounterStore } from './store/counter';
+
+function Counter() {
+  const count = useCounterStore((state) => state.count);
+  const increment = useCounterStore((state) => state.increment);
+  const decrement = useCounterStore((state) => state.decrement);
+
+  return (
+    <div className="flex items-center gap-4">
+      <button onClick={decrement}>-</button>
+      <span className="text-2xl font-bold">{count}</span>
+      <button onClick={increment}>+</button>
+    </div>
+  );
+}
+```
+
+Dengan pendekatan selector, komponen hanya re-render ketika bagian state yang dipilih berubah.
+
+## Store dengan Data Asynchronous
+
+Zustand tidak membatasi di mana kamu memanggil `set` — termasuk di dalam async function:
+
+```typescript
+interface UserState {
+  user: User | null;
+  loading: boolean;
+  fetchUser: (id: string) => Promise<void>;
+}
+
+export const useUserStore = create<UserState>((set) => ({
+  user: null,
+  loading: false,
+  fetchUser: async (id: string) => {
+    set({ loading: true });
+    try {
+      const res = await fetch(`/api/users/${id}`);
+      const user = await res.json();
+      set({ user, loading: false });
+    } catch (error) {
+      set({ loading: false });
+    }
+  },
+}));
+```
+
+## Best Practices
+
+### 1. Gunakan Selector untuk Performa
+
+Selalu gunakan selector untuk menghindari re-render tidak perlu:
+
+```typescript
+// ❌ Re-render setiap kali state berubah
+const store = useCounterStore();
+
+// ✅ Re-render hanya saat count berubah
+const count = useCounterStore((s) => s.count);
+```
+
+### 2. Pisahkan Store Berdasarkan Domain
+
+Buat store terpisah untuk fitur yang berbeda:
+
+```typescript
+// store/auth.ts
+// store/cart.ts
+// store/theme.ts
+```
+
+### 3. Kombinasikan dengan Persist Middleware
+
+```typescript
+import { persist } from 'zustand/middleware';
+
+export const useThemeStore = create(
+  persist(
+    (set) => ({
+      theme: 'light',
+      toggle: () =>
+        set((s) => ({ theme: s.theme === 'light' ? 'dark' : 'light' })),
+    }),
+    { name: 'theme-preference' }
+  )
+);
+```
+
+## Kapan Harus Pakai Zustand?
+
+| Kondisi | Zustand | Redux |
+|---------|---------|-------|
+| Project kecil/menengah | ✅ Ideal | ❌ Overkill |
+| Butuh boilerplate minimal | ✅ Sangat cocok | ❌ Banyak setup |
+| Middleware kompleks | ⚠️ Terbatas | ✅ Banyak pilihan |
+| Tim besar dengan standar ketat | ⚠️ Kurang struktur | ✅ Sangat terstruktur |
+| Perlu DevTools | ✅ Built-in | ✅ Redux DevTools |
+
+## Kesimpulan
+
+Zustand membuktikan bahwa state management tidak harus rumit. Dengan API yang minimalis, performa yang baik, dan fleksibilitas tinggi, Zustand menjadi pilihan tepat untuk project React modern yang ingin menghindari kompleksitas Redux tanpa mengorbankan fitur.
+
+Coba integrasikan Zustand di project selanjutnya dan rasakan sendiri kemudahannya!

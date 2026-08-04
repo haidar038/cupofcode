@@ -1,0 +1,39 @@
+---
+export const prerender = true;
+import BaseLayout from "../layouts/BaseLayout.astro";
+import AvatarSVG from "../assets/avatar.svg";
+import { SITE_TITLE } from "../consts";
+---
+
+<BaseLayout
+  title={`Tentang - ${SITE_TITLE}`}
+  description="Kenali Cup of Code dan fokus konten yang dibagikan."
+>
+  <section
+    class="grid items-start gap-8 md:grid-cols-[minmax(0,720px)_minmax(150px,240px)] lg:gap-12"
+    aria-labelledby="about-title"
+  >
+    <div class="flex max-w-180 flex-col items-start gap-5">
+      <p class="rounded-full bg-coc-tag-yellow px-3 py-1 text-xs leading-4.5 text-[#212121]">
+        Tentang
+      </p>
+      <h1
+        id="about-title"
+        class="font-coc-display text-[42px] leading-[1.08] text-coc-text sm:text-5xl lg:text-[60px]"
+      >
+        Cup of Code
+      </h1>
+      <p class="text-base leading-7 text-coc-muted sm:text-lg">
+        Cup of Code adalah ruang belajar untuk menemukan tutorial, tips, dan
+        aset digital yang membantu proses membangun website dan aplikasi jadi
+        lebih praktis.
+      </p>
+    </div>
+    <img
+      src={AvatarSVG.src}
+      alt=""
+      class="pointer-events-none h-auto w-30 justify-self-end object-contain sm:w-37.5 md:w-47.5 lg:w-59"
+      aria-hidden="true"
+    />
+  </section>
+</BaseLayout>

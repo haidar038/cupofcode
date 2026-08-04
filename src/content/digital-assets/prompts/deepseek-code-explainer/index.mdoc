@@ -1,0 +1,76 @@
+---
+title: DeepSeek Code Explainer
+description: A powerful prompt for using DeepSeek to explain complex code and generate detailed documentation
+type: prompt
+isFree: true
+variables:
+  - "Programming Language"
+  - "Code Complexity Level"
+downloadUrl: /downloads/deepseek-code-explainer.md
+---
+
+Prompt instruksi untuk memaksa AI menjelaskan blok kode rumit baris-demi-baris dengan analogi yang sangat mudah dipahami pemula.
+
+## Prompt Template
+
+```
+Bertindaklah sebagai Senior [Programming Language] Developer.
+Saya memiliki potongan kode di bawah ini yang tidak saya pahami.
+
+Tolong jelaskan logika baris-demi-baris.
+Gunakan analogi [Code Complexity Level] agar saya yang masih pemula
+bisa membayangkannya dengan mudah.
+Hindari menggunakan jargon teknis tanpa penjelasan.
+
+Berikut kodenya:
+
+[paste code here]
+```
+
+## Variabel Prompt
+
+| Variabel | Contoh Isian | Deskripsi |
+|----------|-------------|-----------|
+| Programming Language | `TypeScript`, `Python`, `Go` | Bahasa pemrograman yang digunakan |
+| Code Complexity Level | `Menyusun Lego`, `Memasak`, `Ototomotif` | Analogi yang familiar untuk pemula |
+
+## Contoh Output
+
+**Input:**
+```typescript
+const data = await fetch('/api/users');
+const users = await data.json();
+return users.filter(u => u.isActive);
+```
+
+**Output yang dihasilkan:**
+```
+Bayangkan kamu punya lemari arsip besar (server API).
+1. const data = await fetch('/api/users')
+   Kamu mengirim asisten (fetch) ke lemari arsip untuk mengambil
+   map berlabel "Users". Kamu menunggu (await) sampai asisten
+   kembali dengan map-nya.
+
+2. const users = await data.json()
+   Sekarang kamu membuka map tersebut dan mengubah isinya
+   (dari format JSON) ke tumpukan kertas yang bisa kamu baca.
+
+3. return users.filter(u => u.isActive)
+   Kamu menyortir tumpukan kertas, hanya mengambil data user
+   yang statusnya "Active", sisanya kamu sisihkan.
+```
+
+## Tips Penggunaan
+
+1. **Semakin kompleks kode, semakin detail analogi yang dibutuhkan**
+2. **Sertakan konteks**: jelaskan juga apa tujuan dari blok kode tersebut
+3. **Minta visualisasi**: tambahkan "gambarkan dalam bentuk diagram" jika perlu
+4. **Iterasi**: jika penjelasan kurang jelas, minta AI menjelaskan dengan analogi berbeda
+
+## Panduan Instalasi (untuk AI Assistant)
+
+Jika kamu menggunakan AI Assistant seperti DeepSeek, cukup paste prompt di atas dan ikuti variabel yang tersedia. Prompt ini sudah dioptimalkan untuk:
+
+- **DeepSeek Chat** — hasil optimal dengan penjelasan mendalam
+- **ChatGPT** — tetap berfungsi baik, sesuaikan analogi jika perlu
+- **Claude** — unggul dalam analogi kreatif dan contoh dunia nyata

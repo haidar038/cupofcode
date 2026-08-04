@@ -1,0 +1,51 @@
+---
+import { SITE_URL } from "../consts";
+
+interface Props {
+  items: { label: string; href?: string }[];
+}
+
+const { items } = Astro.props;
+
+const currentUrl = new URL(Astro.url.pathname, SITE_URL).href;
+
+const crumbs = [
+  { name: "Beranda", url: new URL("/", SITE_URL).href },
+  ...items.map((item, i) => {
+    const isLast = i === items.length - 1;
+    const url = item.href
+      ? new URL(item.href, SITE_URL).href
+      : isLast
+        ? currentUrl
+        : undefined;
+    return { name: item.label, url };
+  }),
+];
+
+const breadcrumbLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: crumbs.map((c, i) => ({
+    "@type": "ListItem",
+    position: i + 1,
+    name: c.name,
+    ...(c.url ? { item: c.url } : {}),
+  })),
+};
+---
+
+<nav class="mb-8 flex items-center gap-2 text-sm font-medium text-coc-muted" aria-label="Breadcrumb">
+  <a href="/" class="transition-colors hover:text-coc-text">Beranda</a>
+  {items.map((item) => (
+    <>
+      <span class="text-xs text-coc-line" aria-hidden="true">/</span>
+      {item.href ? (
+        <a href={item.href} class="transition-colors hover:text-coc-text">{item.label}</a>
+      ) : (
+        <span class="text-coc-text">{item.label}</span>
+      )}
+    </>
+  ))}
+</nav>
+
+<script type="application/ld+json" set:html={JSON.stringify(breadcrumbLd)} />

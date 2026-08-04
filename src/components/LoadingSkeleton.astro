@@ -1,0 +1,44 @@
+---
+interface Props {
+  count?: number;
+  variant?: "card" | "text" | "detail";
+}
+
+const { count = 1, variant = "card" } = Astro.props;
+const items = Array.from({ length: count });
+---
+
+{
+  variant === "card" && (
+    <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+      {items.map(() => (
+        <div class="skeleton skeleton-card" />
+      ))}
+    </div>
+  )
+}
+
+{
+  variant === "text" && (
+    <div class="space-y-3">
+      {items.map(() => (
+        <div>
+          <div class="skeleton skeleton-text" />
+          <div class="skeleton skeleton-text-sm" />
+        </div>
+      ))}
+    </div>
+  )
+}
+
+{
+  variant === "detail" && (
+    <div class="space-y-6">
+      <div class="skeleton aspect-2/1 w-full rounded-3xl" />
+      <div class="skeleton skeleton-text" style="width:60%;height:32px" />
+      <div class="skeleton skeleton-text" />
+      <div class="skeleton skeleton-text" />
+      <div class="skeleton skeleton-text-sm" style="width:40%" />
+    </div>
+  )
+}

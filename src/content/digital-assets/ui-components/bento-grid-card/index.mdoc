@@ -1,0 +1,180 @@
+---
+title: Bento Grid Card
+description: A modern, customizable card component using Tailwind CSS that adapts to bento box grid layouts
+type: component
+isFree: true
+format: React + Tailwind CSS
+fileSize: 2.4 MB
+downloadUrl: /downloads/bento-grid-card.zip
+---
+
+Komponen grid asimetris bergaya bento box yang modern, cocok untuk halaman portofolio, fitur produk, atau dashboard.
+
+## Fitur
+
+- Grid asimetris 3 kolom dengan span fleksibel
+- Animasi hover yang halus
+- 100% responsive (mobile-first)
+- Dark mode ready
+- Variasi warna preset
+
+## Instalasi
+
+```bash
+npm install lucide-react clsx tailwind-merge
+```
+
+## Props
+
+| Prop | Tipe | Default | Deskripsi |
+|------|------|---------|-----------|
+| items | `BentoItem[]` | — | Array item yang akan ditampilkan |
+| className | `string` | `''` | Class tambahan untuk kustomisasi |
+| columns | `3 \| 4` | `3` | Jumlah kolom grid |
+
+### BentoItem
+
+| Field | Tipe | Deskripsi |
+|-------|------|-----------|
+| title | `string` | Judul card |
+| description | `string` | Deskripsi singkat |
+| icon | `LucideIcon` | Icon dari lucide-react |
+| color | `'yellow' \| 'dark' \| 'white' \| 'green'` | Warna background |
+| span | `'1x1' \| '2x1' \| '1x2' \| '2x2'` | Ukuran span grid |
+
+## Kode Komponen
+
+```tsx
+import { type LucideIcon } from 'lucide-react';
+import { cn } from '@/lib/utils';
+
+interface BentoItem {
+  title: string;
+  description: string;
+  icon: LucideIcon;
+  color: 'yellow' | 'dark' | 'white' | 'green';
+  span: '1x1' | '2x1' | '1x2' | '2x2';
+}
+
+interface BentoGridProps {
+  items: BentoItem[];
+  className?: string;
+  columns?: 3 | 4;
+}
+
+const colorMap: Record<string, string> = {
+  yellow: 'bg-amber-400 text-white',
+  dark: 'bg-neutral-900 text-white',
+  white: 'bg-white text-neutral-900 border border-neutral-200',
+  green: 'bg-emerald-500 text-white',
+};
+
+const spanMap: Record<string, string> = {
+  '1x1': 'col-span-1 row-span-1',
+  '2x1': 'col-span-2 row-span-1',
+  '1x2': 'col-span-1 row-span-2',
+  '2x2': 'col-span-2 row-span-2',
+};
+
+export function BentoGrid({ items, className, columns = 3 }: BentoGridProps) {
+  return (
+    <div
+      className={cn(
+        `grid grid-cols-1 md:grid-cols-${columns} gap-4`,
+        className
+      )}
+    >
+      {items.map((item, i) => {
+        const Icon = item.icon;
+        return (
+          <div
+            key={i}
+            className={cn(
+              'rounded-2xl p-6 flex flex-col gap-3 transition-all duration-300 hover:scale-[1.02] hover:shadow-lg',
+              colorMap[item.color],
+              spanMap[item.span]
+            )}
+          >
+            <div className="flex items-center gap-3">
+              <Icon className="size-6" />
+              <h3 className="font-bold text-lg">{item.title}</h3>
+            </div>
+            <p className="text-sm opacity-80 leading-relaxed">
+              {item.description}
+            </p>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+```
+
+## Contoh Penggunaan
+
+```tsx
+import { BentoGrid } from '@/components/ui/bento-grid';
+import { Code2, Palette, Sparkles, Globe, Zap, Shield } from 'lucide-react';
+
+const items = [
+  {
+    title: 'Fast Performance',
+    description: 'Optimized for speed with lazy loading and code splitting.',
+    icon: Zap,
+    color: 'yellow' as const,
+    span: '2x1' as const,
+  },
+  {
+    title: 'Clean Code',
+    description: 'TypeScript-first with strict typing and best practices.',
+    icon: Code2,
+    color: 'dark' as const,
+    span: '1x1' as const,
+  },
+  {
+    title: 'Beautiful UI',
+    description: 'Modern design system with Tailwind CSS.',
+    icon: Palette,
+    color: 'white' as const,
+    span: '1x1' as const,
+  },
+  {
+    title: 'AI-Powered',
+    description: 'Smart features powered by machine learning.',
+    icon: Sparkles,
+    color: 'green' as const,
+    span: '1x1' as const,
+  },
+];
+
+export function FeatureGrid() {
+  return <BentoGrid items={items} columns={3} />;
+}
+```
+
+## Variasi Layout
+
+### Layout 3 Kolom (Default)
+
+```
+┌─────────────────┬─────────────┐
+│   Main Feature  │   Stat 1    │
+│   (2x2)         │   (1x1)     │
+│                 ├─────────────┤
+│                 │   Stat 2    │
+│                 │   (1x1)     │
+├─────────────────┴─────────────┤
+│   Bottom Feature (2x1)        │
+└───────────────────────────────┘
+```
+
+### Layout 4 Kolom
+
+```
+┌──────────┬──────────┬──────────┬──────────┐
+│ Feature 1│ Feature 2│ Feature 3│ Feature 4│
+│ (1x1)    │ (1x1)    │ (1x1)    │ (1x1)    │
+├──────────┴──────────┼──────────┴──────────┤
+│   Highlight (2x1)   │   Side (2x1)        │
+└─────────────────────┴─────────────────────┘
+```

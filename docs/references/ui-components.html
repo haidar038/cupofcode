@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bento Grid Component - Cup of Code</title>
+    <!-- Tailwind CSS v4 (Play CDN) -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cal+Sans&family=Google+Sans+Flex:opsz,wght@6..144,1..1000&display=swap"
+        rel="stylesheet" />
+
+    <!-- ============================================================
+         CUP OF CODE — Design System (Tailwind v4 Play CDN)
+         Single source of truth shared across all reference pages.
+         ============================================================ -->
+    <style type="text/tailwindcss">
+        @theme {
+            --font-sans: "Google Sans Flex", system-ui, -apple-system, sans-serif;
+            --font-display: "Cal Sans", system-ui, sans-serif;
+
+            --color-brand-dark: #2b2b2b;
+            --color-brand-yellow: #f5b027;
+            --color-brand-yellow-dark: #e09b1f;
+            --color-brand-light: #fdfdfd;
+
+            --color-bg: #fafafa;
+            --color-surface: #ffffff;
+            --color-text-primary: #323232;
+            --color-text-secondary: #555555;
+            --color-text-muted: #868686;
+            --color-line: #e8e8e8;
+            --color-line-soft: #f2f2f2;
+
+            --color-tag-yellow: #fff0c8;
+            --color-tag-green: #ceffd7;
+            --color-tag-pink: #ffd0d4;
+        }
+
+        @layer base {
+            html {
+                scroll-behavior: smooth;
+            }
+            body {
+                background-color: var(--color-bg);
+                color: var(--color-text-primary);
+                font-family: var(--font-sans);
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+            }
+            ::selection {
+                background-color: var(--color-brand-yellow);
+                color: #fff;
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #aaa;
+        }
+    </style>
+</head>
+
+<body class="antialiased">
+    <main class="py-12">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+
+            <!-- Breadcrumb & Header -->
+            <div class="mb-8">
+                <nav class="mb-4 flex items-center gap-2 text-sm font-medium text-text-muted">
+                    <a href="#" class="hover:text-text-primary transition-colors">Aset Digital</a>
+                    <i class="ph-bold ph-caret-right text-xs"></i>
+                    <a href="#" class="hover:text-text-primary transition-colors">UI Component</a>
+                    <i class="ph-bold ph-caret-right text-xs"></i>
+                    <span class="text-text-primary">Bento Grid Layout</span>
+                </nav>
+                <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+                    <div>
+                        <h1 class="font-display text-4xl text-text-primary md:text-5xl tracking-tight mb-3">Bento Grid
+                            Layout Card</h1>
+                        <p class="text-text-secondary text-lg max-w-2xl">Komponen grid asimetris bergaya bento box yang
+                            modern, sangat cocok untuk halaman portofolio atau fitur produk.</p>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <span
+                            class="flex items-center gap-1.5 rounded-full border border-blue-200 bg-blue-50 px-3 py-1 font-mono text-xs font-bold text-blue-700">
+                            <i class="ph-fill ph-atom"></i> React + Tailwind
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Interactive Area -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                <div class="lg:col-span-8 space-y-6">
+
+                    <!-- Preview Box -->
+                    <div class="rounded-3xl border border-gray-200 bg-surface overflow-hidden flex flex-col">
+                        <!-- Toolbar -->
+                        <div class="flex items-center justify-between border-b border-gray-100 bg-gray-50 px-4 py-3">
+                            <div class="flex items-center gap-2">
+                                <button
+                                    class="rounded-lg bg-white px-3 py-1.5 text-sm font-bold text-text-primary flex items-center gap-2">
+                                    <i class="ph-bold ph-eye"></i> Preview
+                                </button>
+                                <button
+                                    class="rounded-lg px-3 py-1.5 text-sm font-bold text-text-muted hover:text-text-primary transition-colors flex items-center gap-2">
+                                    <i class="ph-bold ph-code"></i> Code
+                                </button>
+                            </div>
+                            <!-- Responsive Toggles -->
+                            <div class="flex items-center gap-1 rounded-xl border border-gray-200 bg-white p-1">
+                                <button class="rounded-lg bg-gray-100 p-1.5 text-text-primary leading-0"><i
+                                        class="ph-bold ph-monitor text-lg"></i></button>
+                                <button
+                                    class="rounded-lg p-1.5 text-text-muted hover:text-text-primary transition-colors leading-0"><i
+                                        class="ph-bold ph-device-tablet text-lg"></i></button>
+                                <button
+                                    class="rounded-lg p-1.5 text-text-muted hover:text-text-primary transition-colors leading-0"><i
+                                        class="ph-bold ph-device-mobile text-lg"></i></button>
+                            </div>
+                        </div>
+
+                        <!-- Canvas Area (Simulated) -->
+                        <div class="bg-gray-100 p-8 min-h-100 flex items-center justify-center">
+                            <!-- Fake Bento Grid Rendering -->
+                            <div class="grid grid-cols-3 gap-4 w-full max-w-2xl h-64">
+                                <div class="col-span-2 row-span-2 rounded-2xl bg-white p-6 border border-gray-200">
+                                    Main Feature</div>
+                                <div class="col-span-1 row-span-1 rounded-2xl bg-brand-yellow text-white p-6">
+                                    Stat 1</div>
+                                <div class="col-span-1 row-span-1 rounded-2xl bg-brand-dark text-white p-6">
+                                    Stat 2</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Documentation Content (Markdoc Rendered here) -->
+                    <div class="prose prose-gray max-w-none text-text-secondary">
+                        <h3 class="text-2xl font-bold text-text-primary mb-4">Cara Instalasi</h3>
+                        <p class="mb-4">Komponen ini sangat mandiri (*standalone*). Pastikan kamu sudah menginstall
+                            <code>lucide-react</code> dan <code>clsx</code> di project kamu.
+                        </p>
+                        <div
+                            class="bg-[#1e1e2e] rounded-xl p-4 font-mono text-sm text-gray-200 mb-6 overflow-x-auto shadow-inner">
+                            <pre><code>npm install lucide-react clsx tailwind-merge</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sticky Sidebar -->
+                <div class="lg:col-span-4 relative">
+                    <div class="sticky top-8 space-y-6 rounded-3xl border border-gray-200 bg-surface p-6">
+                        <div class="mb-2">
+                            <span class="block text-3xl font-extrabold text-green-600 mb-1">Gratis</span>
+                            <span class="text-sm font-medium text-text-muted">Lisensi Bebas (MIT)</span>
+                        </div>
+                        <button
+                            class="w-full rounded-xl bg-brand-dark px-6 py-4 font-bold text-white shadow-md transition-colors hover:bg-black flex items-center justify-center gap-2 group">
+                            <i class="ph-bold ph-download-simple text-xl group-hover:animate-bounce"></i> Download
+                            Source
+                        </button>
+
+                        <div class="space-y-3 pt-4 border-t border-gray-100 text-sm">
+                            <div class="flex justify-between items-center">
+                                <span class="text-text-muted flex items-center gap-2"><i
+                                        class="ph ph-file-zip text-lg"></i> Format</span>
+                                <span class="font-bold text-text-primary">React (JSX)</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-text-muted flex items-center gap-2"><i
+                                        class="ph ph-hard-drives text-lg"></i> Ukuran</span>
+                                <span class="font-bold text-text-primary">12 KB</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+</body>
+
+</html>

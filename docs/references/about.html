@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tentang - Cup of Code</title>
+
+    <!-- Tailwind CSS v4 (Play CDN) -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cal+Sans&family=Google+Sans+Flex:opsz,wght@6..144,1..1000&display=swap"
+        rel="stylesheet">
+
+    <!-- ============================================================
+         CUP OF CODE — Design System (Tailwind v4 Play CDN)
+         Single source of truth shared across all reference pages.
+         ============================================================ -->
+    <style type="text/tailwindcss">
+        @theme {
+            --font-sans: "Google Sans Flex", system-ui, -apple-system, sans-serif;
+            --font-display: "Cal Sans", system-ui, sans-serif;
+
+            --color-brand-dark: #2b2b2b;
+            --color-brand-yellow: #f5b027;
+            --color-brand-yellow-dark: #e09b1f;
+            --color-brand-light: #fdfdfd;
+
+            --color-bg: #fafafa;
+            --color-surface: #ffffff;
+            --color-text-primary: #323232;
+            --color-text-secondary: #555555;
+            --color-text-muted: #868686;
+            --color-line: #e8e8e8;
+            --color-line-soft: #f2f2f2;
+
+            --color-tag-yellow: #fff0c8;
+            --color-tag-green: #ceffd7;
+            --color-tag-pink: #ffd0d4;
+        }
+
+        @layer base {
+            html {
+                scroll-behavior: smooth;
+            }
+            body {
+                background-color: var(--color-bg);
+                color: var(--color-text-primary);
+                font-family: var(--font-sans);
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+            }
+            ::selection {
+                background-color: var(--color-brand-yellow);
+                color: #fff;
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #aaa;
+        }
+    </style>
+</head>
+
+<body class="antialiased">
+
+    <main class="mx-auto w-full max-w-360 overflow-hidden px-4 py-10 sm:px-6 sm:py-12 lg:px-20 lg:py-18 xl:px-30">
+
+        <!-- Header Section -->
+        <header class="mx-auto mb-12 flex max-w-3xl flex-col items-center justify-start text-center">
+            <h1 class="mb-6 text-4xl leading-tight tracking-tight text-text-primary font-display md:text-5xl">
+                Membangun Komunitas<br>Lewat Baris Kode<span class="text-brand-yellow">.</span>
+            </h1>
+            <p class="mx-auto text-lg leading-relaxed text-text-secondary md:text-xl">
+                Cup of Code adalah ruang digital di mana eksplorasi teknologi, desain antarmuka, dan efisiensi ngoding
+                diseduh menjadi bacaan ringan yang mencerahkan.
+            </p>
+        </header>
+
+        <!-- Hero Image -->
+        <div class="mx-auto mb-16 px-4 sm:px-0">
+            <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=2072&auto=format&fit=crop"
+                alt="Coding Setup"
+                class="h-75 w-full rounded-3xl object-cover shadow-sm md:h-112">
+        </div>
+
+        <!-- Story Section -->
+        <article class="mx-auto space-y-6 text-[17px] leading-[1.8] text-text-secondary">
+            <h2 class="mb-6 text-2xl font-bold text-text-primary md:text-3xl">Kisah di Balik Layar</h2>
+
+            <p>
+                Semua berawal dari kebutuhan simpel: pengen nyimpen catatan pribadi tentang <em>bug</em> yang pernah
+                diselesaiin, dokumentasi setup yang sering kelupaan, dan trik desain yang bikin antarmuka jadi lebih
+                manusiawi.
+            </p>
+
+            <p>
+                Tapi, catatan-catatan itu rasanya terlalu berharga kalau cuma disimpan sendiri. Nah, dari situlah
+                <strong>Cup of Code</strong> lahir!
+            </p>
+
+            <p>
+                Kami percaya kalau ilmu tentang <em>software development</em> dan <em>UI/UX design</em> itu hak semua
+                orang. Di era sekarang, siapa aja harusnya bisa akses ilmu ini secara gratis, tanpa perlu terbebani
+                biaya mahal buat beli buku, kursus, atau kelas mentoring yang harganya selangit.
+            </p>
+
+            <!-- Highlighted Text Block -->
+            <p>
+                Sekarang kita emang hidup di zaman AI, di mana bikin web app atau komponen desain keliatannya gampang
+                dan instan banget. Tapi jujur, kami resah melihat banyak narasi di luar sana yang bilang kalau
+                <span class="rounded bg-yellow-100 px-1.5 py-0.5 font-medium text-yellow-900">"fundamental dan dasar
+                    coding itu udah gak penting lagi, tinggal modal copas prompt AI aja pasti beres."</span>
+                Padahal kenyataannya gak semudah itu. Tanpa tahu dasarnya, kita gak bakal tahu gimana cara nanganin
+                error yang rumit, mikirin keamanan data, sampai ngurusin skalabilitas aplikasi ke depannya.
+            </p>
+
+            <p>
+                Di Cup of Code, kami pengen nerapin inklusivitas yang sesungguhnya. Kami pengen nunjukkin kalau AI itu
+                adalah alat bantu buat efisiensi kerja, bukan pengganti logika dasar kita sebagai developer. Kami gak
+                mau kamu cuma bisa 'salin-tempel' tanpa tahu apa yang terjadi di balik layar.
+            </p>
+
+            <p>
+                Makanya, lewat blog ini, kami gak cuma berbagi tutorial yang mudah dipahami, tapi juga bakal nyediain
+                aset-aset digital secara <strong>100% gratis!</strong> Mulai dari template siap pakai, <em>UI
+                    components</em>, sampai racikan <em>prompt</em> AI yang efektif. Semuanya bisa kamu akses kapan aja
+                buat bahan eksperimen kamu sendiri.
+            </p>
+
+            <p class="pt-2 font-medium text-text-primary">
+                Yuk, kita belajar bareng dengan cara yang sehat, jujur, dan beneran bikin skill kamu berkembang!
+            </p>
+        </article>
+
+        <!-- Two Column Box -->
+        <div
+            class="mx-auto mt-18 grid grid-cols-1 gap-10 rounded-4xl border border-line bg-surface/50 p-8 backdrop-blur-sm md:grid-cols-2 md:gap-16 md:p-12">
+
+            <!-- Item 1 -->
+            <div>
+                <div class="mb-6 flex h-12 w-12 items-center justify-center rounded-xl bg-tag-yellow text-brand-yellow">
+                    <i class="ph-fill ph-eye text-2xl"></i>
+                </div>
+                <h3 class="mb-3 text-xl text-text-primary">Visi Kami</h3>
+                <p class="text-text-secondary">
+                    Pengen jadi tempat sharing paling "bersih" dan relevan buat belajar coding, desain, dan AI secara
+                    sehat, mulai dari yang baru merintis sampai yang udah profesional.
+                </p>
+            </div>
+
+            <!-- Item 2 -->
+            <div>
+                <div class="mb-6 flex h-12 w-12 items-center justify-center rounded-xl bg-green-50 text-green-600">
+                    <i class="ph-fill ph-book-open text-2xl"></i>
+                </div>
+                <h3 class="mb-3 text-xl text-text-primary">Apa yang Dibahas?</h3>
+                <p class="text-text-secondary">
+                    Kita bakal ngulik ekosistem Front-End (React, Next.js, CSS), UI/UX (Figma), sampai integrasi AI
+                    (ChatGPT & Gemini) lewat Web App, Apps Script, dan Spreadsheet secara mendalam tapi gampang
+                    dipahami.
+                </p>
+            </div>
+
+        </div>
+
+    </main>
+
+</body>
+
+</html>

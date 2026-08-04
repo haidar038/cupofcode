@@ -1,0 +1,268 @@
+---
+export const prerender = true;
+import { getCollection, render } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { SITE_TITLE } from "../../consts";
+import { Download, FileCode, Gem } from "@lucide/astro";
+import Breadcrumb from "../../components/Breadcrumb.astro";
+import BackToTop from "../../components/ui/BackToTop.tsx";
+import ComponentPreview from "../../components/digital-assets/ComponentPreview.astro";
+import PromptFiller from "../../components/digital-assets/PromptFiller.tsx";
+import GemsViewer from "../../components/digital-assets/GemsViewer.astro";
+
+export async function getStaticPaths() {
+  const assets = await getCollection("digitalAssets");
+  return assets.map((asset) => ({
+    params: { slug: asset.id },
+    props: { asset },
+  }));
+}
+
+const { asset } = Astro.props;
+const { Content } = await render(asset);
+
+// --- Type-safe narrowing helpers ---
+const isComponent = asset.data.type === "component";
+const isPrompt = asset.data.type === "prompt";
+const isGem = asset.data.type === "gem";
+
+// Extract raw code strings from body for ComponentPreview
+const rawBody = asset.body || "";
+
+// Safe extraction (no arbitrary eval)
+function extractCodeBlock(content: string, lang: string): string | null {
+  const pattern = new RegExp(`\`\`\`${lang}\\s*\\n([\\s\\S]*?)\\n\`\`\``, "i");
+  const match = content.match(pattern);
+  return match?.[1] ?? null;
+}
+
+function extractPromptTemplate(content: string): string {
+  // Fallback: first fenced block in the prompt section
+  const fenced = content.match(/```\s*\n([\s\S]*?)\n```/);
+  return fenced?.[1].trim() ?? "";
+}
+
+// -- Asset-specific payloads --
+let componentCode = "";
+if (isComponent) {
+  componentCode = extractCodeBlock(rawBody, "tsx") ?? extractCodeBlock(rawBody, "jsx") ?? rawBody;
+}
+
+let promptTemplate = "";
+let promptVariables: string[] = [];
+if (isPrompt) {
+  promptTemplate = extractPromptTemplate(rawBody);
+  promptVariables = asset.data.variables || [];
+}
+
+let gemInstructions = "";
+let gemExampleBefore = "";
+let gemExampleAfter = "";
+let gemTips: string[] = [];
+if (isGem) {
+  const sections = rawBody.split(/##\s+/).map((s) => s.trim());
+  const sysIdx = sections.findIndex((s) => s.startsWith("System Instructions"));
+  if (sysIdx !== -1 && sysIdx + 1 < sections.length) {
+    // Extract content between this heading and next
+    const block = sections[sysIdx];
+    // Rough extraction: text between "System Instructions" heading and next "## "
+    const headingMatch = block.match(/System Instructions\s*\n([\s\S]*?)(?=\n## |\n$)/);
+    if (headingMatch) {
+      gemInstructions = headingMatch[1].trim();
+    }
+  }
+  // Contoh Transformasi (before/after)
+  const beforeMatch = rawBody.match(/\*\*Input:\*\*\s*```[a-z]*\s*\n([\s\S]*?)\n```/i);
+  const afterMatch = rawBody.match(/\*\*(Output|Hasil)[^*]*:\*\*\s*```\s*\n([\s\S]*?)\n```/i);
+  if (beforeMatch) gemExampleBefore = beforeMatch[1].trim();
+  if (afterMatch) gemExampleAfter = afterMatch[2].trim();
+  // Tips Penggunaan → list items di section "Tips"
+  const tipsIdx = sections.findIndex((s) => s.startsWith("Tips Penggunaan"));
+  if (tipsIdx !== -1) {
+    const tipsBlock = sections[tipsIdx];
+    const items = tipsBlock.match(/^\d+\.\s+.*/gm) || [];
+    gemTips = items.map((t) => t.replace(/^\d+\.\s+/, "").trim());
+  }
+}
+
+const typeLabels: Record<string, string> = {
+  component: "UI Component",
+  prompt: "AI Prompt",
+  gem: "Custom Gem",
+};
+
+const typeBadgeColors: Record<string, string> = {
+  component: "bg-blue-50 text-blue-700 border-blue-200",
+  prompt: "bg-purple-50 text-purple-700 border-purple-200",
+  gem: "bg-green-50 text-green-700 border-green-200",
+};
+---
+
+<BaseLayout
+  title={`${asset.data.title} | ${SITE_TITLE}`}
+  description={asset.data.description}
+  type="article"
+>
+  <Breadcrumb
+    items={[
+      { label: "Aset Digital", href: "/assets" },
+      { label: asset.data.title },
+    ]}
+  />
+
+  <div class="grid grid-cols-1 gap-x-12 lg:grid-cols-12">
+    <div class="lg:col-span-8">
+      <div class="mb-8 w-full overflow-hidden rounded-3xl border border-coc-line bg-gray-100">
+        <div class="flex aspect-2/1 w-full items-center justify-center text-gray-300">
+          <FileCode width="96" height="96" stroke-width="1.2" />
+        </div>
+      </div>
+
+      <div class="space-y-8">
+        <div>
+          <span
+            class:list={[
+              "mb-4 inline-flex items-center gap-1.5 rounded-full border px-3 py-1 font-mono text-xs font-bold",
+              typeBadgeColors[asset.data.type] || "",
+            ]}
+          >
+            {typeLabels[asset.data.type] || asset.data.type}
+          </span>
+          <h1 class="mb-4 font-coc-display text-3xl font-bold leading-tight tracking-tight text-coc-text md:text-4xl">
+            {asset.data.title}
+          </h1>
+          <p class="text-lg leading-relaxed text-coc-muted">
+            {asset.data.description}
+          </p>
+        </div>
+
+        <hr class="border-coc-line" />
+
+        <!-- ============ TYPE-SPECIFIC VIEWER ============ -->
+        {isComponent && (
+          <ComponentPreview
+            code={componentCode}
+            format={asset.data.format}
+          />
+        )}
+
+        {isPrompt && (
+          <PromptFiller
+            template={promptTemplate}
+            variables={promptVariables}
+            client:idle
+          />
+        )}
+
+        {isGem && (
+          <GemsViewer
+            instructions={gemInstructions}
+            exampleBefore={gemExampleBefore}
+            exampleAfter={gemExampleAfter}
+            tips={gemTips}
+          />
+        )}
+
+        <div class="prose prose-gray max-w-none text-coc-muted">
+          <Content />
+        </div>
+      </div>
+    </div>
+
+    <div class="lg:col-span-4">
+      <div class="sticky top-28 rounded-3xl border border-coc-line bg-coc-surface p-6 md:p-8">
+        <div class="mb-6">
+          <span class="mb-1 block text-3xl font-extrabold text-green-600">
+            {asset.data.isFree ? "Gratis" : "Premium"}
+          </span>
+          {asset.data.type === "component" && asset.data.format && (
+            <span class="inline-flex items-center gap-1.5 rounded-full border border-blue-200 bg-blue-50 px-3 py-1 font-mono text-xs font-bold text-blue-700">
+              <FileCode width="14" height="14" />
+              {asset.data.format}
+            </span>
+          )}
+        </div>
+
+        <!-- ============ DOWNLOAD BUTTON (Premium Gate) ============ -->
+        {asset.data.isFree && asset.data.downloadUrl ? (
+          <a
+            href={asset.data.downloadUrl}
+            download
+            data-asset-title={asset.data.title}
+            data-asset-type={asset.data.type}
+            class="download-trigger group mb-6 flex w-full items-center justify-center rounded-xl bg-coc-dark py-4 font-bold text-white transition-all duration-300 hover:bg-black"
+          >
+            <Download width="20" height="20" class="mr-2 group-hover:animate-bounce" />
+            Download Source Code
+          </a>
+        ) : (
+          <button
+            disabled
+            class="group mb-6 flex w-full cursor-not-allowed items-center justify-center rounded-xl bg-gray-300 py-4 font-bold text-gray-500"
+          >
+            <Download width="20" height="20" class="mr-2" />
+            Coming Soon
+          </button>
+        )}
+
+        <div class="mb-8 space-y-4 text-sm">
+          {asset.data.format && (
+            <div class="flex items-center justify-between border-b border-coc-line py-2">
+              <span class="flex items-center gap-2 text-coc-muted">Format</span>
+              <span class="font-semibold text-coc-text">{asset.data.format}</span>
+            </div>
+          )}
+          {asset.data.fileSize && (
+            <div class="flex items-center justify-between border-b border-coc-line py-2">
+              <span class="flex items-center gap-2 text-coc-muted">Ukuran</span>
+              <span class="font-semibold text-coc-text">{asset.data.fileSize}</span>
+            </div>
+          )}
+          {asset.data.type === "prompt" && asset.data.variables && asset.data.variables.length > 0 && (
+            <div class="border-b border-coc-line py-2">
+              <span class="mb-2 block text-coc-muted">Variabel Prompt</span>
+              <div class="flex flex-wrap gap-2">
+                {asset.data.variables.map((v) => (
+                  <span class="rounded-lg bg-coc-tag-yellow px-2 py-1 text-xs font-medium text-[#212121]">
+                    {v}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+
+        <div class="flex items-center gap-3 rounded-xl border border-coc-line bg-gray-50 p-4">
+          <div class="flex size-10 items-center justify-center rounded-full bg-coc-dark text-coc-accent">
+            <Gem width="20" height="20" />
+          </div>
+          <div>
+            <p class="text-xs font-medium text-coc-muted">Dibuat oleh</p>
+            <p class="text-sm font-bold text-coc-text">Cup of Code Team</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <BackToTop client:idle />
+</BaseLayout>
+
+<!-- Analytics: asset_download event tracking -->
+{asset.data.isFree && asset.data.downloadUrl && (
+  <script is:inline define:vars={{ title: asset.data.title, type: asset.data.type }}>
+    function trackDownload(e) {
+      const title = e.currentTarget.dataset.assetTitle;
+      const type = e.currentTarget.dataset.assetType;
+      if (typeof window.plausible !== 'undefined') {
+        window.plausible('asset_download', {
+          props: { title, type }
+        });
+      }
+    }
+    document.addEventListener('astro:page-load', () => {
+      document.querySelectorAll('.download-trigger').forEach((el) =>
+        el.addEventListener('click', trackDownload)
+      );
+    });
+  </script>
+)}

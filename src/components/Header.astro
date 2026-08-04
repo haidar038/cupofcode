@@ -1,0 +1,25 @@
+---
+import { SITE_TITLE } from "../consts";
+import HeaderLink from "./HeaderLink.astro";
+import MobileNav from "./ui/MobileNav.tsx";
+---
+
+<header class="border-b border-coc-line bg-coc-bg">
+    <div class="h-1.5 w-full bg-linear-to-r from-coc-accent to-coc-green" aria-hidden="true"></div>
+    <nav class="mx-auto flex w-full max-w-360 items-center justify-between px-4 py-4 sm:px-6 md:py-5 lg:px-20 xl:px-30" aria-label="Navigasi utama">
+        <a class="whitespace-nowrap font-coc-display text-5 font-medium leading-1.2 tracking-[-0.02em] text-coc-text sm:text-[1.375rem]" href="/">{SITE_TITLE}</a>
+        <div class="hidden items-center gap-5 md:flex lg:gap-8">
+            <div class="flex items-center gap-4 lg:gap-6">
+                <HeaderLink href="/">Beranda</HeaderLink>
+                <HeaderLink href="/posts">Artikel</HeaderLink>
+                <HeaderLink href="/assets">Aset Digital</HeaderLink>
+                <HeaderLink href="/snippets">Snippets</HeaderLink>
+                <HeaderLink href="/about">Tentang</HeaderLink>
+                <HeaderLink href="/contact">Kontak</HeaderLink>
+            </div>
+        </div>
+        <div class="flex items-center gap-3 md:hidden">
+            <MobileNav client:load />
+        </div>
+    </nav>
+</header>

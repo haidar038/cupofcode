@@ -1,0 +1,75 @@
+---
+import CopyButton from "../ui/CopyButton.tsx";
+import { ChevronDown, ChevronUp, Gem, Zap } from "@lucide/astro";
+
+interface Props {
+  instructions: string;
+  exampleBefore?: string;
+  exampleAfter?: string;
+  tips?: string[];
+}
+const { instructions, exampleBefore, exampleAfter, tips } = Astro.props;
+const hasExample = Boolean(exampleBefore && exampleAfter);
+---
+
+<div class="rounded-3xl border border-coc-line bg-coc-surface overflow-hidden">
+  <div class="flex items-center justify-between border-b border-coc-line bg-gray-50 px-6 py-4">
+    <h3 class="flex items-center gap-2 font-bold text-coc-text">
+      <span class="rounded-lg bg-indigo-100 p-2 text-indigo-700">
+        <Gem width="16" height="16" />
+      </span>
+      System Instructions (Gem)
+    </h3>
+    <CopyButton text={instructions} label="Salin Instructions" client:idle />
+  </div>
+
+  <div class="relative">
+    <div
+      class="max-h-96 overflow-y-auto bg-[#1e1e2e] p-6 font-mono text-sm leading-relaxed text-gray-300"
+      tabindex="0"
+      aria-label="Instruksi system bisa di-scroll dengan keyboard"
+    >
+      <pre class="whitespace-pre-wrap break-words">{instructions}</pre>
+    </div>
+  </div>
+
+  {hasExample && (
+    <div class="border-t border-coc-line">
+      <details class="group">
+        <summary
+          class="flex w-full cursor-pointer select-none items-center justify-between px-6 py-4 text-left font-bold text-coc-text transition-colors hover:bg-gray-50"
+        >
+          <span>Lihat Contoh Transformasi</span>
+          <ChevronDown width="20" height="20" class="group-open:hidden" />
+          <ChevronUp width="20" height="20" class="hidden group-open:block" />
+        </summary>
+        <div class="px-6 pb-6">
+          <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <div class="rounded-2xl border border-red-200 bg-red-50 p-4">
+              <p class="mb-2 text-xs font-bold uppercase tracking-wide text-red-700">Developer Text</p>
+              <pre class="whitespace-pre-wrap break-words font-mono text-sm text-red-900">{exampleBefore}</pre>
+            </div>
+            <div class="rounded-2xl border border-emerald-200 bg-emerald-50 p-4">
+              <p class="mb-2 text-xs font-bold uppercase tracking-wide text-emerald-700">UX Writer Assistant</p>
+              <pre class="whitespace-pre-wrap break-words font-mono text-sm text-emerald-900">{exampleAfter}</pre>
+            </div>
+          </div>
+        </div>
+      </details>
+    </div>
+  )}
+
+  {tips && tips.length > 0 && (
+    <div class="border-t border-coc-line bg-gray-50 px-6 py-6">
+      <h4 class="mb-3 flex items-center gap-2 text-sm font-bold text-coc-text">
+        <Zap width="16" height="16" class="text-coc-accent" />
+        Tips Penggunaan
+      </h4>
+      <ul class="list-inside list-disc space-y-2 text-sm text-coc-muted">
+        {tips.map((tip) => (
+          <li>{tip}</li>
+        ))}
+      </ul>
+    </div>
+  )}
+</div>

@@ -1,0 +1,139 @@
+---
+title: "Panduan Lengkap Setup Tailwind CSS di Vite"
+featured_image: https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=2072&auto=format&fit=crop
+category: tutorial
+description: "Pelajari cara mengonfigurasi Tailwind CSS v4 pada project React yang menggunakan Vite build tool untuk performa maksimal dan developer experience terbaik."
+publishDate: 2026-07-10
+featured: false
+---
+
+Tailwind CSS telah menjadi pilihan utama developer untuk styling di tahun 2026. Dengan pendekatan utility-first, kamu bisa membangun antarmuka yang konsisten tanpa menulis CSS kustom berulang kali. Di versi 4, Tailwind mengalami perubahan besar dengan konfigurasi berbasis CSS native yang lebih bersih.
+
+Artikel ini akan memandumu setup Tailwind CSS v4 dari awal hingga siap produksi.
+
+## Persiapan Awal
+
+Pastikan kamu sudah memiliki project Vite + React. Jika belum, buat dulu:
+
+```bash
+npm create vite@latest my-project -- --template react-ts
+cd my-project
+```
+
+Kita akan menggunakan TypeScript agar pengalaman develop lebih aman dengan type checking.
+
+## Instalasi Tailwind CSS v4
+
+Versi 4 hadir dengan pendekatan baru: CSS-first configuration. Tidak perlu file `tailwind.config.js` terpisah.
+
+```bash
+npm install tailwindcss @tailwindcss/vite
+```
+
+## Konfigurasi Vite Plugin
+
+Buka file `vite.config.ts` dan tambahkan plugin Tailwind:
+
+```typescript
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import tailwindcss from '@tailwindcss/vite';
+
+export default defineConfig({
+  plugins: [react(), tailwindcss()],
+});
+```
+
+ ini akan mengaktifkan engine Tailwind langsung di dalam pipeline Vite.
+
+## Setup CSS Entry Point
+
+Buka file `src/index.css` (atau buat baru) dan tambahkan:
+
+```css
+@import "tailwindcss";
+```
+
+Selesai! Dengan satu baris ini, semua utility Tailwind sudah tersedia. Tidak perlu direktif `@tailwind base/components/utilities` seperti di v3.
+
+## Kustomisasi Tema
+
+Di Tailwind v4, kustomisasi dilakukan langsung di CSS menggunakan `@theme`:
+
+```css
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+
+  --color-primary: #f5b027;
+  --color-primary-dark: #e09b1f;
+  --color-surface: #fafafa;
+  --color-text-primary: #323232;
+
+  --radius-card: 1.5rem;
+
+  --animate-fade-in: fade-in 0.5s ease-out;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+```
+
+## Menggunakan di Komponen React
+
+```tsx
+function Button({ children, variant = 'primary' }: {
+  children: React.ReactNode;
+  variant?: 'primary' | 'secondary';
+}) {
+  const base = 'rounded-xl px-6 py-3 font-bold transition-all duration-200';
+
+  const variants = {
+    primary: 'bg-primary text-white hover:bg-primary-dark',
+    secondary: 'border border-gray-200 text-text-primary hover:bg-gray-50',
+  };
+
+  return (
+    <button className={`${base} ${variants[variant]}`}>
+      {children}
+    </button>
+  );
+}
+```
+
+## Optimasi Produksi
+
+Tailwind v4 menggunakan teknik **selective scanning** — hanya utility yang benar-benar dipakai yang masuk ke bundle final. Untuk optimasi tambahan:
+
+```bash
+npm run build
+```
+
+Cek ukuran bundle dengan:
+```bash
+npx vite-bundle-analyzer
+```
+
+## Troubleshooting Umum
+
+### Utility tidak muncul
+Pastikan plugin `@tailwindcss/vite` sudah terdaftar di `vite.config.ts` dan CSS entry sudah meng-import `tailwindcss`.
+
+### Build error
+Update ke versi terbaru:
+```bash
+npm install tailwindcss@latest @tailwindcss/vite@latest
+```
+
+### IntelliSense tidak bekerja
+Install extension VS Code "Tailwind CSS IntelliSense" versi terbaru yang mendukung v4.
+
+## Kesimpulan
+
+Setup Tailwind CSS v4 di Vite jauh lebih sederhana dibanding versi sebelumnya. CSS-first configuration mengurangi boilerplate dan memberikan kontrol penuh melalui CSS murni. Dengan performa build yang cepat berkat Vite, kombinasi ini menjadi pilihan ideal untuk project modern.
+
+Mulai gunakan Tailwind v4 di project barumu dan rasakan perbedaan developer experience-nya!

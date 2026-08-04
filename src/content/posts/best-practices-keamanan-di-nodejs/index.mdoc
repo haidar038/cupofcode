@@ -1,0 +1,198 @@
+---
+title: "Best Practices Keamanan di Node.js"
+featured_image: https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070&auto=format&fit=crop
+category: tips-trik
+description: "Lindungi server Node.js kamu dari serangan umum. Panduan praktis menerapkan CORS, Helmet, Rate Limiting, dan teknik keamanan esensial lainnya."
+publishDate: 2026-07-20
+featured: false
+---
+
+Keamanan sering kali menjadi afterthought dalam pengembangan backend. Padahal, server yang tidak diamankan dengan benar bisa menjadi pintu masuk bagi attacker untuk mencuri data pengguna atau merusak sistem.
+
+Artikel ini membahas praktik keamanan esensial yang wajib diterapkan di setiap aplikasi Node.js.
+
+## 1. Gunakan Helmet untuk Security Headers
+
+Helmet adalah middleware yang secara otomatis menyetel berbagai header HTTP keamanan:
+
+```bash
+npm install helmet
+```
+
+```typescript
+import express from 'express';
+import helmet from 'helmet';
+
+const app = express();
+app.use(helmet());
+```
+
+Helmet mengaktifkan header seperti:
+- `X-Content-Type-Options: nosniff` — mencegah MIME sniffing
+- `X-Frame-Options: DENY` — mencegah clickjacking
+- `Strict-Transport-Security` — memaksa koneksi HTTPS
+- `X-XSS-Protection` — perlindungan XSS dasar
+
+## 2. Terapkan CORS dengan Ketat
+
+Jangan biarkan API kamu diakses dari domain sembarangan:
+
+```typescript
+import cors from 'cors';
+
+const allowedOrigins = ['https://cupofcode.site', 'https://admin.cupofcode.site'];
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+    methods: ['GET', 'POST'],
+    credentials: true,
+  })
+);
+```
+
+## 3. Rate Limiting untuk Mencegah Brute Force
+
+Batasi jumlah request dari satu IP dalam periode waktu tertentu:
+
+```bash
+npm install express-rate-limit
+```
+
+```typescript
+import rateLimit from 'express-rate-limit';
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 menit
+  max: 100, // maksimal 100 request per window
+  message: { error: 'Terlalu banyak request, coba lagi nanti.' },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+app.use('/api/', limiter);
+```
+
+Untuk endpoint login, buat pembatas yang lebih ketat:
+
+```typescript
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 5, // hanya 5 percobaan login
+  message: { error: 'Terlalu banyak percobaan login. Akun sementara dikunci.' },
+});
+
+app.use('/api/auth/login', loginLimiter);
+```
+
+## 4. Validasi Input dengan Zod
+
+Jangan pernah percaya input pengguna. Validasi semua data masuk:
+
+```bash
+npm install zod
+```
+
+```typescript
+import { z } from 'zod';
+
+const createUserSchema = z.object({
+  email: z.string().email('Email tidak valid'),
+  password: z.string().min(8, 'Password minimal 8 karakter'),
+  name: z.string().min(2).max(100),
+  age: z.number().int().positive().optional(),
+});
+
+app.post('/api/users', (req, res) => {
+  const result = createUserSchema.safeParse(req.body);
+  if (!result.success) {
+    return res.status(400).json({
+      error: 'Validasi gagal',
+      details: result.error.flatten().fieldErrors,
+    });
+  }
+  // Lanjutkan logika bisnis dengan data yang sudah tervalidasi
+});
+```
+
+## 5. Lindungi Data Sensitif
+
+### Environment Variables
+
+Jangan pernah hardcode secret di kode:
+
+```typescript
+// .env
+DATABASE_URL=postgresql://user:pass@localhost:5432/db
+JWT_SECRET=your-256-bit-secret
+API_KEY=sk-proj-xxxxx
+```
+
+```typescript
+import 'dotenv/config';
+
+const dbUrl = process.env.DATABASE_URL;
+if (!dbUrl) throw new Error('DATABASE_URL tidak ditemukan');
+```
+
+### Hash Password
+
+Gunakan bcrypt untuk menyimpan password:
+
+```bash
+npm install bcrypt
+```
+
+```typescript
+import bcrypt from 'bcrypt';
+
+const saltRounds = 12;
+const hashedPassword = await bcrypt.hash(password, saltRounds);
+const isValid = await bcrypt.compare(inputPassword, hashedPassword);
+```
+
+## 6. SQL Injection Prevention
+
+Gunakan parameterized query atau ORM:
+
+```typescript
+// ❌ Rentan SQL Injection
+const query = `SELECT * FROM users WHERE email = '${email}'`;
+
+// ✅ Aman dengan parameterized query
+const query = 'SELECT * FROM users WHERE email = $1';
+const result = await db.query(query, [email]);
+```
+
+## Checklist Keamanan Minimum
+
+| Item | Status |
+|------|--------|
+| Helmet middleware terpasang | ☐ |
+| CORS dibatasi origin | ☐ |
+| Rate limiting aktif | ☐ |
+| Input validation (Zod/Joi) | ☐ |
+| Environment variables untuk secret | ☐ |
+| Password di-hash (bcrypt) | ☐ |
+| SQL injection prevention | ☐ |
+| HTTPS aktif (production) | ☐ |
+| Dependencies di-audit rutin | ☐ |
+
+Jalankan audit keamanan secara berkala:
+
+```bash
+npm audit
+npm audit fix
+```
+
+## Kesimpulan
+
+Keamanan bukanlah fitur sekali jadi, melainkan proses berkelanjutan. Dengan menerapkan praktik di atas, kamu sudah membangun fondasi keamanan yang kokoh untuk aplikasi Node.js-mu.
+
+Mulailah dari yang kecil: pasang Helmet, aktifkan CORS, dan validasi input. Sisanya bisa ditambahkan secara bertahap seiring kebutuhan.

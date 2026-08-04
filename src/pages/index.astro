@@ -1,0 +1,242 @@
+---
+export const prerender = true;
+import BaseLayout from "../layouts/BaseLayout.astro";
+import FeaturedImage from "../assets/blog-placeholder-1.jpg";
+import AvatarSVG from "../assets/avatar.svg";
+import { SITE_DESCRIPTION, SITE_TITLE } from "../consts";
+import { ImageIcon } from "@lucide/astro";
+import { getCollection, getEntry } from "astro:content";
+import { Image } from "astro:assets";
+import SearchBar from "../components/ui/SearchBar.tsx";
+import BackToTop from "../components/ui/BackToTop.tsx";
+import ScrollAnimations from "../components/ScrollAnimations.astro";
+
+type Tone = "yellow" | "green" | "pink";
+
+const categories = await getCollection("categories");
+const allPosts = await getCollection("posts");
+const featuredPosts = allPosts.filter((p) => p.data.featured);
+const featuredArticle = featuredPosts.length > 0 ? featuredPosts[0] : allPosts[0];
+const gridArticles = allPosts.filter((p) => p.id !== featuredArticle?.id).slice(0, 8);
+
+const toneClass: Record<Tone, string> = {
+  yellow: "bg-coc-tag-yellow",
+  green: "bg-coc-tag-green",
+  pink: "bg-coc-tag-pink",
+};
+
+const toneByCategory = new Map<string, Tone>();
+for (const cat of categories) {
+  toneByCategory.set(cat.id, cat.data.tone as Tone);
+}
+
+const categoryLabel = new Map<string, string>();
+for (const cat of categories) {
+  categoryLabel.set(cat.id, cat.data.label);
+}
+
+const searchItems = allPosts.map((p) => ({
+  title: p.data.title,
+  description: p.data.description ?? "",
+  url: `/posts/${p.id}`,
+  category: categoryLabel.get(p.data.category) ?? "",
+}));
+---
+
+<BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
+      <section
+        class="grid items-start gap-8 md:grid-cols-[minmax(0,1fr)_minmax(150px,240px)] lg:gap-12"
+        aria-labelledby="hero-title"
+      >
+        <div class="max-w-173.75">
+          <h1
+            id="hero-title"
+            class="font-coc-display text-5xl leading-1.2 text-coc-text sm:text-5xl lg:text-6xl lg:leading-18"
+          >
+            Explore Everything,<br />
+            Your Journey Starts Here<span class="text-coc-accent">.</span>
+          </h1>
+          <p
+            class="mt-4 max-w-170 text-base leading-7 text-coc-muted sm:text-lg lg:text-xl"
+          >
+            Temukan tutorial mendalam, tips & trik esensial, serta aset digital
+            siap pakai untuk kebutuhan kamu sehari-hari.
+          </p>
+        </div>
+        <div
+          class="pointer-events-none justify-self-end self-start"
+          aria-hidden="true"
+        >
+          <Image
+            src={AvatarSVG}
+            alt=""
+            class="h-auto w-30 max-w-none object-contain sm:w-38 md:w-48 lg:w-60"
+            loading="eager"
+          />
+        </div>
+      </section>
+
+      <section
+        id="artikel"
+        class="mt-14 grid gap-10 lg:mt-18 lg:grid-cols-[306px_minmax(0,1fr)] lg:gap-14"
+        aria-label="Artikel Cup of Code"
+      >
+        <aside
+          class="grid gap-8 sm:grid-cols-[minmax(260px,360px)_minmax(0,1fr)] lg:sticky lg:top-6 lg:block lg:space-y-8"
+        >
+          <div class="space-y-3">
+            <h2 class="text-base font-semibold leading-6 text-coc-text mb-3">
+              Pencarian
+            </h2>
+            <SearchBar items={searchItems} placeholder="Cari Artikel..." client:idle />
+          </div>
+          <div class="space-y-3">
+            <h2 class="text-base font-semibold leading-6 text-coc-text mb-3">
+              Kategori
+            </h2>
+            <ul class="space-y-3 text-base leading-6">
+              <li>
+                <a
+                  class="inline-flex items-center gap-3 font-bold text-coc-text"
+                  href="/#artikel"
+                >
+                  <span class="size-2 rounded-full bg-coc-accent"></span>
+                  Semua
+                </a>
+              </li>
+              {
+                categories.map((category) => (
+                  <li>
+                    <a
+                      class="inline-flex items-center gap-3 text-coc-muted hover:text-coc-text"
+                      href={`/posts?cat=${category.id}`}
+                    >
+                      <span class="size-2 rounded-full bg-[#ddd]" />
+                      {category.data.label}
+                    </a>
+                  </li>
+                ))
+              }
+            </ul>
+          </div>
+        </aside>
+
+        <div class="flex min-w-0 flex-col gap-12 lg:gap-14">
+          {
+            featuredArticle && (() => {
+              const fCat = categories.find(c => c.id === featuredArticle.data.category);
+              const fTone: Tone = (fCat?.data.tone as Tone) || "yellow";
+              return (
+                <article data-animate
+                  class="grid gap-6 md:grid-cols-[minmax(0,1.22fr)_minmax(260px,0.9fr)] md:items-center lg:gap-8"
+                >
+                  <a
+                    class="block overflow-hidden rounded-3xl bg-[#d9d9d9] transition hover:-translate-y-0.5"
+                    href={`/posts/${featuredArticle.id}`}
+                  >
+                    {
+                      featuredArticle.data.featured_image ? (
+                        <Image
+                          src={featuredArticle.data.featured_image}
+                          alt={featuredArticle.data.title}
+                          width={1200}
+                          height={758}
+                          sizes="(max-width: 768px) 100vw, 60vw" densities={[1, 2]}
+                          class="aspect-462/292 h-full w-full object-cover transition duration-200 hover:scale-[1.02]"
+                          loading="eager"
+                          fetchpriority="high"
+                        />
+                      ) : (
+                        <Image
+                          src={FeaturedImage}
+                          alt={featuredArticle.data.title}
+                          sizes="(max-width: 768px) 100vw, 60vw" densities={[1, 2]}
+                          class="aspect-462/292 h-full w-full object-cover transition duration-200 hover:scale-[1.02]"
+                          loading="eager"
+                          fetchpriority="high"
+                        />
+                      )
+                    }
+                  </a>
+                  <div class="flex flex-col items-start gap-4 md:gap-5">
+                    <span
+                      class:list={[
+                        "rounded-full px-3 py-1 text-xs leading-4 text-[#212121]",
+                        toneClass[fTone],
+                      ]}
+                    >
+                      {fCat?.data.label || "Artikel"}
+                    </span>
+                    <h2
+                      class="font-coc-body text-2xl font-bold leading-8 text-coc-text lg:text-[32px] lg:leading-10"
+                    >
+                      <a href={`/posts/${featuredArticle.id}`} class="hover:text-coc-accent">
+                        {featuredArticle.data.title}
+                      </a>
+                    </h2>
+                    <p class="line-clamp-4 text-base leading-6 text-coc-muted">
+                      {featuredArticle.data.description}
+                    </p>
+                  </div>
+                </article>
+              );
+            })()
+          }
+
+          <div class="grid gap-10 sm:grid-cols-2 lg:gap-x-14 lg:gap-y-12">
+            {
+              gridArticles.map((article) => {
+                const gCat = categories.find(c => c.id === article.data.category);
+                const gTone: Tone = (gCat?.data.tone as Tone) || "yellow";
+                return (
+                  <article data-animate class="flex flex-col items-start gap-5 transition hover:-translate-y-0.5">
+                    <a
+                      class="flex aspect-391/249 w-full items-center justify-center overflow-hidden rounded-3xl bg-[#d9d9d9] text-[#aaa]"
+                      href={`/posts/${article.id}`}
+                      aria-label={`Baca artikel ${article.data.title}`}
+                      title={article.data.title}
+                    >
+                      {article.data.featured_image ? (
+                        <Image
+                          src={article.data.featured_image}
+                          alt={article.data.title}
+                          width={800}
+                          height={509}
+                          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw" densities={[1, 2]}
+                          class="h-full w-full object-cover transition duration-200 hover:scale-[1.02]"
+                          loading="lazy"
+                        />
+                      ) : (
+                        <ImageIcon width="96" height="96" stroke-width="1.8" />
+                      )}
+                    </a>
+                    <div class="flex flex-col items-start gap-3">
+                      <span
+                        class:list={[
+                          "rounded-full px-3 py-1 text-xs leading-4 text-[#212121]",
+                          toneClass[gTone],
+                        ]}
+                      >
+                        {gCat?.data.label || "Artikel"}
+                      </span>
+                      <h3 class="text-xl font-bold leading-7 text-coc-text sm:text-2xl sm:leading-8">
+                        <a href={`/posts/${article.id}`} class="hover:text-coc-accent">
+                          {article.data.title}
+                        </a>
+                      </h3>
+                      {article.data.description && (
+                        <p class="line-clamp-2 text-base leading-6 text-coc-muted">
+                          {article.data.description}
+                        </p>
+                      )}
+                    </div>
+                  </article>
+                );
+              })
+            }
+          </div>
+        </div>
+      </section>
+      <BackToTop client:idle />
+      <ScrollAnimations />
+    </BaseLayout>

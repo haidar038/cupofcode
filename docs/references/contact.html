@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kontak - Cup of Code</title>
+
+    <!-- Tailwind CSS v4 (Play CDN) -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cal+Sans&family=Google+Sans+Flex:opsz,wght@6..144,1..1000&display=swap"
+        rel="stylesheet">
+
+    <!-- ============================================================
+         CUP OF CODE — Design System (Tailwind v4 Play CDN)
+         Single source of truth shared across all reference pages.
+         ============================================================ -->
+    <style type="text/tailwindcss">
+        @theme {
+            --font-sans: "Google Sans Flex", system-ui, -apple-system, sans-serif;
+            --font-display: "Cal Sans", system-ui, sans-serif;
+
+            --color-brand-dark: #2b2b2b;
+            --color-brand-yellow: #f5b027;
+            --color-brand-yellow-dark: #e09b1f;
+            --color-brand-light: #fdfdfd;
+
+            --color-bg: #fafafa;
+            --color-surface: #ffffff;
+            --color-text-primary: #323232;
+            --color-text-secondary: #555555;
+            --color-text-muted: #868686;
+            --color-line: #e8e8e8;
+            --color-line-soft: #f2f2f2;
+
+            --color-tag-yellow: #fff0c8;
+            --color-tag-green: #ceffd7;
+            --color-tag-pink: #ffd0d4;
+        }
+
+        @layer base {
+            html {
+                scroll-behavior: smooth;
+            }
+            body {
+                background-color: var(--color-bg);
+                color: var(--color-text-primary);
+                font-family: var(--font-sans);
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+            }
+            ::selection {
+                background-color: var(--color-brand-yellow);
+                color: #fff;
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #aaa;
+        }
+    </style>
+</head>
+
+<body class="antialiased">
+
+    <main class="mx-auto max-w-7xl px-4 py-16 sm:px-6 md:py-18 lg:px-8">
+
+        <div class="grid grid-cols-1 items-start gap-12 lg:grid-cols-2 lg:gap-24">
+
+            <!-- Left Column: Content -->
+            <div class="pt-2">
+                <h1 class="mb-6 text-5xl leading-[1.1] tracking-tight text-text-primary font-display md:text-6xl">
+                    Mari<br>Berkolaborasi<span class="text-brand-yellow">.</span>
+                </h1>
+
+                <p class="mb-14 max-w-md text-lg leading-relaxed text-text-secondary">
+                    Punya pertanyaan seputar tutorial, ingin diskusi project, tawaran kerja sama, atau sekadar menyapa?
+                    Jangan ragu untuk mengirimkan pesan.
+                </p>
+
+                <div class="space-y-8">
+                    <!-- Email Directly -->
+                    <div>
+                        <h3 class="mb-2 text-lg font-medium text-text-primary">Kirim Email Langsung</h3>
+                        <a href="mailto:hello@cupofcode.cc"
+                            class="text-lg text-blue-500 transition-colors hover:text-blue-600 hover:underline">
+                            hello@cupofcode.cc
+                        </a>
+                    </div>
+
+                    <!-- Social Media Links -->
+                    <div>
+                        <h3 class="mb-3 text-lg font-medium text-text-primary">Terhubung Lewat Sosmed</h3>
+                        <div class="flex items-center space-x-3">
+                            <a href="#" aria-label="TikTok"
+                                class="flex h-11 w-11 items-center justify-center rounded-full bg-gray-100 text-gray-700 transition-colors hover:bg-gray-200 hover:text-gray-900">
+                                <i class="ph-fill ph-tiktok-logo text-xl"></i>
+                            </a>
+                            <a href="#" aria-label="X (Twitter)"
+                                class="flex h-11 w-11 items-center justify-center rounded-full bg-gray-100 text-gray-700 transition-colors hover:bg-gray-200 hover:text-gray-900">
+                                <i class="ph-fill ph-x-logo text-xl"></i>
+                            </a>
+                            <a href="#" aria-label="GitHub"
+                                class="flex h-11 w-11 items-center justify-center rounded-full bg-gray-100 text-gray-700 transition-colors hover:bg-gray-200 hover:text-gray-900">
+                                <i class="ph-fill ph-github-logo text-xl"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Form Card -->
+            <div class="rounded-3xl border border-line bg-surface p-8 md:p-10">
+                <form class="space-y-6">
+
+                    <!-- Row 1: Name & Email -->
+                    <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+                        <div class="space-y-2">
+                            <label for="name" class="block text-sm font-medium text-gray-700">Nama Lengkap</label>
+                            <input type="text" id="name" placeholder="Budi Pekerti"
+                                class="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-900 transition-all focus:border-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-200">
+                        </div>
+                        <div class="space-y-2">
+                            <label for="email" class="block text-sm font-medium text-gray-700">Alamat Email</label>
+                            <input type="email" id="email" placeholder="budi123@email.com"
+                                class="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-900 transition-all focus:border-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-200">
+                        </div>
+                    </div>
+
+                    <!-- Row 2: Subject -->
+                    <div class="space-y-2">
+                        <label for="subject" class="block text-sm font-medium text-gray-700">Subjek</label>
+                        <div class="relative">
+                            <select id="subject"
+                                class="w-full cursor-pointer appearance-none rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-700 transition-all focus:border-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-200">
+                                <option value="" disabled selected>Tanya seputar tutorial</option>
+                                <option value="diskusi">Diskusi Project</option>
+                                <option value="kerjasama">Kerja Sama</option>
+                                <option value="lainnya">Lainnya</option>
+                            </select>
+                            <div
+                                class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
+                                <i class="ph ph-caret-down"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Row 3: Message -->
+                    <div class="space-y-2">
+                        <label for="message" class="block text-sm font-medium text-gray-700">Pesan Anda</label>
+                        <textarea id="message" rows="5" placeholder="Tulis pesan kamu di sini...."
+                            class="w-full resize-none rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-900 transition-all focus:border-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-200"></textarea>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="button"
+                        class="mt-4 w-full rounded-full bg-brand-dark py-4 text-sm font-semibold text-white transition-colors hover:bg-black focus:outline-none focus:ring-2 focus:ring-[#2b2b2b] focus:ring-offset-2">
+                        Kirim Pesan
+                    </button>
+
+                </form>
+            </div>
+
+        </div>
+
+    </main>
+
+</body>
+
+</html>

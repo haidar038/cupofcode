@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learning Pathways - Cup of Code</title>
+
+    <!-- Tailwind CSS v4 (Play CDN) -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cal+Sans&family=Google+Sans+Flex:opsz,wght@6..144,1..1000&display=swap"
+        rel="stylesheet">
+
+    <!-- ============================================================
+         CUP OF CODE — Design System (Tailwind v4 Play CDN)
+         Single source of truth shared across all reference pages.
+         ============================================================ -->
+    <style type="text/tailwindcss">
+        @theme {
+            --font-sans: "Google Sans Flex", system-ui, -apple-system, sans-serif;
+            --font-display: "Cal Sans", system-ui, sans-serif;
+
+            --color-brand-dark: #2b2b2b;
+            --color-brand-yellow: #f5b027;
+            --color-brand-yellow-dark: #e09b1f;
+            --color-brand-light: #fdfdfd;
+
+            --color-bg: #fafafa;
+            --color-surface: #ffffff;
+            --color-text-primary: #323232;
+            --color-text-secondary: #555555;
+            --color-text-muted: #868686;
+            --color-line: #e8e8e8;
+            --color-line-soft: #f2f2f2;
+
+            --color-tag-yellow: #fff0c8;
+            --color-tag-green: #ceffd7;
+            --color-tag-pink: #ffd0d4;
+        }
+
+        @layer base {
+            html {
+                scroll-behavior: smooth;
+            }
+            body {
+                background-color: var(--color-bg);
+                color: var(--color-text-primary);
+                font-family: var(--font-sans);
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+            }
+            ::selection {
+                background-color: var(--color-brand-yellow);
+                color: #fff;
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #aaa;
+        }
+    </style>
+</head>
+
+<body class="antialiased">
+
+    <main class="min-h-screen py-16">
+        <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+
+            <header class="mx-auto mb-20 max-w-3xl text-center">
+                <div
+                    class="mb-6 inline-flex items-center gap-2 rounded-full bg-green-100 px-4 py-2 text-sm text-green-800">
+                    <i class="ph-fill ph-graduation-cap text-lg"></i> Kelas Terstruktur
+                </div>
+                <h1 class="mb-6 text-4xl font-display tracking-tight text-text-primary md:text-5xl">Learning Pathways
+                </h1>
+                <p class="text-lg leading-relaxed text-text-secondary">
+                    Pilih jalur belajarmu. Rangkaian seri panduan kurasi bertahap yang didesain logis dari dasar hingga
+                    mahir agar kamu terhindar dari jebakan <i>tutorial hell</i>.
+                </p>
+            </header>
+
+            <div class="grid grid-cols-1 gap-10 lg:grid-cols-2">
+
+                <!-- Pathway 1: Front-End -->
+                <div
+                    class="group relative overflow-hidden rounded-4xl border border-gray-200 bg-surface p-8 transition-all duration-300 md:p-10">
+
+                    <div class="mb-8 flex items-start justify-between">
+                        <div
+                            class="flex h-16 w-16 items-center justify-center rounded-2xl border border-orange-100 bg-orange-50 text-3xl text-orange-500">
+                            <i class="ph-fill ph-layout"></i>
+                        </div>
+                        <span
+                            class="flex items-center gap-1 rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-600"><i
+                                class="ph-fill ph-stairs"></i> Level: Pemula</span>
+                    </div>
+
+                    <h3
+                        class="mb-4 text-2xl font-bold text-text-primary transition-colors group-hover:text-brand-yellow">
+                        Modern Front-End Foundation</h3>
+                    <p class="mb-8 text-base leading-relaxed text-text-secondary">
+                        Kuasai fondasi mutlak web modern. Belajar menyusun markup semantik, manipulasi tata letak dengan
+                        CSS Grid/Flexbox, dan membangun logika antarmuka menggunakan Vanilla JavaScript.
+                    </p>
+
+                    <div class="mb-10 space-y-4">
+                        <div class="flex items-start gap-4">
+                            <div
+                                class="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-orange-100 text-xs font-bold text-orange-600">
+                                1</div>
+                            <div>
+                                <h4 class="text-sm font-bold text-text-primary">HTML5 Semantik & Aksesibilitas</h4>
+                                <p class="mt-1 text-xs text-text-muted">Struktur web ramah SEO dan Screen Reader.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <div
+                                class="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-orange-100 text-xs font-bold text-orange-600">
+                                2</div>
+                            <div>
+                                <h4 class="text-sm font-bold text-text-primary">CSS Modern & Layouting</h4>
+                                <p class="mt-1 text-xs text-text-muted">Menguasai Flexbox, Grid, dan properti fluid.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <div
+                                class="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-orange-100 text-xs font-bold text-orange-600">
+                                3</div>
+                            <div>
+                                <h4 class="text-sm font-bold text-text-primary">DOM & Async JavaScript</h4>
+                                <p class="mt-1 text-xs text-text-muted">Manipulasi elemen dan fetching data API
+                                    (Fetch/Axios).</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-auto flex items-center justify-between border-t border-gray-100 pt-6">
+                        <div class="flex items-center gap-5 text-sm text-text-muted">
+                            <span class="flex items-center gap-1.5"><i class="ph-bold ph-books"></i> 12 Modul</span>
+                            <span class="flex items-center gap-1.5"><i class="ph-bold ph-clock"></i> 18 Jam</span>
+                        </div>
+                        <button
+                            class="flex items-center gap-2 rounded-xl bg-brand-dark px-6 py-3 text-sm font-bold text-white transition-colors hover:bg-black">
+                            Mulai Jalur <i class="ph-bold ph-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Pathway 2: Full Stack React -->
+                <div
+                    class="group relative overflow-hidden rounded-4xl border border-gray-200 bg-surface p-8 transition-all duration-300 md:p-10">
+
+                    <div class="mb-8 flex items-start justify-between">
+                        <div
+                            class="flex h-16 w-16 items-center justify-center rounded-2xl border border-blue-100 bg-blue-50 text-3xl text-blue-500">
+                            <i class="ph-fill ph-atom"></i>
+                        </div>
+                        <span
+                            class="flex items-center gap-1 rounded-full bg-yellow-100 px-3 py-1 text-xs font-medium text-yellow-800"><i
+                                class="ph-fill ph-stairs"></i> Level: Menengah</span>
+                    </div>
+
+                    <h3
+                        class="mb-4 text-2xl font-bold text-text-primary transition-colors group-hover:text-brand-yellow">
+                        React & Next.js Ecosystem</h3>
+                    <p class="mb-8 text-base leading-relaxed text-text-secondary">
+                        Naikkan levelmu ke arsitektur Component-Driven. Mengupas tuntas ekosistem React 19, Server
+                        Components di Next.js App Router, hingga integrasi database modern.
+                    </p>
+
+                    <div class="mb-10 space-y-4">
+                        <div class="flex items-start gap-4">
+                            <div
+                                class="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-blue-100 text-xs font-bold text-blue-600">
+                                1</div>
+                            <div>
+                                <h4 class="text-sm font-bold text-text-primary">React Core & State Management</h4>
+                                <p class="mt-1 text-xs text-text-muted">Hooks, Context API, Zustand, dan Lifecycle.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <div
+                                class="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-blue-100 text-xs font-bold text-blue-600">
+                                2</div>
+                            <div>
+                                <h4 class="text-sm font-bold text-text-primary">Next.js App Router Masterclass</h4>
+                                <p class="mt-1 text-xs text-text-muted">Routing, Server Actions, SSR, dan optimasi
+                                    gambar.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <div
+                                class="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-blue-100 text-xs font-bold text-blue-600">
+                                3</div>
+                            <div>
+                                <h4 class="text-sm font-bold text-text-primary">Integrasi BaaS (Supabase/Firebase)</h4>
+                                <p class="mt-1 text-xs text-text-muted">Otentikasi pengguna, database RLS, dan Storage.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-auto flex items-center justify-between border-t border-gray-100 pt-6">
+                        <div class="flex items-center gap-5 text-sm text-text-muted">
+                            <span class="flex items-center gap-1.5"><i class="ph-bold ph-books"></i> 16 Modul</span>
+                            <span class="flex items-center gap-1.5"><i class="ph-bold ph-clock"></i> 32 Jam</span>
+                        </div>
+                        <button
+                            class="flex items-center gap-2 rounded-xl bg-brand-dark px-6 py-3 text-sm font-bold text-white transition-colors hover:bg-black">
+                            Mulai Jalur <i class="ph-bold ph-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>

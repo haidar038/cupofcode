@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Halaman Tidak Ditemukan - Cup of Code</title>
+
+    <!-- Tailwind CSS v4 (Play CDN) -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cal+Sans&family=Google+Sans+Flex:opsz,wght@6..144,1..1000&display=swap"
+        rel="stylesheet">
+
+    <!-- ============================================================
+         CUP OF CODE — Design System (Tailwind v4 Play CDN)
+         Single source of truth shared across all reference pages.
+         ============================================================ -->
+    <style type="text/tailwindcss">
+        @theme {
+            --font-sans: "Google Sans Flex", system-ui, -apple-system, sans-serif;
+            --font-display: "Cal Sans", system-ui, sans-serif;
+
+            --color-brand-dark: #2b2b2b;
+            --color-brand-yellow: #f5b027;
+            --color-brand-yellow-dark: #e09b1f;
+            --color-brand-light: #fdfdfd;
+
+            --color-bg: #fafafa;
+            --color-surface: #ffffff;
+            --color-text-primary: #323232;
+            --color-text-secondary: #555555;
+            --color-text-muted: #868686;
+            --color-line: #e8e8e8;
+            --color-line-soft: #f2f2f2;
+
+            --color-tag-yellow: #fff0c8;
+            --color-tag-green: #ceffd7;
+            --color-tag-pink: #ffd0d4;
+        }
+
+        @layer base {
+            html {
+                scroll-behavior: smooth;
+            }
+            body {
+                background-color: var(--color-bg);
+                color: var(--color-text-primary);
+                font-family: var(--font-sans);
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+            }
+            ::selection {
+                background-color: var(--color-brand-yellow);
+                color: #fff;
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #aaa;
+        }
+    </style>
+</head>
+
+<body class="antialiased">
+
+    <main class="flex min-h-[85vh] flex-col items-center justify-center px-4 text-center">
+
+        <!-- Big Number -->
+        <div class="relative mb-6 inline-block">
+            <h1
+                class="select-none text-[120px] leading-none tracking-tighter text-gray-200 font-display md:text-[180px]">
+                404<span class="text-brand-yellow">.</span>
+            </h1>
+        </div>
+
+        <!-- Title -->
+        <h2 class="mb-4 max-w-lg text-3xl leading-tight text-text-primary md:text-4xl">
+            <span class="font-bold">Oops!</span> Halaman Yang<br class="hidden md:block"> Kamu Cari Gak Ada Nih!
+        </h2>
+
+        <!-- Description -->
+        <p class="mx-auto mb-10 max-w-md text-base leading-relaxed text-text-secondary md:text-lg">
+            Kayaknya tautan yang kamu tuju udah rusak atau halamannya udah dipindahin. Jangan khawatir, yuk balik ke
+            jalan yang benar.
+        </p>
+
+        <!-- Button -->
+        <a href="#"
+            class="inline-flex items-center space-x-2 rounded-full bg-brand-dark px-8 py-3.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-black">
+            <i class="ph-bold ph-arrow-left text-lg"></i>
+            <span>Kembali ke Beranda</span>
+        </a>
+
+    </main>
+
+</body>
+
+</html>

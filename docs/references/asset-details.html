@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SaaS Admin Dashboard Template - Cup of Code</title>
+
+    <!-- Tailwind CSS v4 (Play CDN) -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cal+Sans&family=Google+Sans+Flex:opsz,wght@6..144,1..1000&display=swap"
+        rel="stylesheet">
+
+    <!-- ============================================================
+         CUP OF CODE — Design System (Tailwind v4 Play CDN)
+         Single source of truth shared across all reference pages.
+         ============================================================ -->
+    <style type="text/tailwindcss">
+        @theme {
+            --font-sans: "Google Sans Flex", system-ui, -apple-system, sans-serif;
+            --font-display: "Cal Sans", system-ui, sans-serif;
+
+            --color-brand-dark: #2b2b2b;
+            --color-brand-yellow: #f5b027;
+            --color-brand-yellow-dark: #e09b1f;
+            --color-brand-light: #fdfdfd;
+
+            --color-bg: #fafafa;
+            --color-surface: #ffffff;
+            --color-text-primary: #323232;
+            --color-text-secondary: #555555;
+            --color-text-muted: #868686;
+            --color-line: #e8e8e8;
+            --color-line-soft: #f2f2f2;
+
+            --color-tag-yellow: #fff0c8;
+            --color-tag-green: #ceffd7;
+            --color-tag-pink: #ffd0d4;
+        }
+
+        @layer base {
+            html {
+                scroll-behavior: smooth;
+            }
+            body {
+                background-color: var(--color-bg);
+                color: var(--color-text-primary);
+                font-family: var(--font-sans);
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+            }
+            ::selection {
+                background-color: var(--color-brand-yellow);
+                color: #fff;
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #aaa;
+        }
+    </style>
+</head>
+
+<body class="antialiased">
+
+    <!-- Main Content -->
+    <main class="mx-auto w-full max-w-360 px-4 py-10 sm:px-6 sm:py-12 lg:px-20 lg:py-18 xl:px-30">
+
+        <!-- Breadcrumbs -->
+        <nav class="mb-8 flex items-center space-x-2 text-sm font-medium text-text-secondary">
+            <a href="#" class="transition-colors hover:text-text-primary">Beranda</a>
+            <i class="ph-bold ph-caret-right text-xs"></i>
+            <a href="#" class="transition-colors hover:text-text-primary">Aset Digital</a>
+            <i class="ph-bold ph-caret-right text-xs"></i>
+            <span class="text-text-primary">SaaS Admin Dashboard Template</span>
+        </nav>
+
+        <div class="grid max-w-6xl grid-cols-1 gap-x-12 lg:grid-cols-12">
+
+            <!-- Left Column: Content -->
+            <div class="lg:col-span-8">
+
+                <!-- Image Gallery Preview -->
+                <div class="mb-8 w-full overflow-hidden rounded-3xl border border-gray-200 bg-gray-100">
+                    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070&auto=format&fit=crop"
+                        alt="Preview Dashboard" class="h-auto w-full object-cover">
+                </div>
+
+                <!-- Asset Details -->
+                <div class="space-y-8">
+                    <div>
+                        <h1 class="mb-4 text-3xl font-bold leading-tight tracking-tight text-text-primary md:text-4xl">
+                            SaaS Admin Dashboard Template</h1>
+                        <p class="text-lg leading-relaxed text-text-secondary">
+                            Template admin dashboard lengkap yang dibangun menggunakan ekosistem modern React 18 dan
+                            Tailwind CSS v3. Didesain secara khusus untuk memenuhi kebutuhan antarmuka analitik,
+                            manajemen pengguna, dan visualisasi data.
+                        </p>
+                    </div>
+
+                    <hr class="border-gray-200">
+
+                    <!-- Features -->
+                    <div>
+                        <h3 class="mb-4 text-xl font-bold text-text-primary">Apa saja fitur unggulannya?</h3>
+                        <ul class="space-y-3">
+                            <li class="flex items-start">
+                                <i class="ph-fill ph-check-circle mr-3 mt-0.5 shrink-0 text-xl text-green-500"></i>
+                                <span class="text-text-secondary"><strong>Komponen Moduler:</strong> Lebih dari 30+
+                                    komponen UI reusable (Charts, Tables, Modals, Forms).</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="ph-fill ph-check-circle mr-3 mt-0.5 shrink-0 text-xl text-green-500"></i>
+                                <span class="text-text-secondary"><strong>Dark Mode Ready:</strong> Sudah terkonfigurasi
+                                    dengan fitur transisi Dark/Light mode bawaan Tailwind.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="ph-fill ph-check-circle mr-3 mt-0.5 shrink-0 text-xl text-green-500"></i>
+                                <span class="text-text-secondary"><strong>100% Responsif:</strong> Tampilan rapi dari
+                                    layar handphone hingga monitor ultra-wide.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="ph-fill ph-check-circle mr-3 mt-0.5 shrink-0 text-xl text-green-500"></i>
+                                <span class="text-text-secondary"><strong>Clean Code:</strong> Standar coding ESLint &
+                                    Prettier untuk kemudahan maintainability.</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Usage Instruction -->
+                    <div>
+                        <h3 class="mb-4 text-xl font-bold text-text-primary">Cara Penggunaan</h3>
+                        <div
+                            class="overflow-x-auto rounded-2xl bg-gray-800 p-6 font-mono text-sm leading-relaxed text-gray-200 shadow-inner">
+                            <p class="mb-2 text-gray-400">// 1. Ekstrak file zip yang telah didownload</p>
+                            <p class="mb-2 text-gray-400">// 2. Buka terminal pada folder tersebut</p>
+                            <p class="mb-2 text-brand-yellow">$ npm install</p>
+                            <p class="mb-2 text-gray-400">// 3. Jalankan server lokal</p>
+                            <p class="text-brand-yellow">$ npm run dev</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Right Column: Sidebar (Sticky Box) -->
+            <div class="lg:col-span-4">
+                <!-- Sticky Container -->
+                <div class="sticky top-28 rounded-3xl border border-gray-200 bg-surface p-6 md:p-8">
+
+                    <div class="mb-6">
+                        <span class="mb-1 block text-3xl font-extrabold text-green-600">Gratis</span>
+                        <span class="text-sm text-text-secondary line-through">Rp 250.000</span>
+                    </div>
+
+                    <button
+                        class="group mb-6 flex w-full items-center justify-center rounded-xl bg-brand-yellow py-4 font-bold text-white transition-all duration-300 hover:bg-brand-yellow-dark">
+                        <i class="ph-bold ph-download-simple mr-2 text-xl group-hover:animate-bounce"></i>
+                        Download Source Code
+                    </button>
+
+                    <div class="mb-8 space-y-4 text-sm">
+                        <div class="flex items-center justify-between border-b border-gray-100 py-2">
+                            <span class="flex items-center text-text-secondary"><i
+                                    class="ph ph-file-zip mr-2 text-lg"></i>
+                                Format</span>
+                            <span class="font-semibold text-text-primary">.ZIP (React/JS)</span>
+                        </div>
+                        <div class="flex items-center justify-between border-b border-gray-100 py-2">
+                            <span class="flex items-center text-text-secondary"><i
+                                    class="ph ph-hard-drives mr-2 text-lg"></i>
+                                Ukuran</span>
+                            <span class="font-semibold text-text-primary">2.4 MB</span>
+                        </div>
+                        <div class="flex items-center justify-between border-b border-gray-100 py-2">
+                            <span class="flex items-center text-text-secondary"><i class="ph ph-clock mr-2 text-lg"></i>
+                                Update</span>
+                            <span class="font-semibold text-text-primary">20 Jun 2026</span>
+                        </div>
+                        <div class="flex items-center justify-between border-b border-gray-100 py-2">
+                            <span class="flex items-center text-text-secondary"><i
+                                    class="ph ph-shield-check mr-2 text-lg"></i> Lisensi</span>
+                            <span class="font-semibold text-text-primary">Free for Personal & Com</span>
+                        </div>
+                    </div>
+
+                    <!-- Author Info -->
+                    <div class="flex items-center space-x-3 rounded-xl border border-gray-100 bg-gray-50 p-4">
+                        <div
+                            class="flex h-10 w-10 items-center justify-center rounded-full bg-brand-dark text-brand-yellow">
+                            <i class="ph-fill ph-coffee text-xl"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs font-medium text-text-secondary">Dibuat oleh</p>
+                            <p class="text-sm font-bold text-text-primary">Cup of Code Team</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+</body>
+
+</html>

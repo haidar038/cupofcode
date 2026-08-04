@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aset Digital - Cup of Code</title>
+
+    <!-- Tailwind CSS v4 (Play CDN) -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cal+Sans&family=Google+Sans+Flex:opsz,wght@6..144,1..1000&display=swap"
+        rel="stylesheet">
+
+    <!-- ============================================================
+         CUP OF CODE — Design System (Tailwind v4 Play CDN)
+         Single source of truth shared across all reference pages.
+         ============================================================ -->
+    <style type="text/tailwindcss">
+        @theme {
+            --font-sans: "Google Sans Flex", system-ui, -apple-system, sans-serif;
+            --font-display: "Cal Sans", system-ui, sans-serif;
+
+            --color-brand-dark: #2b2b2b;
+            --color-brand-yellow: #f5b027;
+            --color-brand-yellow-dark: #e09b1f;
+            --color-brand-light: #fdfdfd;
+
+            --color-bg: #fafafa;
+            --color-surface: #ffffff;
+            --color-text-primary: #323232;
+            --color-text-secondary: #555555;
+            --color-text-muted: #868686;
+            --color-line: #e8e8e8;
+            --color-line-soft: #f2f2f2;
+
+            --color-tag-yellow: #fff0c8;
+            --color-tag-green: #ceffd7;
+            --color-tag-pink: #ffd0d4;
+        }
+
+        @layer base {
+            html {
+                scroll-behavior: smooth;
+            }
+            body {
+                background-color: var(--color-bg);
+                color: var(--color-text-primary);
+                font-family: var(--font-sans);
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+            }
+            ::selection {
+                background-color: var(--color-brand-yellow);
+                color: #fff;
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #aaa;
+        }
+    </style>
+</head>
+
+<body class="antialiased">
+
+    <!-- Main Content -->
+    <main class="py-18">
+
+        <!-- Header -->
+        <header class="mx-auto max-w-3xl pb-12 text-center">
+            <div class="mb-6 inline-block rounded-full bg-yellow-100 px-3 py-1 text-xs font-semibold text-yellow-800">
+                Explore
+            </div>
+            <h1 class="mb-6 text-4xl leading-tight tracking-tight text-text-primary font-display md:text-5xl">
+                Aset Digital
+            </h1>
+            <p class="text-lg leading-relaxed text-text-secondary">
+                Kumpulan template, UI Kit, dan <i>resources</i> siap pakai untuk mempercepat proses <i>development</i>
+                dan desain kamu. Semua tersedia secara gratis.
+            </p>
+        </header>
+
+        <!-- Filters -->
+        <div class="mx-auto mb-12 flex max-w-6xl flex-wrap justify-center gap-3">
+            <button class="rounded-full bg-brand-dark px-5 py-2 text-sm font-semibold text-white shadow-sm">Semua
+                Aset</button>
+            <button
+                class="rounded-full border border-gray-200 bg-white px-5 py-2 text-sm font-semibold text-gray-600 transition-colors hover:border-gray-300 hover:text-text-primary">UI
+                Kit</button>
+            <button
+                class="rounded-full border border-gray-200 bg-white px-5 py-2 text-sm font-semibold text-gray-600 transition-colors hover:border-gray-300 hover:text-text-primary">Web
+                Template</button>
+            <button
+                class="rounded-full border border-gray-200 bg-white px-5 py-2 text-sm font-semibold text-gray-600 transition-colors hover:border-gray-300 hover:text-text-primary">Icon
+                & Vector</button>
+        </div>
+
+        <!-- Grid -->
+        <div class="mx-auto grid max-w-6xl grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+
+            <!-- Asset Card 1 -->
+            <a href="#"
+                class="group flex h-full flex-col overflow-hidden rounded-2xl border border-gray-100 bg-surface transition-all duration-300">
+                <div class="relative h-56 w-full overflow-hidden bg-gray-100">
+                    <img src="https://images.unsplash.com/photo-1618761714954-0b8cd0026356?q=80&w=2070&auto=format&fit=crop"
+                        class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        alt="E-Commerce UI Kit">
+                    <!-- Format Badge -->
+                    <div
+                        class="absolute left-4 top-4 flex items-center rounded-full bg-white/90 px-3 py-1 text-xs font-bold text-text-primary shadow-sm backdrop-blur-sm">
+                        <i class="ph-fill ph-figma-logo mr-1.5 text-sm text-pink-500"></i> Figma
+                    </div>
+                </div>
+                <div class="flex grow flex-col p-6">
+                    <h3
+                        class="mb-2 text-xl font-bold leading-snug text-text-primary transition-colors group-hover:text-brand-yellow">
+                        Minimalist E-Commerce UI Kit</h3>
+                    <p class="mb-6 line-clamp-2 grow text-sm text-text-secondary">Desain antarmuka toko online modern
+                        dengan 40+ layar siap pakai untuk mobile dan desktop.</p>
+
+                    <div class="mt-auto flex items-center justify-between border-t border-gray-100 pt-4">
+                        <div class="flex items-center space-x-2">
+                            <span class="text-sm font-bold text-green-600">Gratis</span>
+                        </div>
+                        <div
+                            class="flex h-8 w-8 items-center justify-center rounded-full bg-gray-50 text-gray-400 transition-colors group-hover:bg-brand-yellow group-hover:text-white">
+                            <i class="ph ph-download-simple"></i>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Asset Card 2 -->
+            <a href="#"
+                class="group flex h-full flex-col overflow-hidden rounded-2xl border border-gray-100 bg-surface transition-all duration-300">
+                <div class="relative h-56 w-full overflow-hidden bg-gray-100">
+                    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070&auto=format&fit=crop"
+                        class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        alt="Admin Dashboard">
+                    <!-- Format Badge -->
+                    <div
+                        class="absolute left-4 top-4 flex items-center rounded-full bg-white/90 px-3 py-1 text-xs font-bold text-text-primary shadow-sm backdrop-blur-sm">
+                        <i class="ph-fill ph-atom mr-1.5 text-sm text-blue-500"></i> React + Tailwind
+                    </div>
+                </div>
+                <div class="flex grow flex-col p-6">
+                    <h3
+                        class="mb-2 text-xl font-bold leading-snug text-text-primary transition-colors group-hover:text-brand-yellow">
+                        SaaS Admin Dashboard Template</h3>
+                    <p class="mb-6 line-clamp-2 grow text-sm text-text-secondary">Template dashboard analitik siap pakai
+                        dengan integrasi grafik modern dan mode gelap.</p>
+
+                    <div class="mt-auto flex items-center justify-between border-t border-gray-100 pt-4">
+                        <div class="flex items-center space-x-2">
+                            <span class="text-sm font-bold text-green-600">Gratis</span>
+                        </div>
+                        <div
+                            class="flex h-8 w-8 items-center justify-center rounded-full bg-gray-50 text-gray-400 transition-colors group-hover:bg-brand-yellow group-hover:text-white">
+                            <i class="ph ph-download-simple"></i>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Asset Card 3 -->
+            <a href="#"
+                class="group flex h-full flex-col overflow-hidden rounded-2xl border border-gray-100 bg-surface transition-all duration-300">
+                <div class="relative h-56 w-full overflow-hidden bg-gray-100">
+                    <img src="https://images.unsplash.com/photo-1507721999472-8ed4421c4af2?q=80&w=2070&auto=format&fit=crop"
+                        class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        alt="Landing Page">
+                    <!-- Format Badge -->
+                    <div
+                        class="absolute left-4 top-4 flex items-center rounded-full bg-white/90 px-3 py-1 text-xs font-bold text-text-primary shadow-sm backdrop-blur-sm">
+                        <i class="ph-fill ph-file-html mr-1.5 text-sm text-orange-500"></i> HTML5
+                    </div>
+                </div>
+                <div class="flex grow flex-col p-6">
+                    <h3
+                        class="mb-2 text-xl font-bold leading-snug text-text-primary transition-colors group-hover:text-brand-yellow">
+                        Startup Landing Page v2.0</h3>
+                    <p class="mb-6 line-clamp-2 grow text-sm text-text-secondary">Landing page responsif super cepat
+                        yang dioptimalkan untuk konversi tinggi dan SEO.</p>
+
+                    <div class="mt-auto flex items-center justify-between border-t border-gray-100 pt-4">
+                        <div class="flex items-center space-x-2">
+                            <span class="text-sm font-bold text-green-600">Gratis</span>
+                        </div>
+                        <div
+                            class="flex h-8 w-8 items-center justify-center rounded-full bg-gray-50 text-gray-400 transition-colors group-hover:bg-brand-yellow group-hover:text-white">
+                            <i class="ph ph-download-simple"></i>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Asset Card 4 -->
+            <a href="#"
+                class="group flex h-full flex-col overflow-hidden rounded-2xl border border-gray-100 bg-surface transition-all duration-300">
+                <div class="relative h-56 w-full overflow-hidden bg-gray-100">
+                    <img src="https://images.unsplash.com/photo-1627398225081-24c89544eb1a?q=80&w=2070&auto=format&fit=crop"
+                        class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        alt="Icons">
+                    <!-- Format Badge -->
+                    <div
+                        class="absolute left-4 top-4 flex items-center rounded-full bg-white/90 px-3 py-1 text-xs font-bold text-text-primary shadow-sm backdrop-blur-sm">
+                        <i class="ph-fill ph-bezier-curve mr-1.5 text-sm text-purple-500"></i> SVG
+                    </div>
+                </div>
+                <div class="flex grow flex-col p-6">
+                    <h3
+                        class="mb-2 text-xl font-bold leading-snug text-text-primary transition-colors group-hover:text-brand-yellow">
+                        Dev Tool Essential Icons</h3>
+                    <p class="mb-6 line-clamp-2 grow text-sm text-text-secondary">Paket 150+ icon vektor bertema
+                        teknologi dan development untuk mempercantik UI kamu.</p>
+
+                    <div class="mt-auto flex items-center justify-between border-t border-gray-100 pt-4">
+                        <div class="flex items-center space-x-2">
+                            <span class="text-sm font-bold text-green-600">Gratis</span>
+                        </div>
+                        <div
+                            class="flex h-8 w-8 items-center justify-center rounded-full bg-gray-50 text-gray-400 transition-colors group-hover:bg-brand-yellow group-hover:text-white">
+                            <i class="ph ph-download-simple"></i>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Asset Card 5 -->
+            <a href="#"
+                class="group flex h-full flex-col overflow-hidden rounded-2xl border border-gray-100 bg-surface transition-all duration-300">
+                <div class="relative h-56 w-full overflow-hidden bg-gray-100">
+                    <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=2070&auto=format&fit=crop"
+                        class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        alt="Portfolio">
+                    <!-- Format Badge -->
+                    <div
+                        class="absolute left-4 top-4 flex items-center rounded-full bg-white/90 px-3 py-1 text-xs font-bold text-text-primary shadow-sm backdrop-blur-sm">
+                        <i class="ph-fill ph-file-code mr-1.5 text-sm text-indigo-500"></i> Next.js
+                    </div>
+                </div>
+                <div class="flex grow flex-col p-6">
+                    <h3
+                        class="mb-2 text-xl font-bold leading-snug text-text-primary transition-colors group-hover:text-brand-yellow">
+                        Developer Portfolio Starter</h3>
+                    <p class="mb-6 line-clamp-2 grow text-sm text-text-secondary">Buat portofolio super cepat dengan
+                        template Next.js yang sudah terintegrasi Markdown blog.</p>
+
+                    <div class="mt-auto flex items-center justify-between border-t border-gray-100 pt-4">
+                        <div class="flex items-center space-x-2">
+                            <span class="text-sm font-bold text-green-600">Gratis</span>
+                        </div>
+                        <div
+                            class="flex h-8 w-8 items-center justify-center rounded-full bg-gray-50 text-gray-400 transition-colors group-hover:bg-brand-yellow group-hover:text-white">
+                            <i class="ph ph-download-simple"></i>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Asset Card 6 -->
+            <a href="#"
+                class="group flex h-full flex-col overflow-hidden rounded-2xl border border-gray-100 bg-surface transition-all duration-300">
+                <div class="relative h-56 w-full overflow-hidden bg-gray-100">
+                    <img src="https://images.unsplash.com/photo-1542744094-3a31f272c490?q=80&w=2070&auto=format&fit=crop"
+                        class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        alt="Presentation">
+                    <!-- Format Badge -->
+                    <div
+                        class="absolute left-4 top-4 flex items-center rounded-full bg-white/90 px-3 py-1 text-xs font-bold text-text-primary shadow-sm backdrop-blur-sm">
+                        <i class="ph-fill ph-presentation-chart mr-1.5 text-sm text-yellow-600"></i> Pitch Deck
+                    </div>
+                </div>
+                <div class="flex grow flex-col p-6">
+                    <h3
+                        class="mb-2 text-xl font-bold leading-snug text-text-primary transition-colors group-hover:text-brand-yellow">
+                        Tech Startup Pitch Deck</h3>
+                    <p class="mb-6 line-clamp-2 grow text-sm text-text-secondary">Template presentasi siap presentasi
+                        untuk meyakinkan investor. Tersedia di Figma & PowerPoint.</p>
+
+                    <div class="mt-auto flex items-center justify-between border-t border-gray-100 pt-4">
+                        <div class="flex items-center space-x-2">
+                            <span class="text-sm font-bold text-green-600">Gratis</span>
+                        </div>
+                        <div
+                            class="flex h-8 w-8 items-center justify-center rounded-full bg-gray-50 text-gray-400 transition-colors group-hover:bg-brand-yellow group-hover:text-white">
+                            <i class="ph ph-download-simple"></i>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+        </div>
+
+        <!-- Pagination -->
+        <div class="mt-16 flex items-center justify-center space-x-2">
+            <button
+                class="flex h-10 w-10 items-center justify-center rounded-full bg-brand-dark text-sm font-semibold text-white transition-colors">1</button>
+            <button
+                class="flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 bg-white text-sm font-semibold text-gray-600 transition-colors hover:bg-gray-50">2</button>
+            <button
+                class="flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 bg-white text-sm font-semibold text-gray-600 transition-colors hover:bg-gray-50">3</button>
+            <span class="px-2 text-gray-400">...</span>
+            <button
+                class="flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 bg-white text-sm font-semibold text-gray-600 transition-colors hover:bg-gray-50"><i
+                    class="ph ph-caret-right text-lg"></i></button>
+        </div>
+
+    </main>
+
+</body>
+
+</html>

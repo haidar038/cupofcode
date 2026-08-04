@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snippet Library - Cup of Code</title>
+
+    <!-- Tailwind CSS v4 (Play CDN) -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cal+Sans&family=Fira+Code:wght@300..700&family=Google+Sans+Flex:opsz,wght@6..144,1..1000&display=swap"
+        rel="stylesheet">
+
+    <!-- ============================================================
+         CUP OF CODE — Design System (Tailwind v4 Play CDN)
+         Single source of truth shared across all reference pages.
+         ============================================================ -->
+    <style type="text/tailwindcss">
+        @theme {
+            --font-sans: "Google Sans Flex", system-ui, -apple-system, sans-serif;
+            --font-display: "Cal Sans", system-ui, sans-serif;
+            --font-mono: "Fira Code", SF Mono, Consolas, "Liberation Mono", Menlo, Courier, monospace;
+
+            --color-brand-dark: #2b2b2b;
+            --color-brand-yellow: #f5b027;
+            --color-brand-yellow-dark: #e09b1f;
+            --color-brand-light: #fdfdfd;
+
+            --color-bg: #fafafa;
+            --color-surface: #ffffff;
+            --color-text-primary: #323232;
+            --color-text-secondary: #555555;
+            --color-text-muted: #868686;
+            --color-line: #e8e8e8;
+            --color-line-soft: #f2f2f2;
+
+            --color-tag-yellow: #fff0c8;
+            --color-tag-green: #ceffd7;
+            --color-tag-pink: #ffd0d4;
+        }
+
+        @layer base {
+            html {
+                scroll-behavior: smooth;
+            }
+            body {
+                background-color: var(--color-bg);
+                color: var(--color-text-primary);
+                font-family: var(--font-sans);
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+            }
+            ::selection {
+                background-color: var(--color-brand-yellow);
+                color: #fff;
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #aaa;
+        }
+
+        /* Dark scrollbar untuk code block */
+        .code-wrapper::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        .code-wrapper::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .code-wrapper::-webkit-scrollbar-thumb {
+            background: #555555;
+            border-radius: 4px;
+        }
+        .code-wrapper::-webkit-scrollbar-thumb:hover {
+            background: #888888;
+        }
+
+        /* Firefox scrollbar color */
+        .code-wrapper {
+            scrollbar-color: #555555 transparent;
+            scrollbar-width: thin;
+        }
+    </style>
+</head>
+
+<body class="antialiased">
+
+    <!-- MAIN CONTENT ONLY -->
+    <main class="min-h-screen py-12">
+        <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+
+            <!-- Header Section -->
+            <header class="mb-12 max-w-3xl">
+                <div
+                    class="mb-5 inline-flex items-center gap-2 rounded-full bg-yellow-100 px-3 py-1.5 text-xs font-bold text-yellow-800">
+                    <span class="h-2 w-2 animate-pulse rounded-full bg-brand-yellow"></span> Today I Learned
+                </div>
+                <h1 class="mb-5 text-4xl font-display tracking-tight text-text-primary md:text-5xl">Snippet Library</h1>
+                <p class="text-lg leading-relaxed text-text-secondary">
+                    Koleksi potongan kode esensial, fungsi utilitas, dan trik optimasi siap pakai. Salin dengan satu
+                    klik untuk mempercepat alur kerja harian kamu.
+                </p>
+            </header>
+
+            <!-- Search and Filter Bar -->
+            <div
+                class="mb-10 flex flex-col items-center justify-between gap-4 rounded-2xl border border-gray-100 bg-surface p-4 lg:flex-row">
+                <!-- Search Input -->
+                <div class="relative w-full shrink-0 lg:w-96">
+                    <i
+                        class="ph ph-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-lg text-gray-400"></i>
+                    <input type="text" placeholder="Cari snippet (misal: debounce, grid)..."
+                        class="w-full rounded-xl border border-gray-200 bg-gray-50 py-3 pl-11 pr-4 text-sm font-medium text-text-primary transition-all focus:border-transparent focus:outline-none focus:ring-2 focus:ring-brand-yellow">
+                </div>
+                <!-- Language Filters -->
+                <div class="flex w-full items-center gap-2 overflow-x-auto pb-2 lg:pb-0">
+                    <button
+                        class="whitespace-nowrap rounded-xl bg-brand-dark px-5 py-2.5 text-sm font-semibold text-white">Semua</button>
+                    <button
+                        class="whitespace-nowrap rounded-xl border border-gray-200 bg-gray-50 px-5 py-2.5 text-sm font-semibold text-gray-600 transition-colors hover:bg-gray-100 hover:text-text-primary">React
+                        Hooks</button>
+                    <button
+                        class="whitespace-nowrap rounded-xl border border-gray-200 bg-gray-50 px-5 py-2.5 text-sm font-semibold text-gray-600 transition-colors hover:bg-gray-100 hover:text-text-primary">Tailwind
+                        CSS</button>
+                    <button
+                        class="whitespace-nowrap rounded-xl border border-gray-200 bg-gray-50 px-5 py-2.5 text-sm font-semibold text-gray-600 transition-colors hover:bg-gray-100 hover:text-text-primary">JavaScript</button>
+                    <button
+                        class="whitespace-nowrap rounded-xl border border-gray-200 bg-gray-50 px-5 py-2.5 text-sm font-semibold text-gray-600 transition-colors hover:bg-gray-100 hover:text-text-primary">CSS
+                        Murni</button>
+                </div>
+            </div>
+
+            <!-- Snippets Grid -->
+            <div class="grid grid-cols-1 gap-8 lg:grid-cols-2">
+
+                <!-- Snippet 1 -->
+                <div
+                    class="group flex flex-col rounded-3xl border border-gray-200 bg-surface p-6 transition-all duration-300 md:p-8 hover:scale-[1.01]">
+                    <div class="mb-5 flex items-start justify-between">
+                        <span
+                            class="flex items-center gap-1.5 rounded-lg border border-blue-100 bg-blue-50 px-3 py-1 font-mono text-xs font-medium text-blue-700">
+                            <i class="ph-fill ph-atom"></i> React Hook
+                        </span>
+                        <button
+                            class="flex items-center gap-1.5 rounded-lg bg-gray-50 px-3 py-1.5 text-sm font-semibold text-gray-400 transition-colors hover:bg-yellow-50 hover:text-brand-yellow">
+                            <i class="ph ph-copy text-lg"></i> Salin
+                        </button>
+                    </div>
+                    <h3
+                        class="mb-3 cursor-pointer text-2xl font-bold text-text-primary transition-colors group-hover:text-brand-yellow">
+                        useDebounce Hook</h3>
+                    <p class="mb-6 text-sm leading-relaxed text-text-secondary">
+                        Mencegah pemanggilan fungsi yang berlebihan (misal: saat mengetik di kolom pencarian) dengan
+                        menunda eksekusi hingga jeda waktu tertentu.
+                    </p>
+                    <div
+                        class="code-wrapper mb-6 overflow-x-auto rounded-2xl border border-gray-800 bg-[#1e1e2e] p-5 font-mono text-sm text-gray-300 shadow-inner">
+                        <pre><code><span class="text-[#cba6f7]">import</span> { useState, useEffect } <span class="text-[#cba6f7]">from</span> <span class="text-[#a6e3a1]">'react'</span>;
+
+<span class="text-[#cba6f7]">export function</span> <span class="text-[#89b4fa]">useDebounce</span>(value, delay) {
+  <span class="text-[#cba6f7]">const</span> [debouncedValue, setDebouncedValue] = <span class="text-[#89b4fa]">useState</span>(value);
+
+  <span class="text-[#89b4fa]">useEffect</span>(() => {
+    <span class="text-[#cba6f7]">const</span> handler = <span class="text-[#89b4fa]">setTimeout</span>(() => {
+      <span class="text-[#89b4fa]">setDebouncedValue</span>(value);
+    }, delay);
+
+    <span class="text-[#cba6f7]">return</span> () => {
+      <span class="text-[#89b4fa]">clearTimeout</span>(handler);
+    };
+  }, [value, delay]);
+
+  <span class="text-[#cba6f7]">return</span> debouncedValue;
+}</code></pre>
+                    </div>
+                    <div
+                        class="mt-auto flex items-center justify-between border-t border-gray-100 pt-4 text-xs font-medium text-text-muted">
+                        <span class="flex items-center gap-1.5"><i class="ph ph-clock"></i> Diperbarui 1 hari
+                            lalu</span>
+                        <span class="flex items-center gap-1.5"><i class="ph ph-fire text-orange-500"></i> 1.2k
+                            Penggunaan</span>
+                    </div>
+                </div>
+
+                <!-- Snippet 2 -->
+                <div
+                    class="group flex flex-col rounded-3xl border border-gray-200 bg-surface p-6 transition-all duration-300 md:p-8 hover:scale-[1.01]">
+                    <div class="mb-5 flex items-start justify-between">
+                        <span
+                            class="flex items-center gap-1.5 rounded-lg border border-yellow-100 bg-yellow-50 px-3 py-1 font-mono text-xs font-medium text-yellow-700">
+                            <i class="ph-fill ph-file-js"></i> JavaScript Utils
+                        </span>
+                        <button
+                            class="flex items-center gap-1.5 rounded-lg bg-gray-50 px-3 py-1.5 text-sm font-semibold text-gray-400 transition-colors hover:bg-yellow-50 hover:text-brand-yellow">
+                            <i class="ph ph-copy text-lg"></i> Salin
+                        </button>
+                    </div>
+                    <h3
+                        class="mb-3 cursor-pointer text-2xl font-bold text-text-primary transition-colors group-hover:text-brand-yellow">
+                        Format Rupiah (IDR)</h3>
+                    <p class="mb-6 text-sm leading-relaxed text-text-secondary">
+                        Fungsi utilitas super bersih untuk memformat angka tipe integer ke dalam format mata uang Rupiah
+                        standar menggunakan Intl.NumberFormat.
+                    </p>
+                    <div
+                        class="code-wrapper mb-6 overflow-x-auto rounded-2xl border border-gray-800 bg-[#1e1e2e] p-5 font-mono text-sm text-gray-300 shadow-inner">
+                        <pre><code><span class="text-[#89b4fa]">/**</span>
+<span class="text-[#89b4fa]"> * Mengubah angka menjadi format mata uang IDR</span>
+<span class="text-[#89b4fa]"> * @param {number} amount - Angka nominal</span>
+<span class="text-[#89b4fa]"> */</span>
+<span class="text-[#cba6f7]">export const</span> <span class="text-[#89b4fa]">formatRupiah</span> = (amount) => {
+  <span class="text-[#cba6f7]">return new</span> <span class="text-[#f9e2af]">Intl.NumberFormat</span>(<span class="text-[#a6e3a1]">'id-ID'</span>, {
+    style: <span class="text-[#a6e3a1]">'currency'</span>,
+    currency: <span class="text-[#a6e3a1]">'IDR'</span>,
+    minimumFractionDigits: <span class="text-[#fab387]">0</span>,
+    maximumFractionDigits: <span class="text-[#fab387]">0</span>,
+  }).<span class="text-[#89b4fa]">format</span>(amount);
+};
+
+<span class="text-[#6c7086]">// Contoh: formatRupiah(250000) => "Rp 250.000"</span></code></pre>
+                    </div>
+                    <div
+                        class="mt-auto flex items-center justify-between border-t border-gray-100 pt-4 text-xs font-medium text-text-muted">
+                        <span class="flex items-center gap-1.5"><i class="ph ph-clock"></i> Diperbarui 3 hari
+                            lalu</span>
+                        <span class="flex items-center gap-1.5"><i class="ph ph-download-simple"></i> 856 Disalin</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>

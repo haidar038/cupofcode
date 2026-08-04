@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Explainer Prompt - Cup of Code</title>
+    <!-- Tailwind CSS v4 (Play CDN) -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cal+Sans&family=Google+Sans+Flex:opsz,wght@6..144,1..1000&display=swap"
+        rel="stylesheet" />
+
+    <!-- ============================================================
+         CUP OF CODE — Design System (Tailwind v4 Play CDN)
+         Single source of truth shared across all reference pages.
+         ============================================================ -->
+    <style type="text/tailwindcss">
+        @theme {
+            --font-sans: "Google Sans Flex", system-ui, -apple-system, sans-serif;
+            --font-display: "Cal Sans", system-ui, sans-serif;
+
+            --color-brand-dark: #2b2b2b;
+            --color-brand-yellow: #f5b027;
+            --color-brand-yellow-dark: #e09b1f;
+            --color-brand-light: #fdfdfd;
+
+            --color-bg: #fafafa;
+            --color-surface: #ffffff;
+            --color-text-primary: #323232;
+            --color-text-secondary: #555555;
+            --color-text-muted: #868686;
+            --color-line: #e8e8e8;
+            --color-line-soft: #f2f2f2;
+
+            --color-tag-yellow: #fff0c8;
+            --color-tag-green: #ceffd7;
+            --color-tag-pink: #ffd0d4;
+        }
+
+        @layer base {
+            html {
+                scroll-behavior: smooth;
+            }
+            body {
+                background-color: var(--color-bg);
+                color: var(--color-text-primary);
+                font-family: var(--font-sans);
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+            }
+            ::selection {
+                background-color: var(--color-brand-yellow);
+                color: #fff;
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #aaa;
+        }
+    </style>
+</head>
+
+<body class="antialiased">
+    <main class="py-12">
+        <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+
+            <div class="mb-10 text-center mx-auto max-w-3xl">
+                <span
+                    class="inline-flex items-center gap-1.5 rounded-full border border-purple-200 bg-purple-50 px-3 py-1 font-mono text-xs font-bold text-purple-700 mb-4">
+                    <i class="ph-fill ph-magic-wand"></i> AI Prompt Template
+                </span>
+                <h1 class="font-display text-4xl text-text-primary md:text-5xl tracking-tight mb-4">DeepSeek Code
+                    Explainer</h1>
+                <p class="text-text-secondary text-lg">Prompt instruksi untuk memaksa AI menjelaskan blok kode rumit
+                    baris-demi-baris dengan analogi yang sangat mudah dipahami pemula.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+                <!-- Left: Variable Filler Form (Interactive) -->
+                <div class="lg:col-span-5 rounded-3xl border border-gray-200 bg-surface p-6 md:p-8">
+                    <div class="mb-6 border-b border-gray-100 pb-4">
+                        <h3 class="text-lg font-bold text-text-primary flex items-center gap-2">
+                            <i class="ph-fill ph-faders text-brand-yellow"></i> Sesuaikan Prompt
+                        </h3>
+                        <p class="text-xs text-text-muted mt-1">Isi variabel di bawah ini, teks di kanan akan berubah
+                            otomatis.</p>
+                    </div>
+
+                    <form class="space-y-5">
+                        <!-- Variables based on the Canvas Keystatic config Array -->
+                        <div>
+                            <label class="block text-sm font-bold text-text-primary mb-2">Bahasa Pemrograman</label>
+                            <input type="text" placeholder="Misal: JavaScript, Python..." value="TypeScript"
+                                class="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-text-primary focus:border-brand-yellow focus:outline-none focus:ring-1 focus:ring-brand-yellow">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-text-primary mb-2">Analogi yang
+                                Diinginkan</label>
+                            <input type="text" placeholder="Misal: Memasak, Otomotif..." value="Menyusun Lego"
+                                class="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-text-primary focus:border-brand-yellow focus:outline-none focus:ring-1 focus:ring-brand-yellow">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-text-primary mb-2">Paste Kode Mentah</label>
+                            <textarea rows="4" placeholder="Paste kodemu di sini..."
+                                class="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm font-mono text-text-primary focus:border-brand-yellow focus:outline-none focus:ring-1 focus:ring-brand-yellow">const data = await fetch('/api/users');</textarea>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Right: Generated Output -->
+                <div class="lg:col-span-7 flex flex-col h-full relative">
+                    <div class="relative grow rounded-3xl border border-gray-200 bg-surface p-6 md:p-8 flex flex-col">
+
+                        <div class="mb-4 flex items-center justify-between">
+                            <h4 class="font-bold text-text-primary text-sm uppercase tracking-widest text-text-muted">
+                                Hasil Prompt Siap Salin</h4>
+                        </div>
+
+                        <!-- Dynamic Text Area -->
+                        <div class="grow rounded-2xl bg-[#1e1e2e] p-6 shadow-inner relative overflow-hidden">
+                            <p class="font-mono text-sm leading-relaxed text-gray-300">
+                                Bertindaklah sebagai Senior <span
+                                    class="text-brand-yellow bg-yellow-500/20 px-1 rounded">TypeScript</span> Developer.
+                                Saya memiliki potongan kode di bawah ini yang tidak saya pahami.
+                                <br><br>
+                                Tolong jelaskan logika baris-demi-baris. Gunakan analogi <span
+                                    class="text-brand-yellow bg-yellow-500/20 px-1 rounded">Menyusun Lego</span> agar
+                                saya yang masih pemula bisa membayangkannya dengan mudah. Hindari menggunakan jargon
+                                teknis tanpa penjelasan.
+                                <br><br>
+                                Berikut kodenya:<br>
+                                <span class="text-brand-yellow bg-yellow-500/20 px-1 rounded block mt-2">const data =
+                                    await fetch('/api/users');</span>
+                            </p>
+                        </div>
+
+                        <div class="mt-6 flex items-center justify-end">
+                            <button
+                                class="flex items-center gap-2 rounded-xl bg-brand-dark px-6 py-3 font-bold text-white transition-all hover:bg-black active:scale-95">
+                                <i class="ph-bold ph-copy text-lg"></i> Salin ke Clipboard
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>

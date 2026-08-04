@@ -1,0 +1,28 @@
+---
+import { Code } from "astro:components";
+import CopyButton from "../ui/CopyButton.tsx";
+
+interface Props {
+  code: string;
+  format?: string;
+}
+
+const { code, format } = Astro.props;
+---
+
+<div class="overflow-hidden rounded-3xl border border-coc-line bg-coc-surface">
+  <div class="flex items-center justify-between border-b border-coc-line bg-gray-50 px-4 py-3">
+    <span class="rounded-lg bg-white px-3 py-1.5 text-sm font-bold text-coc-text">Source Code</span>
+    <div class="flex items-center gap-2">
+      {format && (
+        <span class="rounded-lg border border-blue-200 bg-blue-50 px-2 py-1 font-mono text-xs font-bold text-blue-700">
+          {format}
+        </span>
+      )}
+      <CopyButton text={code} label="Salin kode" client:idle />
+    </div>
+  </div>
+  <div class="bg-[#1e1e2e] p-4">
+    <Code code={code} lang="tsx" theme="one-dark-pro" />
+  </div>
+</div>

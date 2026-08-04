@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roadmap Jadi Web Developer di 2026 - Cup of Code</title>
+
+    <!-- Tailwind CSS v4 (Play CDN) -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cal+Sans&family=Google+Sans+Flex:opsz,wght@6..144,1..1000&display=swap"
+        rel="stylesheet">
+
+    <!-- ============================================================
+         CUP OF CODE — Design System (Tailwind v4 Play CDN)
+         Single source of truth shared across all reference pages.
+         ============================================================ -->
+    <style type="text/tailwindcss">
+        @theme {
+            --font-sans: "Google Sans Flex", system-ui, -apple-system, sans-serif;
+            --font-display: "Cal Sans", system-ui, sans-serif;
+
+            --color-brand-dark: #2b2b2b;
+            --color-brand-yellow: #f5b027;
+            --color-brand-yellow-dark: #e09b1f;
+            --color-brand-light: #fdfdfd;
+
+            --color-bg: #fafafa;
+            --color-surface: #ffffff;
+            --color-text-primary: #323232;
+            --color-text-secondary: #555555;
+            --color-text-muted: #868686;
+            --color-line: #e8e8e8;
+            --color-line-soft: #f2f2f2;
+
+            --color-tag-yellow: #fff0c8;
+            --color-tag-green: #ceffd7;
+            --color-tag-pink: #ffd0d4;
+        }
+
+        @layer base {
+            html {
+                scroll-behavior: smooth;
+            }
+            body {
+                background-color: var(--color-bg);
+                color: var(--color-text-primary);
+                font-family: var(--font-sans);
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+            }
+            ::selection {
+                background-color: var(--color-brand-yellow);
+                color: #fff;
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #aaa;
+        }
+    </style>
+
+    <!-- Page-specific: inline code styling for the article body -->
+    <style>
+        article code {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+            background-color: var(--color-line-soft);
+            border-radius: 0.25rem;
+            padding: 0.1rem 0.35rem;
+            font-size: 0.875em;
+        }
+    </style>
+</head>
+
+<body class="antialiased">
+
+    <!-- Navigation -->
+    <nav class="sticky top-0 z-50 border-b border-gray-100 bg-surface">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="flex h-20 items-center justify-between">
+                <!-- Logo -->
+                <div class="flex shrink-0 cursor-pointer items-center gap-2">
+                    <span class="flex items-center text-xl font-bold tracking-tight text-text-primary">
+                        <i class="ph-fill ph-coffee mr-2 text-2xl text-brand-yellow"></i>
+                        cup of code
+                    </span>
+                </div>
+
+                <!-- Nav Links (Desktop) -->
+                <div class="hidden items-center space-x-8 text-sm font-medium text-text-secondary md:flex">
+                    <a href="#" class="transition-colors hover:text-text-primary">Beranda</a>
+                    <a href="#" class="transition-colors hover:text-text-primary">Tentang</a>
+                    <a href="#" class="transition-colors hover:text-text-primary">Kontak</a>
+                </div>
+
+                <!-- Language Selector -->
+                <div
+                    class="hidden cursor-pointer items-center space-x-2 rounded-full border border-gray-200 px-3 py-1.5 text-sm transition-colors hover:bg-gray-50 md:flex">
+                    <img src="https://flagcdn.com/w20/id.png" alt="ID" class="h-auto w-5 rounded-sm">
+                    <span class="font-medium text-text-secondary">ID</span>
+                    <i class="ph ph-caret-down text-text-muted"></i>
+                </div>
+
+                <!-- Mobile menu button -->
+                <div class="flex items-center md:hidden">
+                    <button class="text-gray-500 transition-colors hover:text-text-primary focus:outline-none">
+                        <i class="ph ph-list text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Article Header -->
+    <header class="mx-auto max-w-4xl px-4 pb-8 pt-10 text-center">
+        <!-- Back Button -->
+        <div class="mb-8 flex justify-start">
+            <button
+                class="flex items-center space-x-2 rounded-full border border-gray-200 bg-surface px-4 py-2 text-sm font-medium text-text-secondary shadow-sm transition-colors hover:bg-gray-50">
+                <i class="ph ph-arrow-left"></i>
+                <span>Kembali</span>
+            </button>
+        </div>
+
+        <!-- Badge -->
+        <div class="mb-6 inline-block rounded-full bg-yellow-100 px-3 py-1 text-xs font-semibold text-yellow-800">
+            Roadmap
+        </div>
+
+        <!-- Title -->
+        <h1 class="mb-4 text-3xl font-display font-bold leading-tight tracking-tight text-text-primary md:text-5xl">
+            Roadmap Jadi Web Developer<br class="hidden md:block"> yang Relevan di 2026
+        </h1>
+
+        <!-- Meta -->
+        <p class="text-sm font-medium text-text-muted">
+            13 Juni 2026 • 10:00 WIB
+        </p>
+    </header>
+
+    <!-- Hero Image -->
+    <div class="mx-auto mb-16 max-w-6xl px-4">
+        <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=2070&auto=format&fit=crop"
+            alt="Coding Workspace"
+            class="h-75 w-full rounded-3xl object-cover shadow-lg md:h-125">
+    </div>
+
+    <!-- Content Layout -->
+    <main class="mx-auto grid max-w-6xl grid-cols-1 gap-12 px-4 pb-20 md:grid-cols-12">
+
+        <!-- Sidebar (Table of Contents) -->
+        <aside class="hidden md:col-span-3 md:block">
+            <div class="sticky top-28 rounded-2xl border border-gray-100 bg-surface p-6 shadow-sm">
+                <h3 class="mb-4 text-sm font-bold uppercase tracking-wider text-text-primary">Daftar Isi</h3>
+                <ul class="space-y-4 text-sm">
+                    <li
+                        class="flex cursor-pointer items-center font-semibold text-text-primary transition-colors hover:text-brand-yellow">
+                        <span class="mr-3 h-1.5 w-1.5 rounded-full bg-brand-yellow"></span>
+                        <a href="#section-1">1. Fondasi HTML, CSS, JS</a>
+                    </li>
+                    <li class="flex cursor-pointer items-center text-gray-500 transition-colors hover:text-text-primary">
+                        <span class="mr-3 h-1.5 w-1.5 rounded-full border border-gray-300 bg-transparent"></span>
+                        <a href="#section-2">2. Desain Web Responsive</a>
+                    </li>
+                    <li class="flex cursor-pointer items-center text-gray-500 transition-colors hover:text-text-primary">
+                        <span class="mr-3 h-1.5 w-1.5 rounded-full border border-gray-300 bg-transparent"></span>
+                        <a href="#section-3">3. Memilih Framework</a>
+                    </li>
+                    <li class="flex cursor-pointer items-center text-gray-500 transition-colors hover:text-text-primary">
+                        <span class="mr-3 h-1.5 w-1.5 rounded-full border border-gray-300 bg-transparent"></span>
+                        <a href="#section-4">4. Keluar dari Tutorial Hell</a>
+                    </li>
+                </ul>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <article class="space-y-8 text-lg leading-relaxed text-text-secondary md:col-span-8 lg:col-span-7">
+
+            <p>
+                Menjadi seorang Web Developer di tahun 2026 terasa berbeda dibandingkan lima tahun yang lalu. Dengan
+                masuknya AI generatif yang bisa menulis kode dasar, tugas seorang developer kini bukan sekadar "mengetik
+                kode", melainkan menjadi seorang <em>problem solver</em> yang memahami arsitektur dan pengalaman
+                pengguna.
+            </p>
+            <p>
+                Jika kamu baru memulai perjalananmu tahun ini, jangan panik dengan banyaknya teknologi baru. Kuncinya
+                tetap sama: kuasai dasar-dasarnya dengan sangat baik, lalu adaptasi dengan alat modern. Berikut adalah
+                roadmap lengkap yang realistis untuk menjadi web developer handal di tahun 2026.
+            </p>
+
+            <!-- Section 1 -->
+            <h2 id="section-1" class="mb-4 mt-12 text-2xl font-bold text-text-primary">1. Menguasai 3 Pilar Utama (HTML,
+                CSS, JS)</h2>
+            <p>
+                Banyak pemula melakukan kesalahan fatal: langsung melompat belajar React atau Next.js tanpa memahami
+                bagaimana web bekerja di tingkat dasar. AI mungkin bisa membuatkanmu komponen React, tapi ketika terjadi
+                <em>bug</em> yang spesifik, pemahaman fundamental-lah yang akan menyelamatkanmu.
+            </p>
+            <ul class="mb-6 mt-4 list-disc space-y-2 pl-5">
+                <li><strong>HTML5:</strong> Pelajari semantik web. Gunakan tag yang benar (<code>&lt;header&gt;</code>,
+                    <code>&lt;nav&gt;</code>, <code>&lt;main&gt;</code>, <code>&lt;article&gt;</code>) bukan sekadar
+                    <code>&lt;div&gt;</code> di mana-mana. Ini penting untuk aksesibilitas dan SEO.</li>
+                <li><strong>CSS3:</strong> Pahami <em>Box Model</em>, spesifisitas, Flexbox, dan CSS Grid. Meskipun nanti
+                    kamu akan menggunakan Tailwind CSS atau library lain, kamu tidak akan bisa men-debug tampilan jika
+                    tidak tahu CSS murni.</li>
+                <li><strong>JavaScript (ES6+):</strong> Ini adalah jantung dari interaktivitas web. Pahami konsep
+                    <em>DOM Manipulation</em>, <em>Promises & Async/Await</em> untuk mengambil data (API fetching),
+                    <em>Array methods</em> (map, filter, reduce), dan pemahaman tentang <em>Scope</em> serta
+                    <em>Closures</em>.</li>
+            </ul>
+
+            <!-- Section 2 -->
+            <h2 id="section-2" class="mb-4 mt-12 text-2xl font-bold text-text-primary">2. Membangun Web yang Benar-Benar
+                Responsive</h2>
+            <p>
+                Di tahun 2026, lebih dari 70% traffic web berasal dari perangkat mobile, dan sekarang kita juga harus
+                memikirkan layar lipat (foldables) serta ultra-wide monitor. Prinsip <em>Mobile-First Design</em> bukan
+                lagi opsi tambahan, melainkan kewajiban mutlak.
+            </p>
+            <p>
+                Jangan hanya mengandalkan angka <em>breakpoint</em> yang kaku. Pelajari cara menggunakan unit relatif
+                seperti <code>rem</code>, <code>vh</code>, <code>vw</code>, dan fungsi CSS modern seperti
+                <code>clamp()</code> untuk tipografi yang <em>fluid</em> (fleksibel mengikuti ukuran layar secara mulus).
+                Biasakan menguji tampilan web-mu di DevTools browser menggunakan berbagai simulasi ukuran layar.
+            </p>
+
+            <!-- Section 3 -->
+            <h2 id="section-3" class="mb-4 mt-12 text-2xl font-bold text-text-primary">3. Memilih Senjata Utama:
+                Framework Modern</h2>
+            <p>
+                Setelah kamu cukup nyaman membuat halaman interaktif menggunakan HTML, CSS, dan JS murni, saatnya
+                menaikkan standar. Di ekosistem modern, kita jarang membangun proyek besar tanpa framework. Tujuannya
+                adalah mempercepat pengembangan dan menjaga struktur kode agar tetap rapi.
+            </p>
+            <p>
+                <strong>React.js</strong> masih menjadi raja industri dengan permintaan kerja tertinggi. Namun,
+                <strong>Vue.js</strong> dan <strong>Svelte</strong> menawarkan pengalaman developer (DX) yang luar biasa
+                ringan dan cepat. Rekomendasi di 2026:
+            </p>
+            <div class="my-6 rounded-r-lg border-l-4 border-blue-500 bg-blue-50 p-4 text-base text-blue-900">
+                <strong>Tips Memilih:</strong> Jangan pelajari semuanya sekaligus. Pilih <strong>React</strong> jika kamu
+                mengincar pekerjaan korporat secepatnya. Pilih <strong>Vue/Svelte</strong> jika kamu fokus menjadi
+                freelance atau membangun produk/startup sendiri dengan cepat. Jika sudah menguasai React, wajib
+                lanjutkan ke meta-framework seperti <strong>Next.js</strong>.
+            </div>
+
+            <!-- Section 4 -->
+            <h2 id="section-4" class="mb-4 mt-12 text-2xl font-bold text-text-primary">4. Praktik Real & Keluar dari
+                "Tutorial Hell"</h2>
+            <p>
+                Penyakit nomor satu bagi calon developer adalah <em>Tutorial Hell</em>—kondisi di mana kamu merasa
+                terus-menerus butuh menonton video tutorial untuk ngoding, dan merasa *blank* saat dihadapkan pada
+                layar editor kosong tanpa panduan.
+            </p>
+            <p>
+                Bagaimana cara keluarnya? <strong>Mulai bangun sesuatu tanpa tutorial.</strong>
+            </p>
+            <ol class="mt-4 list-decimal space-y-3 pl-5">
+                <li><strong>Clone UI:</strong> Coba buka website favoritmu (seperti Netflix, Spotify, atau blog ini),
+                    lalu coba buat ulang tampilannya HANYA dengan mengandalkan mata dan ingatanmu, gunakan Google hanya
+                    jika kamu lupa nama tag/class-nya.</li>
+                <li><strong>Buat Proyek Pribadi:</strong> Jangan buat aplikasi <em>To-Do List</em> lagi. Buat aplikasi
+                    yang memecahkan masalahmu sendiri. Misalnya, kalkulator pengeluaran kos, aplikasi pemantau kalori
+                    masakan lokal, atau direktori API gratis.</li>
+                <li><strong>Baca Dokumentasi:</strong> Biasakan membaca dokumentasi resmi daripada mencari video
+                    YouTube. Dokumentasi selalu lebih <em>up-to-date</em> dan melatih logikamu.</li>
+            </ol>
+            <p>
+                Terakhir, jangan takut dengan error. Layar merah yang penuh teks error adalah teman terbaikmu. Belajarlah
+                membaca pesan error tersebut, salin ke Google atau tanyakan pada AI, dan pahami <em>mengapa</em> error
+                itu terjadi. Perjalanan menjadi developer adalah lari maraton, bukan lari sprint. Tetap konsisten ngoding
+                setiap hari, dan kamu akan sampai di sana!
+            </p>
+
+            <!-- Share Section -->
+            <div class="mt-16 flex flex-col items-center justify-center border-t border-gray-200 pt-8">
+                <p class="mb-4 text-sm font-semibold uppercase tracking-wider text-text-muted">Share this post</p>
+                <div class="flex space-x-6 text-gray-400">
+                    <a href="#" class="transition-colors hover:text-pink-600"><i class="ph ph-instagram-logo text-3xl"></i></a>
+                    <a href="#" class="transition-colors hover:text-green-500"><i class="ph ph-whatsapp-logo text-3xl"></i></a>
+                    <a href="#" class="transition-colors hover:text-blue-600"><i class="ph ph-facebook-logo text-3xl"></i></a>
+                    <a href="#" class="transition-colors hover:text-text-primary"><i class="ph ph-x-logo text-3xl"></i></a>
+                </div>
+            </div>
+
+        </article>
+    </main>
+
+    <!-- Recommended Articles Section -->
+    <section class="bg-gray-100 py-16">
+        <div class="mx-auto max-w-6xl px-4">
+            <h2 class="mb-8 text-2xl font-bold text-text-primary">Rekomendasi Artikel</h2>
+
+            <div class="grid grid-cols-1 gap-8 md:grid-cols-3">
+
+                <!-- Card 1 -->
+                <a href="#"
+                    class="group block overflow-hidden rounded-2xl bg-surface shadow-sm transition-all duration-300 hover:shadow-lg">
+                    <div class="relative flex h-48 w-full items-center justify-center overflow-hidden bg-gray-200">
+                        <img src="https://images.unsplash.com/photo-1633356122544-f134324a6cee?q=80&w=2070&auto=format&fit=crop"
+                            class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                            alt="React Thumbnail">
+                        <div class="absolute inset-0 bg-black/5"></div>
+                    </div>
+                    <div class="p-6">
+                        <span class="mb-3 inline-block rounded bg-green-100 px-2 py-1 text-xs font-semibold text-green-700">Tutorial</span>
+                        <h3
+                            class="mb-2 text-lg font-bold leading-snug text-text-primary transition-colors group-hover:text-brand-yellow">
+                            Memahami Konsep State Management di React 19</h3>
+                        <p class="mb-4 line-clamp-2 text-sm text-text-muted">Panduan praktis untuk pemula mengenai cara
+                            mengelola state di aplikasi React skala menengah menggunakan fitur terbaru.</p>
+                        <div class="flex items-center space-x-2">
+                            <div
+                                class="flex h-6 w-6 items-center justify-center rounded-full bg-brand-yellow text-xs font-bold text-white">
+                                <i class="ph-fill ph-coffee"></i>
+                            </div>
+                            <span class="text-xs font-medium text-text-muted">cup of code</span>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Card 2 -->
+                <a href="#"
+                    class="group block overflow-hidden rounded-2xl bg-surface shadow-sm transition-all duration-300 hover:shadow-lg">
+                    <div class="relative flex h-48 w-full items-center justify-center overflow-hidden bg-gray-200">
+                        <img src="https://images.unsplash.com/photo-1618477247222-ac60ceb0a416?q=80&w=2064&auto=format&fit=crop"
+                            class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                            alt="CSS Tailwind">
+                        <div class="absolute inset-0 bg-black/5"></div>
+                    </div>
+                    <div class="p-6">
+                        <span class="mb-3 inline-block rounded bg-green-100 px-2 py-1 text-xs font-semibold text-green-700">Tutorial</span>
+                        <h3
+                            class="mb-2 text-lg font-bold leading-snug text-text-primary transition-colors group-hover:text-brand-yellow">
+                            Trik Tailwind CSS yang Sering Dilupakan Pemula</h3>
+                        <p class="mb-4 line-clamp-2 text-sm text-text-muted">Jangan sekadar hafal class! Pelajari cara
+                            optimasi dan konfigurasi Tailwind agar kodemu lebih bersih dan maintainable.</p>
+                        <div class="flex items-center space-x-2">
+                            <div
+                                class="flex h-6 w-6 items-center justify-center rounded-full bg-brand-yellow text-xs font-bold text-white">
+                                <i class="ph-fill ph-coffee"></i>
+                            </div>
+                            <span class="text-xs font-medium text-text-muted">cup of code</span>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Card 3 -->
+                <a href="#"
+                    class="group block overflow-hidden rounded-2xl bg-surface shadow-sm transition-all duration-300 hover:shadow-lg">
+                    <div class="relative flex h-48 w-full items-center justify-center overflow-hidden bg-gray-200">
+                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070&auto=format&fit=crop"
+                            class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                            alt="API Analytics">
+                        <div class="absolute inset-0 bg-black/5"></div>
+                    </div>
+                    <div class="p-6">
+                        <span class="mb-3 inline-block rounded bg-blue-100 px-2 py-1 text-xs font-semibold text-blue-700">Insight</span>
+                        <h3
+                            class="mb-2 text-lg font-bold leading-snug text-text-primary transition-colors group-hover:text-brand-yellow">
+                            Cara Mengonsumsi REST API dengan Fetch Modern</h3>
+                        <p class="mb-4 line-clamp-2 text-sm text-text-muted">Tinggalkan cara lama. Saatnya beralih ke
+                            pola async/await dan error handling yang elegan untuk komunikasi ke backend.</p>
+                        <div class="flex items-center space-x-2">
+                            <div
+                                class="flex h-6 w-6 items-center justify-center rounded-full bg-brand-yellow text-xs font-bold text-white">
+                                <i class="ph-fill ph-coffee"></i>
+                            </div>
+                            <span class="text-xs font-medium text-text-muted">cup of code</span>
+                        </div>
+                    </div>
+                </a>
+
+            </div>
+
+            <!-- Pagination Dots -->
+            <div class="mt-10 flex justify-center space-x-2">
+                <button class="h-2 w-8 rounded-full bg-brand-yellow focus:outline-none"></button>
+                <button class="h-2 w-2 rounded-full bg-gray-300 transition-colors hover:bg-gray-400 focus:outline-none"></button>
+                <button class="h-2 w-2 rounded-full bg-gray-300 transition-colors hover:bg-gray-400 focus:outline-none"></button>
+                <button class="h-2 w-2 rounded-full bg-gray-300 transition-colors hover:bg-gray-400 focus:outline-none"></button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-brand-dark pt-16 pb-8 text-gray-300">
+        <div class="mx-auto mb-12 grid max-w-6xl grid-cols-1 gap-12 px-4 md:grid-cols-4">
+
+            <!-- Column 1: Brand -->
+            <div class="space-y-4">
+                <div class="mb-4 flex items-center text-2xl font-bold text-white">
+                    <i class="ph-fill ph-coffee mr-2 text-brand-yellow"></i>
+                    cup of code
+                </div>
+                <p class="text-sm leading-relaxed text-gray-400">
+                    Temukan tutorial mendalam, tips & trik esensial, serta aset digital siap pakai untuk kebutuhan kamu
+                    sehari-hari buat ngembangin website dan aplikasi.
+                </p>
+            </div>
+
+            <!-- Column 2: Links -->
+            <div>
+                <h4 class="mb-6 text-sm font-bold uppercase tracking-wider text-brand-yellow">Halaman</h4>
+                <ul class="space-y-3 text-sm">
+                    <li><a href="#" class="transition-colors hover:text-white">Beranda</a></li>
+                    <li><a href="#" class="transition-colors hover:text-white">Tentang</a></li>
+                    <li><a href="#" class="transition-colors hover:text-white">Kontak</a></li>
+                </ul>
+            </div>
+
+            <!-- Column 3: Category -->
+            <div>
+                <h4 class="mb-6 text-sm font-bold uppercase tracking-wider text-brand-yellow">Kategori</h4>
+                <ul class="space-y-3 text-sm">
+                    <li><a href="#" class="transition-colors hover:text-white">Tips & Trik</a></li>
+                    <li><a href="#" class="transition-colors hover:text-white">Tutorial</a></li>
+                    <li><a href="#" class="transition-colors hover:text-white">Aset Digital</a></li>
+                </ul>
+            </div>
+
+            <!-- Column 4: Newsletter -->
+            <div>
+                <h4 class="mb-6 text-sm font-bold uppercase tracking-wider text-brand-yellow">Berlangganan</h4>
+                <p class="mb-4 text-sm text-gray-400">
+                    Dapatkan update artikel terbaru dan insight coding mingguan langsung ke inbox kamu.
+                </p>
+                <form class="relative">
+                    <input type="email" placeholder="Masukkan email kamu..."
+                        class="w-full rounded-full bg-white py-3 pr-12 px-4 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-brand-yellow">
+                    <button type="submit"
+                        class="absolute right-1.5 top-1.5 bottom-1.5 flex h-9 w-9 items-center justify-center rounded-full bg-brand-yellow text-white transition-colors hover:bg-brand-yellow-dark">
+                        <i class="ph ph-paper-plane-right"></i>
+                    </button>
+                </form>
+            </div>
+
+        </div>
+
+        <!-- Footer Bottom -->
+        <div
+            class="mx-auto flex max-w-6xl flex-col items-center justify-between space-y-4 border-t border-gray-700 px-4 pt-8 text-xs text-gray-500 md:flex-row md:space-y-0">
+            <p>&copy; 2026 Cup of Code. All rights reserved.</p>
+            <div class="flex space-x-6">
+                <a href="#" class="transition-colors hover:text-white">Privacy Policy</a>
+                <a href="#" class="transition-colors hover:text-white">Terms of Service</a>
+            </div>
+        </div>
+    </footer>
+
+</body>
+
+</html>

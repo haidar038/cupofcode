@@ -1,0 +1,50 @@
+---
+import { SITE_TITLE } from "../consts";
+import NewsletterForm from "./ui/NewsletterForm.tsx";
+
+const today = new Date();
+---
+
+<footer class="border-t border-[#ffbb001a] bg-coc-dark text-coc-muted-soft" id="kontak">
+    <div class="mx-auto w-full max-w-360 px-6 pb-8 pt-18 lg:px-12">
+        <div class="mb-10 grid grid-cols-1 items-start gap-6 md:grid-cols-2 md:gap-8 lg:grid-cols-[minmax(260px,394px)_1fr_1fr_minmax(220px,280px)] lg:gap-12">
+            <section class="flex flex-col items-start gap-6" aria-label="Tentang Cup of Code">
+                <a class="whitespace-nowrap font-coc-display text-5 font-medium leading-1.2 tracking-[-0.02em] text-white sm:text-[1.375rem]" href="/">{SITE_TITLE}</a>
+                <p class="text-base leading-1.6 text-coc-muted-soft">
+                    Temukan tutorial mendalam, tips & trik esensial, serta aset digital siap pakai untuk kebutuhan kamu sehari-hari buat ngembangin website dan aplikasi.
+                </p>
+            </section>
+            <nav class="flex flex-col items-start gap-3" aria-label="Halaman">
+                <h2 class="mb-3 font-coc-display text-base font-medium leading-1.4 tracking-[0.02em] text-coc-accent">HALAMAN</h2>
+                <a class="text-base leading-1.6 text-coc-muted-soft transition-colors hover:text-coc-accent" href="/">Beranda</a>
+                <a class="text-base leading-1.6 text-coc-muted-soft transition-colors hover:text-coc-accent" href="/posts">Artikel</a>
+                <a class="text-base leading-1.6 text-coc-muted-soft transition-colors hover:text-coc-accent" href="/assets">Aset Digital</a>
+                <a class="text-base leading-1.6 text-coc-muted-soft transition-colors hover:text-coc-accent" href="/snippets">Snippets</a>
+                <a class="text-base leading-1.6 text-coc-muted-soft transition-colors hover:text-coc-accent" href="/about">Tentang</a>
+                <a class="text-base leading-1.6 text-coc-muted-soft transition-colors hover:text-coc-accent" href="/contact">Kontak</a>
+            </nav>
+            <nav class="flex flex-col items-start gap-3" aria-label="Kategori">
+                <h2 class="mb-3 font-coc-display text-base font-medium leading-1.4 tracking-[0.02em] text-coc-accent">KATEGORI</h2>
+                <a class="text-base leading-1.6 text-coc-muted-soft transition-colors hover:text-coc-accent" href="/posts?cat=tips-trik">Tips & Trik</a>
+                <a class="text-base leading-1.6 text-coc-muted-soft transition-colors hover:text-coc-accent" href="/posts?cat=tutorial">Tutorial</a>
+                <a class="text-base leading-1.6 text-coc-muted-soft transition-colors hover:text-coc-accent" href="/privacy">Kebijakan Privasi</a>
+                <a class="text-base leading-1.6 text-coc-muted-soft transition-colors hover:text-coc-accent" href="/terms">Syarat & Ketentuan</a>
+            </nav>
+            <section class="flex flex-col items-start gap-6" aria-label="Berlangganan">
+                <h2 class="m-0 font-coc-display text-base font-medium leading-1.4 tracking-[0.02em] text-coc-accent">BERLANGGANAN</h2>
+                <p class="text-base leading-1.6 text-coc-muted-soft">Dapatkan update artikel terbaru dan insight coding mingguan langsung ke inbox kamu.</p>
+                <NewsletterForm client:idle />
+            </section>
+        </div>
+        <div class="flex flex-col gap-4 border-t border-white/10 pt-8 text-sm leading-1.5 text-coc-muted-soft md:flex-row md:justify-between md:gap-6">
+            <p class="text-base text-coc-muted-soft">
+                &copy; {today.getFullYear()} Cup of Code. All rights reserved.
+            </p>
+            <div class="flex flex-col gap-4 md:flex-row md:gap-8">
+                <a href="/privacy" class="text-base text-coc-muted-soft transition-colors hover:text-coc-accent">Privacy Policy</a>
+                <a href="/terms" class="text-base text-coc-muted-soft transition-colors hover:text-coc-accent">Terms of Service</a>
+            </div>
+        </div>
+    </div>
+    <div class="h-1.5 w-full bg-linear-to-r from-coc-accent to-coc-green" aria-hidden="true"></div>
+</footer>

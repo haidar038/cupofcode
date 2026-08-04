@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UX Writing Assistant Gem - Cup of Code</title>
+    <!-- Tailwind CSS v4 (Play CDN) -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cal+Sans&family=Google+Sans+Flex:opsz,wght@6..144,1..1000&display=swap"
+        rel="stylesheet" />
+
+    <!-- ============================================================
+         CUP OF CODE — Design System (Tailwind v4 Play CDN)
+         Single source of truth shared across all reference pages.
+         ============================================================ -->
+    <style type="text/tailwindcss">
+        @theme {
+            --font-sans: "Google Sans Flex", system-ui, -apple-system, sans-serif;
+            --font-display: "Cal Sans", system-ui, sans-serif;
+
+            --color-brand-dark: #2b2b2b;
+            --color-brand-yellow: #f5b027;
+            --color-brand-yellow-dark: #e09b1f;
+            --color-brand-light: #fdfdfd;
+
+            --color-bg: #fafafa;
+            --color-surface: #ffffff;
+            --color-text-primary: #323232;
+            --color-text-secondary: #555555;
+            --color-text-muted: #868686;
+            --color-line: #e8e8e8;
+            --color-line-soft: #f2f2f2;
+
+            --color-tag-yellow: #fff0c8;
+            --color-tag-green: #ceffd7;
+            --color-tag-pink: #ffd0d4;
+        }
+
+        @layer base {
+            html {
+                scroll-behavior: smooth;
+            }
+            body {
+                background-color: var(--color-bg);
+                color: var(--color-text-primary);
+                font-family: var(--font-sans);
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+            }
+            ::selection {
+                background-color: var(--color-brand-yellow);
+                color: #fff;
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #aaa;
+        }
+    </style>
+</head>
+
+<body class="antialiased">
+    <main class="py-12">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-10">
+
+            <!-- Main Content Area -->
+            <div class="lg:col-span-8 space-y-8">
+
+                <div>
+                    <span
+                        class="inline-flex items-center gap-1.5 rounded-full border border-green-200 bg-green-50 px-3 py-1 font-mono text-xs font-bold text-green-700 mb-4">
+                        <i class="ph-fill ph-sparkle"></i> Custom Gem
+                    </span>
+                    <h1 class="font-display text-4xl text-text-primary md:text-5xl tracking-tight mb-4">Microcopy & UX
+                        Writing Assistant</h1>
+                    <p class="text-text-secondary text-lg">Persona Gemini khusus yang dilatih untuk menulis ulang teks
+                        error, pesan sukses, dan label tombol agar lebih berempati dan sesuai kaidah UX Writing modern.
+                    </p>
+                </div>
+
+                <!-- Box Instruksi System -->
+                <div class="rounded-3xl border border-gray-200 bg-surface overflow-hidden">
+                    <div class="border-b border-gray-100 bg-gray-50 px-6 py-4 flex justify-between items-center">
+                        <h3 class="font-bold text-text-primary flex items-center gap-2">
+                            <i class="ph-bold ph-terminal-window"></i> System Instructions (Prompt)
+                        </h3>
+                        <button
+                            class="text-sm font-bold text-brand-yellow hover:text-yellow-600 transition-colors">Salin</button>
+                    </div>
+                    <div
+                        class="p-6 bg-[#1e1e2e] text-gray-300 font-mono text-sm leading-relaxed max-h-75 overflow-y-auto">
+                        Anda adalah seorang Lead UX Writer di sebuah perusahaan teknologi terkemuka. Tugas utama Anda
+                        adalah mengubah teks teknis dari developer menjadi teks yang berempati, jelas, ringkas, dan
+                        bermanfaat bagi pengguna (User-Centered).
+                        <br><br>
+                        Aturan utama:
+                        <br>1. Hindari menyalahkan pengguna atas error (Jangan gunakan kata "Anda salah input").
+                        <br>2. Selalu berikan solusi atau langkah selanjutnya pada pesan error.
+                        <br>3. Pertahankan Voice & Tone kasual yang tidak kaku.
+                    </div>
+                </div>
+
+                <!-- Box Knowledge File (Berdasarkan konsep dari percakapan) -->
+                <div class="rounded-3xl border border-gray-200 bg-surface p-6">
+                    <h3 class="font-bold text-text-primary mb-2">Knowledge Base Files</h3>
+                    <p class="text-sm text-text-muted mb-4">Gems ini membutuhkan file referensi glosarium brand agar
+                        kata yang dihasilkan konsisten. Unduh dan upload file ini ke pengaturan Knowledge Gem Anda.</p>
+
+                    <div class="flex items-center justify-between p-4 border border-gray-100 rounded-2xl bg-gray-50">
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="w-10 h-10 rounded-lg bg-red-100 text-red-500 flex items-center justify-center text-xl">
+                                <i class="ph-fill ph-file-pdf"></i>
+                            </div>
+                            <div>
+                                <p class="font-bold text-sm text-text-primary">Brand_Voice_Guidelines.pdf</p>
+                                <p class="text-xs text-text-muted">PDF Document • 450 KB</p>
+                            </div>
+                        </div>
+                        <button
+                            class="w-8 h-8 rounded-full bg-white border border-gray-200 flex items-center justify-center text-text-primary hover:text-brand-yellow transition-colors">
+                            <i class="ph-bold ph-download-simple"></i>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Sticky Sidebar CTA -->
+            <div class="lg:col-span-4 relative">
+                <div class="sticky top-8 rounded-3xl border border-gray-200 bg-surface p-6 text-center">
+                    <div
+                        class="w-20 h-20 mx-auto rounded-full bg-linear-to-br from-brand-yellow to-orange-400 p-1 mb-4">
+                        <div
+                            class="w-full h-full bg-white rounded-full flex items-center justify-center border-4 border-white">
+                            <img src="https://www.gstatic.com/lamda/images/gemini_sparkle_v002_d4735304ff6292a690345.svg"
+                                alt="Gemini Logo" class="w-10 h-10">
+                        </div>
+                    </div>
+                    <h3 class="font-bold text-xl text-text-primary mb-2">Siap Digunakan</h3>
+                    <p class="text-sm text-text-secondary mb-6">Jika Anda memiliki akses Gemini Advanced, Anda dapat
+                        langsung menyimpan persona ini ke akun Anda.</p>
+
+                    <button
+                        class="w-full rounded-xl bg-[#1a73e8] px-6 py-4 font-bold text-white transition-colors hover:bg-blue-700 flex items-center justify-center gap-2 mb-4">
+                        <i class="ph-bold ph-arrow-square-out text-xl"></i> Coba Gem Sekarang
+                    </button>
+
+                    <p class="text-xs text-text-muted font-medium border-t border-gray-100 pt-4">Dibuat khusus oleh Cup
+                        of Code Team.</p>
+                </div>
+            </div>
+
+        </div>
+    </main>
+</body>
+
+</html>

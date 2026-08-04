@@ -1,0 +1,103 @@
+---
+export const prerender = true;
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+import { SITE_TITLE } from "../../consts";
+import { Download, ImageIcon } from "@lucide/astro";
+import SearchBar from "../../components/ui/SearchBar.tsx";
+import BackToTop from "../../components/ui/BackToTop.tsx";
+import ScrollAnimations from "../../components/ScrollAnimations.astro";
+
+const assets = await getCollection("digitalAssets");
+
+const typeLabels: Record<string, string> = {
+  component: "UI Component",
+  prompt: "AI Prompt",
+  gem: "Custom Gem",
+};
+
+const typeIcons: Record<string, string> = {
+  component: "bg-blue-50 text-blue-700 border-blue-200",
+  prompt: "bg-purple-50 text-purple-700 border-purple-200",
+  gem: "bg-green-50 text-green-700 border-green-200",
+};
+
+const searchItems = assets.map((a) => ({
+  title: a.data.title,
+  description: a.data.description,
+  url: `/assets/${a.id}`,
+  category: typeLabels[a.data.type] ?? a.data.type,
+}));
+---
+
+<BaseLayout
+  title={`Aset Digital | ${SITE_TITLE}`}
+  description="Kumpulan UI components, AI prompts, dan Custom Gems siap pakai untuk mempercepat workflow coding kamu."
+>
+  <header class="mx-auto mb-8 max-w-3xl text-center">
+    <p class="mb-6 inline-block rounded-full bg-coc-tag-yellow px-3 py-1 text-xs font-semibold text-[#212121]">
+      Jelajahi
+    </p>
+    <h1 class="mb-6 font-coc-display text-4xl leading-tight tracking-tight text-coc-text md:text-5xl">
+      Aset Digital
+    </h1>
+    <p class="text-lg leading-relaxed text-coc-muted">
+      Kumpulan UI components, AI prompts, dan Custom Gems siap pakai untuk mempercepat workflow coding kamu.
+    </p>
+  </header>
+
+  <div class="mx-auto mb-10 max-w-md">
+    <SearchBar items={searchItems} placeholder="Cari aset digital..." client:idle />
+  </div>
+
+  {
+    assets.length > 0 ? (
+      <div class="mx-auto grid max-w-6xl grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        {
+          assets.map((asset) => (
+            <a data-animate
+              href={`/assets/${asset.id}`}
+              class="group flex h-full flex-col overflow-hidden rounded-2xl border border-coc-line bg-coc-surface transition-all duration-300 hover:shadow-md"
+            >
+              <div class="relative aspect-391/249 w-full overflow-hidden bg-[#d9d9d9]">
+                <div class="flex h-full w-full items-center justify-center text-[#aaa]">
+                  <ImageIcon width="64" height="64" stroke-width="1.8" />
+                </div>
+                <div
+                  class:list={[
+                    "absolute left-4 top-4 flex items-center rounded-full border bg-white/90 px-3 py-1 text-xs font-bold text-coc-text shadow-sm backdrop-blur-sm",
+                    typeIcons[asset.data.type] || "bg-white/90",
+                  ]}
+                >
+                  {typeLabels[asset.data.type] || asset.data.type}
+                </div>
+              </div>
+              <div class="flex grow flex-col p-6">
+                <h3 class="mb-2 text-xl font-bold leading-snug text-coc-text transition-colors group-hover:text-coc-accent">
+                  {asset.data.title}
+                </h3>
+                <p class="mb-6 line-clamp-2 grow text-sm text-coc-muted">
+                  {asset.data.description}
+                </p>
+                <div class="mt-auto flex items-center justify-between border-t border-coc-line pt-4">
+                  <span class="text-sm font-bold text-green-600">
+                    {asset.data.isFree ? "Gratis" : "Premium"}
+                  </span>
+                  <span class="flex size-8 items-center justify-center rounded-full bg-gray-50 text-gray-400 transition-colors group-hover:bg-coc-accent group-hover:text-white">
+                    <Download width="18" height="18" />
+                  </span>
+                </div>
+              </div>
+            </a>
+          ))
+        }
+      </div>
+    ) : (
+      <div class="flex flex-col items-center justify-center py-20 text-center">
+        <p class="text-lg text-coc-muted">Belum ada aset digital tersedia.</p>
+      </div>
+    )
+  }
+  <BackToTop client:idle />
+  <ScrollAnimations />
+</BaseLayout>

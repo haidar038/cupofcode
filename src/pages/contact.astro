@@ -1,0 +1,175 @@
+---
+export const prerender = true;
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { SITE_TITLE } from "../consts";
+import { Send } from "@lucide/astro";
+---
+
+<BaseLayout title={`Kontak | ${SITE_TITLE}`} description="Hubungi tim Cup of Code untuk pertanyaan, diskusi, atau kerja sama.">
+    <div class="grid grid-cols-1 items-start gap-12 lg:grid-cols-2 lg:gap-24">
+        <div class="pt-2">
+            <h1 class="mb-6 font-coc-display text-5xl leading-[1.1] tracking-tight text-coc-text md:text-6xl">
+                Mari<br />Berkolaborasi<span class="text-coc-accent">.</span>
+            </h1>
+
+            <p class="mb-14 max-w-md text-lg leading-relaxed text-coc-muted">
+                Punya pertanyaan seputar tutorial, ingin diskusi project, tawaran kerja sama, atau sekadar menyapa? Jangan ragu untuk mengirimkan pesan.
+            </p>
+
+            <div class="space-y-8">
+                <div>
+                    <h3 class="mb-2 text-lg font-medium text-coc-text">Kirim Email Langsung</h3>
+                    <a href="mailto:hello@cupofcode.cc" class="text-lg text-blue-500 transition-colors hover:text-blue-600 hover:underline"> hello@cupofcode.cc </a>
+                </div>
+
+                <div>
+                    <h3 class="mb-3 text-lg font-medium text-coc-text">Terhubung Lewat Sosmed</h3>
+                    <div class="flex items-center gap-3">
+                        <a href="#" aria-label="TikTok" class="flex size-11 items-center justify-center rounded-full bg-gray-100 text-gray-700 transition-colors hover:bg-gray-200">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"
+                                ><path
+                                    d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.89 2.89 2.89 0 0 1-2.88-2.89 2.89 2.89 0 0 1 2.88-2.89c.29 0 .56.05.82.12v-3.5a6.33 6.33 0 0 0-.82-.06A6.34 6.34 0 0 0 3.41 15.6a6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.34-6.34V9.02a8.3 8.3 0 0 0 4.69 1.5v-3.5a4.83 4.83 0 0 1-1.19-.33z"
+                                ></path></svg
+                            >
+                        </a>
+                        <a href="#" aria-label="X (Twitter)" class="flex size-11 items-center justify-center rounded-full bg-gray-100 text-gray-700 transition-colors hover:bg-gray-200">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"
+                                ><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                                ></path></svg
+                            >
+                        </a>
+                        <a href="#" aria-label="GitHub" class="flex size-11 items-center justify-center rounded-full bg-gray-100 text-gray-700 transition-colors hover:bg-gray-200">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"
+                                ><path
+                                    d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.387.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.73.083-.73 1.205.085 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.605-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12 24 5.37 18.63 0 12 0z"
+                                ></path></svg
+                            >
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="rounded-3xl border border-coc-line bg-coc-surface p-8 md:p-10">
+            <form id="contact-form" action="/api/contact" method="POST" class="space-y-6">
+                <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+                    <div class="space-y-2">
+                        <label for="name" class="block text-sm font-medium text-coc-text">Nama Lengkap</label>
+                        <input
+                            type="text"
+                            id="name"
+                            name="name"
+                            required
+                            placeholder="Budi Pekerti"
+                            class="w-full rounded-xl border border-coc-line bg-gray-50 px-4 py-3 text-sm text-coc-text transition-all focus:border-coc-accent focus:outline-none focus:ring-2 focus:ring-coc-accent/20"
+                        />
+                    </div>
+                    <div class="space-y-2">
+                        <label for="email" class="block text-sm font-medium text-coc-text">Alamat Email</label>
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            required
+                            placeholder="budi@email.com"
+                            class="w-full rounded-xl border border-coc-line bg-gray-50 px-4 py-3 text-sm text-coc-text transition-all focus:border-coc-accent focus:outline-none focus:ring-2 focus:ring-coc-accent/20"
+                        />
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <label for="subject" class="block text-sm font-medium text-coc-text">Subjek</label>
+                    <select
+                        id="subject"
+                        name="subject"
+                        required
+                        class="w-full cursor-pointer appearance-none rounded-xl border border-coc-line bg-gray-50 px-4 py-3 text-sm text-coc-text transition-all focus:border-coc-accent focus:outline-none focus:ring-2 focus:ring-coc-accent/20"
+                    >
+                        <option value="" disabled selected>Pilih subjek...</option>
+                        <option value="diskusi">Diskusi Project</option>
+                        <option value="kerjasama">Kerja Sama</option>
+                        <option value="lainnya">Lainnya</option>
+                    </select>
+                </div>
+
+                <!-- Honeypot: Tersembunyi dari user human, visible ke bot -->
+                <div class="hidden" aria-hidden="true">
+                    <label for="website">Website</label>
+                    <input type="text" id="website" name="website" tabindex="-1" autocomplete="off" />
+                </div>
+
+                <div class="space-y-2">
+                    <label for="message" class="block text-sm font-medium text-coc-text">Pesan Anda</label>
+                    <textarea
+                        id="message"
+                        name="message"
+                        rows="5"
+                        required
+                        minlength="10"
+                        placeholder="Tulis pesan kamu di sini..."
+                        class="w-full resize-none rounded-xl border border-coc-line bg-gray-50 px-4 py-3 text-sm text-coc-text transition-all focus:border-coc-accent focus:outline-none focus:ring-2 focus:ring-coc-accent/20"
+                    ></textarea>
+                </div>
+
+                <p id="contact-feedback" role="status" aria-live="polite" hidden class="rounded-xl px-4 py-3 text-sm font-medium"></p>
+
+                <button
+                    type="submit"
+                    id="contact-submit"
+                    class="mt-4 flex w-full items-center justify-center gap-2 rounded-full bg-coc-dark py-4 text-sm font-semibold text-white transition-colors hover:bg-black disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                    <Send width="18" height="18" />
+                    Kirim Pesan
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById("contact-form") as HTMLFormElement | null;
+        const feedback = document.getElementById("contact-feedback");
+        const submit = document.getElementById("contact-submit") as HTMLButtonElement | null;
+
+        if (form && feedback && submit) {
+            const originalHTML = submit.innerHTML;
+            const label = (text: string) => {
+                submit.innerHTML = text;
+            };
+            const setFeedback = (msg: string, ok: boolean) => {
+                feedback.textContent = msg;
+                feedback.hidden = false;
+                feedback.classList.toggle("text-green-600", ok);
+                feedback.classList.toggle("bg-green-50", ok);
+                feedback.classList.toggle("text-red-600", !ok);
+                feedback.classList.toggle("bg-red-50", !ok);
+            };
+
+            form.addEventListener("submit", async (e) => {
+                e.preventDefault();
+                feedback.hidden = true;
+                submit.disabled = true;
+                label("Mengirim...");
+
+                const data = Object.fromEntries(new FormData(form).entries());
+                try {
+                    const res = await fetch("/api/contact", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(data),
+                    });
+                const result = await res.json().catch(() => ({}));
+                setFeedback(result.message ?? "Terjadi kesalahan.", res.ok);
+                if (res.ok) form.reset();
+                if (res.ok && typeof (window as any).plausible !== "undefined") {
+                    (window as any).plausible("contact_submit");
+                }
+                } catch {
+                    setFeedback("Terjadi kesalahan jaringan. Coba lagi.", false);
+                } finally {
+                    submit.disabled = false;
+                    submit.innerHTML = originalHTML;
+                }
+            });
+        }
+    </script>
+</BaseLayout>

@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design System & License - Cup of Code</title>
+
+    <!-- Tailwind CSS v4 (Play CDN) -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cal+Sans&family=Google+Sans+Flex:opsz,wght@6..144,1..1000&display=swap"
+        rel="stylesheet">
+
+    <!-- ============================================================
+         CUP OF CODE — Design System (Tailwind v4 Play CDN)
+         Single source of truth shared across all reference pages.
+         ============================================================ -->
+    <style type="text/tailwindcss">
+        @theme {
+            --font-sans: "Google Sans Flex", system-ui, -apple-system, sans-serif;
+            --font-display: "Cal Sans", system-ui, sans-serif;
+
+            --color-brand-dark: #2b2b2b;
+            --color-brand-yellow: #f5b027;
+            --color-brand-yellow-dark: #e09b1f;
+            --color-brand-light: #fdfdfd;
+
+            --color-bg: #fafafa;
+            --color-surface: #ffffff;
+            --color-text-primary: #323232;
+            --color-text-secondary: #555555;
+            --color-text-muted: #868686;
+            --color-line: #e8e8e8;
+            --color-line-soft: #f2f2f2;
+
+            --color-tag-yellow: #fff0c8;
+            --color-tag-green: #ceffd7;
+            --color-tag-pink: #ffd0d4;
+        }
+
+        @layer base {
+            html {
+                scroll-behavior: smooth;
+            }
+            body {
+                background-color: var(--color-bg);
+                color: var(--color-text-primary);
+                font-family: var(--font-sans);
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+            }
+            ::selection {
+                background-color: var(--color-brand-yellow);
+                color: #fff;
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #aaa;
+        }
+    </style>
+</head>
+
+<body class="antialiased">
+
+    <main class="py-16">
+        <div class="mx-auto grid max-w-7xl grid-cols-1 gap-16 px-4 sm:px-6 lg:px-8 lg:grid-cols-12">
+
+            <!-- Sticky Sidebar Navigation -->
+            <aside class="relative hidden lg:col-span-3 lg:block">
+                <div class="sticky top-12 space-y-8 rounded-2xl border border-gray-100 bg-white p-6">
+                    <div>
+                        <h4 class="mb-4 text-xs font-semibold uppercase tracking-widest text-text-muted">Kebijakan
+                            Hukum
+                        </h4>
+                        <ul class="space-y-3 text-sm font-semibold">
+                            <li><a href="#licensing"
+                                    class="flex items-center gap-2 text-text-primary transition-colors hover:text-brand-yellow"><i
+                                        class="ph-fill ph-shield-check text-lg text-brand-yellow"></i> Lisensi
+                                    Penggunaan</a></li>
+                            <li><a href="#attribution"
+                                    class="flex items-center gap-2 text-text-muted transition-colors hover:text-text-primary"><span
+                                        class="h-2 w-2 rounded-full bg-gray-300"></span> Kebijakan Atribusi</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="mb-4 text-xs font-semibold uppercase tracking-widest text-text-muted">Foundation
+                            (Token)</h4>
+                        <ul class="space-y-3 text-sm font-semibold">
+                            <li><a href="#colors"
+                                    class="flex items-center gap-2 text-text-muted transition-colors hover:text-text-primary"><span
+                                        class="h-2 w-2 rounded-full bg-gray-300"></span> Palet Warna</a></li>
+                            <li><a href="#typography"
+                                    class="flex items-center gap-2 text-text-muted transition-colors hover:text-text-primary"><span
+                                        class="h-2 w-2 rounded-full bg-gray-300"></span> Tipografi</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="mb-4 text-xs font-semibold uppercase tracking-widest text-text-muted">Komponen Inti
+                        </h4>
+                        <ul class="space-y-3 text-sm font-semibold">
+                            <li><a href="#buttons"
+                                    class="flex items-center gap-2 text-text-muted transition-colors hover:text-text-primary"><span
+                                        class="h-2 w-2 rounded-full bg-gray-300"></span> Buttons & CTA</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Documentation Content -->
+            <div class="max-w-4xl space-y-16 text-text-secondary leading-relaxed lg:col-span-8 lg:col-start-4">
+
+                <header class="border-b border-gray-100 pb-8">
+                    <h1 class="mb-4 text-4xl font-display tracking-tight text-text-primary md:text-5xl">Design System &
+                        License</h1>
+                    <p class="text-lg text-text-secondary">Dokumentasi pedoman visual (UI Tokens) <i>Cup of Code</i>
+                        sekaligus panduan hukum lisensi untuk semua aset open-source yang didistribusikan di platform
+                        ini.</p>
+                </header>
+
+                <!-- SECTION: Licensing -->
+                <section id="licensing" class="space-y-6 scroll-mt-12">
+                    <h2 class="border-b border-gray-100 pb-2 text-2xl font-bold text-text-primary">Lisensi & Hak Cipta
+                    </h2>
+                    <p>Seluruh aset kode (Boilerplate, UI Kit HTML/Tailwind) dirilis di bawah <strong>MIT
+                            License</strong>. Sementara aset desain (Figma, Vektor) menggunakan <strong>CC BY
+                            4.0</strong>. Intinya, kami membebaskan kamu untuk berkreasi.</p>
+
+                    <div class="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2">
+                        <!-- DO'S -->
+                        <div class="rounded-2xl border border-green-200 bg-green-50/50 p-6">
+                            <h4 class="mb-4 flex items-center gap-2 text-base font-extrabold text-green-800"><i
+                                    class="ph-fill ph-check-circle text-xl text-green-500"></i> Bebas Dilakukan</h4>
+                            <ul class="space-y-3 text-sm font-medium text-green-900">
+                                <li class="flex items-start gap-2"><i
+                                        class="ph-bold ph-check mt-0.5 text-green-600"></i> Pakai untuk proyek komersial
+                                    (Klien/SaaS).</li>
+                                <li class="flex items-start gap-2"><i
+                                        class="ph-bold ph-check mt-0.5 text-green-600"></i> Modifikasi kode dan desain
+                                    sebebasnya.</li>
+                                <li class="flex items-start gap-2"><i
+                                        class="ph-bold ph-check mt-0.5 text-green-600"></i> Pakai untuk media
+                                    pembelajaran.</li>
+                            </ul>
+                        </div>
+                        <!-- DON'TS -->
+                        <div class="rounded-2xl border border-red-200 bg-red-50/50 p-6">
+                            <h4 class="mb-4 flex items-center gap-2 text-base font-extrabold text-red-800"><i
+                                    class="ph-fill ph-x-circle text-xl text-red-500"></i> Dilarang Keras</h4>
+                            <ul class="space-y-3 text-sm font-medium text-red-900">
+                                <li class="flex items-start gap-2"><i class="ph-bold ph-x mt-0.5 text-red-600"></i>
+                                    Menjual ulang aset mentah di marketplace (Envato, UI8, dll).</li>
+                                <li class="flex items-start gap-2"><i class="ph-bold ph-x mt-0.5 text-red-600"></i>
+                                    Mengklaim sebagai pembuat asli tanpa modifikasi.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECTION: Colors -->
+                <section id="colors" class="space-y-6 scroll-mt-12">
+                    <h2 class="border-b border-gray-100 pb-2 text-2xl font-bold text-text-primary">Palet Warna (Colors)
+                    </h2>
+                    <p>Sistem warna Cup of Code sangat minimalis. Memadukan warna gelap pekat sebagai fondasi elegan,
+                        dan kuning emas sebagai warna aksi (<em>call-to-action</em>).</p>
+
+                    <div class="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
+                        <!-- Dark -->
+                        <div class="group">
+                            <div
+                                class="mb-3 h-24 rounded-2xl border border-gray-200 bg-brand-dark shadow-inner transition-transform group-hover:-translate-y-1">
+                            </div>
+                            <p class="text-sm font-bold text-text-primary">Brand Dark</p>
+                            <p class="font-mono text-xs uppercase text-text-muted">#2B2B2B</p>
+                            <p class="mt-1 text-[11px] text-text-muted">bg-brand-dark</p>
+                        </div>
+                        <!-- Yellow -->
+                        <div class="group">
+                            <div
+                                class="mb-3 h-24 rounded-2xl border border-gray-200 bg-brand-yellow shadow-inner transition-transform group-hover:-translate-y-1">
+                            </div>
+                            <p class="text-sm font-bold text-text-primary">Brand Yellow</p>
+                            <p class="font-mono text-xs uppercase text-text-muted">#F5B027</p>
+                            <p class="mt-1 text-[11px] text-text-muted">bg-brand-yellow</p>
+                        </div>
+                        <!-- Background -->
+                        <div class="group">
+                            <div
+                                class="mb-3 h-24 rounded-2xl border border-gray-200 bg-bg shadow-inner transition-transform group-hover:-translate-y-1">
+                            </div>
+                            <p class="text-sm font-bold text-text-primary">Background</p>
+                            <p class="font-mono text-xs uppercase text-text-muted">#FAFAFA</p>
+                            <p class="mt-1 text-[11px] text-text-muted">bg-bg</p>
+                        </div>
+                        <!-- Surface -->
+                        <div class="group">
+                            <div
+                                class="mb-3 h-24 rounded-2xl border border-gray-200 bg-surface shadow-inner transition-transform group-hover:-translate-y-1">
+                            </div>
+                            <p class="text-sm font-bold text-text-primary">Surface</p>
+                            <p class="font-mono text-xs uppercase text-text-muted">#FFFFFF</p>
+                            <p class="mt-1 text-[11px] text-text-muted">bg-surface</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECTION: Typography -->
+                <section id="typography" class="space-y-6 scroll-mt-12">
+                    <h2 class="border-b border-gray-100 pb-2 text-2xl font-bold text-text-primary">Tipografi</h2>
+                    <p>Kami menggunakan dua <em>font family</em>: <strong>Cal Sans</strong> sebagai <em>font
+                            display</em> untuk judul, dan <strong>Google Sans Flex</strong> sebagai <em>font body</em>.
+                        Kombinasi ini dipilih karena keterbacaan (<em>legibility</em>) yang tinggi pada ukuran kecil dan
+                        karakter modern yang tegas pada ukuran besar.</p>
+
+                    <div class="overflow-x-auto rounded-2xl border border-gray-200 bg-white p-6 md:p-8">
+                        <div class="min-w-100 space-y-6">
+                            <div class="flex items-end gap-6">
+                                <span class="w-20 shrink-0 font-mono text-xs text-text-muted">Display / 48</span>
+                                <h1 class="text-5xl leading-none tracking-tight text-text-primary font-display">The
+                                    quick
+                                    brown fox</h1>
+                            </div>
+                            <div class="flex items-end gap-6">
+                                <span class="w-20 shrink-0 font-mono text-xs text-text-muted">H2 / 30</span>
+                                <h2 class="text-3xl leading-none tracking-tight text-text-primary font-bold">The quick
+                                    brown fox</h2>
+                            </div>
+                            <div class="flex items-end gap-6">
+                                <span class="w-20 shrink-0 font-mono text-xs text-text-muted">Body / 16</span>
+                                <p class="text-base leading-normal text-text-secondary">The quick brown fox jumps over
+                                    the lazy dog. A quick brown fox jumps.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECTION: Components -->
+                <section id="buttons" class="space-y-6 scroll-mt-12">
+                    <h2 class="border-b border-gray-100 pb-2 text-2xl font-bold text-text-primary">Komponen Dasar
+                        (Buttons)
+                    </h2>
+                    <p>Radius sudut standar (<em>border-radius</em>) untuk elemen interaktif seperti tombol dan input
+                        adalah <code
+                            class="rounded bg-gray-100 px-1.5 py-0.5 font-mono text-sm text-text-primary">12px</code>
+                        (<em>rounded-xl</em> di Tailwind).</p>
+
+                    <div class="flex flex-wrap items-center gap-6 rounded-2xl border border-gray-200 bg-surface p-8">
+                        <!-- Primary Solid -->
+                        <button
+                            class="rounded-xl bg-brand-dark px-6 py-3 font-bold text-white transition-all hover:bg-black">
+                            Primary Button
+                        </button>
+                        <!-- Secondary Outline -->
+                        <button
+                            class="rounded-xl border border-gray-300 bg-white px-6 py-3 font-bold text-text-secondary transition-all hover:border-brand-dark hover:text-text-primary">
+                            Secondary Button
+                        </button>
+                        <!-- Ghost -->
+                        <button
+                            class="flex items-center gap-2 rounded-xl px-6 py-3 font-bold text-brand-dark transition-all hover:bg-gray-100">
+                            Ghost Button <i class="ph-bold ph-arrow-right"></i>
+                        </button>
+                    </div>
+                </section>
+
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>

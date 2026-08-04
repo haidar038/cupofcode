@@ -1,0 +1,79 @@
+---
+title: format-currency
+description: Utility function to format numbers as currency strings with proper localization
+language: typescript
+---
+
+---
+title: format-currency
+description: Utility function to format numbers as currency strings with proper localization
+language: typescript
+---
+
+## Instalasi
+
+```typescript
+npm install @cupofcode/utils
+// atau copy fungsi langsung ke project kamu
+```
+
+## Kode
+
+```typescript
+/**
+ * Mengubah angka menjadi format mata uang IDR
+ * @param amount - Angka nominal
+ * @param locale - Kode locale (default: 'id-ID')
+ * @param currency - Kode mata uang (default: 'IDR')
+ */
+export function formatCurrency(
+  amount: number,
+  locale: string = 'id-ID',
+  currency: string = 'IDR'
+): string {
+  return new Intl.NumberFormat(locale, {
+    style: 'currency',
+    currency,
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(amount);
+}
+
+/**
+ * Format angka dengan prefix Rp
+ * @param amount - Angka nominal
+ */
+export function formatRupiah(amount: number): string {
+  return formatCurrency(amount, 'id-ID', 'IDR');
+}
+```
+
+## Penggunaan
+
+```typescript
+formatRupiah(250000); // "Rp 250.000"
+formatRupiah(1500000); // "Rp 1.500.000"
+formatCurrency(50000, 'en-US', 'USD'); // "$50,000"
+```
+
+## Parameter
+
+| Parameter | Tipe | Default | Deskripsi |
+|-----------|------|---------|-----------|
+| amount | `number` | — | Angka yang akan diformat |
+| locale | `string` | `'id-ID'` | Kode lokal (BCP 47) |
+| currency | `string` | `'IDR'` | Kode mata uang ISO 4217 |
+
+## Contoh dengan React
+
+```tsx
+import { formatRupiah } from './utils/currency';
+
+function PriceTag({ price }: { price: number }) {
+  return (
+    <span className="font-bold text-green-600">
+      {formatRupiah(price)}
+    </span>
+  );
+}
+```
