@@ -218,6 +218,45 @@ Output structure Vercel-ready:
 
 ---
 
+## [Review Session 3b / Sprint F-11.5.4a-fix] — 2026-08-31
+
+**Status:** ✅ Selesai (Peer dependency fix)
+**Tujuan:** Resolve `ERESOLVE` error di Vercel deployment
+
+### Root Cause
+
+Vercel `npm install` strict (tanpa `--legacy-peer-deps`) menemukan 3 peer dependency conflicts:
+
+| Package | Versi Lama | Peer Astro | Versi Baru | Peer Astro |
+|---------|-----------|------------|-----------|------------|
+| `@astrojs/markdoc` | `^1.0.6` | `^6.0.0` ❌ | `^2.0.8` | `^7.0.0` ✅ |
+| `@keystatic/astro` | `^5.1.0` | `2 \|\| 3 \|\| 4 \|\| 5 \|\| 6` ❌ | `^6.0.0` | `5 \|\| 6 \|\| 7` ✅ |
+| `@lucide/astro` | `^1.18.0` | `^4 \|\| ^5 \|\| ^6` ❌ | `^1.38.0` | `^4 \|\| ^5 \|\| ^6 \|\| ^7` ✅ |
+
+### Lesson Learned
+
+`package.json` lama menggunakan **package versions yang ditulis saat Astro 6** (Awal 2026), tapi project di-upgrade ke Astro 7 tanpa meng-update peer dependencies. **Build lokal tidak error** karena `npm install` lokal lebih toleran, tapi Vercel strict dan gagal.
+
+### Verifikasi
+
+```
+$ npm ls @astrojs/markdoc astro @astrojs/vercel @keystatic/astro @lucide/astro
+cupofcode@1.1.2
++-- @astrojs/markdoc@2.0.8
++-- @astrojs/vercel@11.0.8
++-- @keystatic/astro@6.0.0
++-- @lucide/astro@1.38.0
++-- @sentry/astro@10.69.0
+`-- astro@7.1.3
+(Semua peer deps valid, no invalid warnings)
+
+$ npx astro build
+[build] Server built in 1m 46s
+[build] Complete!
+```
+
+---
+
 *Last updated: 2026-08-31*
 
 ---
