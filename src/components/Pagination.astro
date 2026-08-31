@@ -1,0 +1,101 @@
+---
+interface Props {
+  page: number;
+  totalPages: number;
+  basePath: string;
+  /** Extra query params to preserve on every page link (e.g. { cat: "tutorial" }). */
+  query?: Record<string, string>;
+}
+
+const { page, totalPages, basePath, query = {} } = Astro.props;
+
+const buildUrl = (p: number) => {
+  const params = new URLSearchParams(query);
+  if (p > 1) params.set("page", String(p));
+  const qs = params.toString();
+  return qs ? `${basePath}?${qs}` : basePath;
+};
+
+const pages: number[] = [];
+for (let p = 1; p <= totalPages; p++) {
+  if (p === 1 || p === totalPages || Math.abs(p - page) <= 1) {
+    pages.push(p);
+  }
+}
+
+const withEllipsis: (number | "…")[] = [];
+let prev: number | null = null;
+for (const p of pages) {
+  if (prev !== null && p - prev > 1) withEllipsis.push("…");
+  withEllipsis.push(p);
+  prev = p;
+}
+---
+
+{
+  totalPages > 1 && (
+    <nav class="mt-12 flex items-center justify-center gap-2" aria-label="Paginasi">
+      {page > 1 ? (
+        <a
+          href={buildUrl(page - 1)}
+          class="inline-flex h-10 items-center gap-1 rounded-xl border border-coc-line bg-coc-surface px-3.5 text-sm font-semibold text-coc-muted transition-colors hover:border-coc-accent hover:text-coc-text"
+          aria-label="Halaman sebelumnya"
+        >
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+          <span class="hidden sm:inline">Sebelumnya</span>
+        </a>
+      ) : (
+        <span
+          class="inline-flex h-10 items-center gap-1 rounded-xl border border-coc-line bg-coc-surface px-3.5 text-sm font-semibold text-coc-muted-soft opacity-50"
+          aria-disabled="true"
+        >
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+          <span class="hidden sm:inline">Sebelumnya</span>
+        </span>
+      )}
+
+      <div class="flex items-center gap-1.5">
+        {
+          withEllipsis.map((item) =>
+            item === "…" ? (
+              <span class="px-1 text-sm text-coc-muted-soft" aria-hidden="true">…</span>
+            ) : item === page ? (
+              <span
+                class="inline-flex size-10 items-center justify-center rounded-xl bg-coc-accent font-bold text-coc-text"
+                aria-current="page"
+              >
+                {item}
+              </span>
+            ) : (
+              <a
+                href={buildUrl(item)}
+                class="inline-flex size-10 items-center justify-center rounded-xl border border-coc-line bg-coc-surface text-sm font-semibold text-coc-muted transition-colors hover:border-coc-accent hover:text-coc-text"
+              >
+                {item}
+              </a>
+            ),
+          )
+        }
+      </div>
+
+      {page < totalPages ? (
+        <a
+          href={buildUrl(page + 1)}
+          class="inline-flex h-10 items-center gap-1 rounded-xl border border-coc-line bg-coc-surface px-3.5 text-sm font-semibold text-coc-muted transition-colors hover:border-coc-accent hover:text-coc-text"
+          aria-label="Halaman selanjutnya"
+        >
+          <span class="hidden sm:inline">Berikutnya</span>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+        </a>
+      ) : (
+        <span
+          class="inline-flex h-10 items-center gap-1 rounded-xl border border-coc-line bg-coc-surface px-3.5 text-sm font-semibold text-coc-muted-soft opacity-50"
+          aria-disabled="true"
+        >
+          <span class="hidden sm:inline">Berikutnya</span>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+        </span>
+      )}
+    </nav>
+  )
+}

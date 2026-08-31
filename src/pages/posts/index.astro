@@ -1,5 +1,5 @@
 ---
-import { getCollection, getEntry } from "astro:content";
+import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { Image } from "astro:assets";
 import { ImageIcon } from "@lucide/astro";
@@ -7,25 +7,42 @@ import { SITE_TITLE } from "../../consts";
 import SearchBar from "../../components/ui/SearchBar.tsx";
 import BackToTop from "../../components/ui/BackToTop.tsx";
 import ScrollAnimations from "../../components/ScrollAnimations.astro";
+import Pagination from "../../components/Pagination.astro";
+import ComingSoonCard from "../../components/ComingSoonCard.astro";
 
-type Tone = "yellow" | "green" | "pink";
+const POSTS_PER_PAGE = 9;
 
 const posts = await getCollection("posts");
 const categories = await getCollection("categories");
 const cat = Astro.url.searchParams.get("cat");
-const selectedCategory = categories.find((c) => c.id === cat);
+
+// "Aset Digital" is a content-type, not a post category — route it to /assets.
+if (cat === "aset-digital") {
+  return Astro.redirect("/assets");
+}
+
+const selectedCategory = cat ? categories.find((c) => c.id === cat) : undefined;
 
 const filteredPosts = cat ? posts.filter((p) => p.data.category === cat) : posts;
+const sortedPosts = [...filteredPosts].sort((a, b) => {
+  const da = a.data.publishDate?.getTime() ?? 0;
+  const db = b.data.publishDate?.getTime() ?? 0;
+  return db - da;
+});
 
-const toneClass: Record<Tone, string> = {
-  yellow: "bg-coc-tag-yellow",
-  green: "bg-coc-tag-green",
-  pink: "bg-coc-tag-pink",
-};
+const totalPages = Math.max(1, Math.ceil(sortedPosts.length / POSTS_PER_PAGE));
+const rawPage = Number.parseInt(Astro.url.searchParams.get("page") ?? "1", 10);
+const page = Number.isNaN(rawPage) ? 1 : Math.min(Math.max(rawPage, 1), totalPages);
+const pagePosts = sortedPosts.slice((page - 1) * POSTS_PER_PAGE, page * POSTS_PER_PAGE);
+
+// Fill the rest of the 3x3 grid with "coming soon" placeholders so the page
+// never looks sparse.
+const missing = Math.max(0, POSTS_PER_PAGE - pagePosts.length);
+const placeholders = sortedPosts.length > 0 ? Array.from({ length: missing }) : [];
 
 const categoryLabel = new Map<string, string>();
-for (const cat of categories) {
-  categoryLabel.set(cat.id, cat.data.label);
+for (const c of categories) {
+  categoryLabel.set(c.id, c.data.label);
 }
 
 const searchItems = posts.map((p) => ({
@@ -59,11 +76,11 @@ const searchItems = posts.map((p) => ({
   </div>
 
   {
-    filteredPosts.length > 0 ? (
+    sortedPosts.length > 0 ? (
       <section class="mx-auto max-w-7xl pb-18">
         <div class="grid grid-cols-1 gap-y-14 gap-x-8 md:grid-cols-2 lg:grid-cols-3">
           {
-            filteredPosts.map((post) => (
+            pagePosts.map((post) => (
               <a data-animate
                 href={`/posts/${post.id}`}
                 class="group block overflow-hidden transition-all duration-300"
@@ -109,7 +126,19 @@ const searchItems = posts.map((p) => ({
               </a>
             ))
           }
+          {
+            placeholders.map(() => (
+              <ComingSoonCard variant="post" />
+            ))
+          }
         </div>
+
+        <Pagination
+          page={page}
+          totalPages={totalPages}
+          basePath="/posts"
+          query={cat ? { cat } : {}}
+        />
       </section>
     ) : (
       <div class="flex flex-col items-center justify-center py-20 text-center">

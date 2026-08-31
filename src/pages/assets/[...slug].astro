@@ -1,14 +1,17 @@
 ---
 export const prerender = true;
-import { getCollection, render } from "astro:content";
+import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { SITE_TITLE } from "../../consts";
 import { Download, FileCode, Gem } from "@lucide/astro";
 import Breadcrumb from "../../components/Breadcrumb.astro";
 import BackToTop from "../../components/ui/BackToTop.tsx";
+import CodeBlock from "../../components/ui/CodeBlock.astro";
+import TableOfContents from "../../components/TableOfContents.astro";
 import ComponentPreview from "../../components/digital-assets/ComponentPreview.astro";
 import PromptFiller from "../../components/digital-assets/PromptFiller.tsx";
 import GemsViewer from "../../components/digital-assets/GemsViewer.astro";
+import { splitBody, renderProse, extractHeadings, type CodeSegment } from "../../lib/markdown";
 
 export async function getStaticPaths() {
   const assets = await getCollection("digitalAssets");
@@ -19,69 +22,67 @@ export async function getStaticPaths() {
 }
 
 const { asset } = Astro.props;
-const { Content } = await render(asset);
 
 // --- Type-safe narrowing helpers ---
 const isComponent = asset.data.type === "component";
 const isPrompt = asset.data.type === "prompt";
 const isGem = asset.data.type === "gem";
 
-// Extract raw code strings from body for ComponentPreview
-const rawBody = asset.body || "";
-
-// Safe extraction (no arbitrary eval)
-function extractCodeBlock(content: string, lang: string): string | null {
-  const pattern = new RegExp(`\`\`\`${lang}\\s*\\n([\\s\\S]*?)\\n\`\`\``, "i");
-  const match = content.match(pattern);
-  return match?.[1] ?? null;
-}
-
-function extractPromptTemplate(content: string): string {
-  // Fallback: first fenced block in the prompt section
-  const fenced = content.match(/```\s*\n([\s\S]*?)\n```/);
-  return fenced?.[1].trim() ?? "";
-}
+// Parse the raw body once into prose + code segments. Every fenced block
+// becomes a dark editor-style viewer; prose is rendered with a small markdown
+// renderer so typography (headings, tables, bold, lists) stays proper.
+const segments = splitBody(asset.body || "");
+const codeSegments = segments.filter((s): s is CodeSegment => s.type === "code");
+const toc = extractHeadings(asset.body || "").filter((h) => h.depth === 2);
 
 // -- Asset-specific payloads --
-let componentCode = "";
-if (isComponent) {
-  componentCode = extractCodeBlock(rawBody, "tsx") ?? extractCodeBlock(rawBody, "jsx") ?? rawBody;
-}
-
 let promptTemplate = "";
 let promptVariables: string[] = [];
-if (isPrompt) {
-  promptTemplate = extractPromptTemplate(rawBody);
-  promptVariables = asset.data.variables || [];
-}
-
 let gemInstructions = "";
 let gemExampleBefore = "";
 let gemExampleAfter = "";
 let gemTips: string[] = [];
-if (isGem) {
-  const sections = rawBody.split(/##\s+/).map((s) => s.trim());
-  const sysIdx = sections.findIndex((s) => s.startsWith("System Instructions"));
-  if (sysIdx !== -1 && sysIdx + 1 < sections.length) {
-    // Extract content between this heading and next
-    const block = sections[sysIdx];
-    // Rough extraction: text between "System Instructions" heading and next "## "
-    const headingMatch = block.match(/System Instructions\s*\n([\s\S]*?)(?=\n## |\n$)/);
-    if (headingMatch) {
-      gemInstructions = headingMatch[1].trim();
-    }
+const consumedIndexes = new Set<number>();
+
+if (isComponent) {
+  // All code blocks are shown in the Source Code panel — keep them out of the
+  // body flow so they are not rendered twice.
+  for (const seg of codeSegments) {
+    const idx = segments.indexOf(seg);
+    if (idx !== -1) consumedIndexes.add(idx);
   }
-  // Contoh Transformasi (before/after)
-  const beforeMatch = rawBody.match(/\*\*Input:\*\*\s*```[a-z]*\s*\n([\s\S]*?)\n```/i);
-  const afterMatch = rawBody.match(/\*\*(Output|Hasil)[^*]*:\*\*\s*```\s*\n([\s\S]*?)\n```/i);
+}
+
+if (isPrompt) {
+  const firstCode = codeSegments[0];
+  if (firstCode) {
+    promptTemplate = firstCode.code.trim();
+    const idx = segments.indexOf(firstCode);
+    if (idx !== -1) consumedIndexes.add(idx);
+  }
+  promptVariables = asset.data.variables || [];
+}
+
+if (isGem) {
+  const instrIdx = segments.findIndex(
+    (s) => s.type === "code" && s.label === "System Instructions",
+  );
+  if (instrIdx !== -1) {
+    gemInstructions = (segments[instrIdx] as CodeSegment).code.trim();
+    consumedIndexes.add(instrIdx);
+  }
+  // Contoh Transformasi (before/after) — only present when fenced in the body.
+  const beforeMatch = asset.body?.match(/\*\*Input:\*\*\s*```[a-z]*\s*\n([\s\S]*?)\n```/i);
+  const afterMatch = asset.body?.match(/\*\*(Output|Hasil)[^*]*:\*\*\s*```\s*\n([\s\S]*?)\n```/i);
   if (beforeMatch) gemExampleBefore = beforeMatch[1].trim();
   if (afterMatch) gemExampleAfter = afterMatch[2].trim();
-  // Tips Penggunaan → list items di section "Tips"
-  const tipsIdx = sections.findIndex((s) => s.startsWith("Tips Penggunaan"));
-  if (tipsIdx !== -1) {
-    const tipsBlock = sections[tipsIdx];
-    const items = tipsBlock.match(/^\d+\.\s+.*/gm) || [];
-    gemTips = items.map((t) => t.replace(/^\d+\.\s+/, "").trim());
+  // Tips Penggunaan → numbered list items in the matching prose section.
+  const tipsSeg = segments.find(
+    (s): s is import("../../lib/markdown").ProseSegment =>
+      s.type === "prose" && /^##\s+Tips/.test(s.markdown.trim()),
+  );
+  if (tipsSeg) {
+    gemTips = [...tipsSeg.markdown.matchAll(/^\d+\.\s+(.+)$/gm)].map((m) => m[1].trim());
   }
 }
 
@@ -110,8 +111,8 @@ const typeBadgeColors: Record<string, string> = {
     ]}
   />
 
-  <div class="grid grid-cols-1 gap-x-12 lg:grid-cols-12">
-    <div class="lg:col-span-8">
+  <div class="grid grid-cols-1 items-start gap-x-12 gap-y-10 lg:grid-cols-12">
+    <div class="min-w-0 lg:col-span-8">
       <div class="mb-8 w-full overflow-hidden rounded-3xl border border-coc-line bg-gray-100">
         <div class="flex aspect-2/1 w-full items-center justify-center text-gray-300">
           <FileCode width="96" height="96" stroke-width="1.2" />
@@ -128,7 +129,7 @@ const typeBadgeColors: Record<string, string> = {
           >
             {typeLabels[asset.data.type] || asset.data.type}
           </span>
-          <h1 class="mb-4 font-coc-display text-3xl font-bold leading-tight tracking-tight text-coc-text md:text-4xl">
+          <h1 class="mb-4 font-coc-body font-bold text-3xl text-coc-text md:text-4xl">
             {asset.data.title}
           </h1>
           <p class="text-lg leading-relaxed text-coc-muted">
@@ -141,7 +142,7 @@ const typeBadgeColors: Record<string, string> = {
         <!-- ============ TYPE-SPECIFIC VIEWER ============ -->
         {isComponent && (
           <ComponentPreview
-            code={componentCode}
+            blocks={codeSegments}
             format={asset.data.format}
           />
         )}
@@ -163,14 +164,40 @@ const typeBadgeColors: Record<string, string> = {
           />
         )}
 
-        <div class="prose prose-gray max-w-none text-coc-muted">
-          <Content />
-        </div>
+        <!-- ============ BODY (prose + remaining code blocks) ============ -->
+        {
+          segments.map((segment, index) => {
+            if (segment.type === "code") {
+              if (consumedIndexes.has(index)) return null;
+              return (
+                <CodeBlock
+                  code={segment.code}
+                  language={segment.lang}
+                  label={segment.label}
+                />
+              );
+            }
+            return (
+              <div
+                class="prose-coc"
+                set:html={renderProse(segment.markdown)}
+              />
+            );
+          })
+        }
       </div>
     </div>
 
-    <div class="lg:col-span-4">
-      <div class="sticky top-28 rounded-3xl border border-coc-line bg-coc-surface p-6 md:p-8">
+    <div class="space-y-6 lg:col-span-4 lg:sticky lg:top-6 lg:self-start">
+      {
+        toc.length > 0 && (
+          <div class="hidden rounded-3xl border border-coc-line bg-coc-surface p-6 md:p-8 lg:block">
+            <TableOfContents headings={toc} />
+          </div>
+        )
+      }
+
+      <div class="rounded-3xl border border-coc-line bg-coc-surface p-6 md:p-8">
         <div class="mb-6">
           <span class="mb-1 block text-3xl font-extrabold text-green-600">
             {asset.data.isFree ? "Gratis" : "Premium"}
@@ -253,10 +280,8 @@ const typeBadgeColors: Record<string, string> = {
     function trackDownload(e) {
       const title = e.currentTarget.dataset.assetTitle;
       const type = e.currentTarget.dataset.assetType;
-      if (typeof window.plausible !== 'undefined') {
-        window.plausible('asset_download', {
-          props: { title, type }
-        });
+      if (typeof window.umami?.track === 'function') {
+        window.umami.track('asset_download', { title, type });
       }
     }
     document.addEventListener('astro:page-load', () => {

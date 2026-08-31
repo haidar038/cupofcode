@@ -160,8 +160,8 @@ import { Send } from "@lucide/astro";
                 const result = await res.json().catch(() => ({}));
                 setFeedback(result.message ?? "Terjadi kesalahan.", res.ok);
                 if (res.ok) form.reset();
-                if (res.ok && typeof (window as any).plausible !== "undefined") {
-                    (window as any).plausible("contact_submit");
+                if (res.ok && typeof (window as any).umami?.track === "function") {
+                    (window as any).umami.track("contact_submit");
                 }
                 } catch {
                     setFeedback("Terjadi kesalahan jaringan. Coba lagi.", false);

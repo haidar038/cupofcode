@@ -134,28 +134,29 @@ location /assets/ {
 ### 5.1 Analytics Provider (Pilih Satu)
 | Option | Priority | Effort | Status | Notes |
 |--------|----------|--------|--------|-------|
-| **Plausible** ⭐ | 🔴 Critical | 30m | ⏳ TODO | Privacy-friendly, Indonesia hosting |
-| Umami | 🔴 Critical | 2h | ⏳ TODO | Self-hosted alternative |
-| Google Analytics 4 | 🔴 Critical | 1h | ⏳ TODO | Industry standard, compliance caveat |
+| **Umami** | 🔴 Critical | 2h | ✅ Done (2026-08-04) | Self-hosted, no cookies, GDPR/PDPL compliant — dipilih sebagai provider aktif. Script tag di `BaseHead.astro` via `PUBLIC_UMAMI_SRC`/`PUBLIC_UMAMI_WEBSITE_ID`; CSP middleware allows its origin. |
+| ~~Plausible~~ | — | — | ✅ Migrated | Fully removed (2026-08-04 Sprint F-5). All event tracking now `window.umami.track("event")`. |
+| Google Analytics 4 | ⏸️ Latent | 1h | — | Env fallback `PUBLIC_GA_ID` masih aktif sebagai opsi; bukan provider utama. |
 
-**Decision:** Gunakan **Plausible** saude GDPR/PDP compliance.
+**Decision:** Umami self-hosted as analytics provider.**
+- **Rationale:** Privacy-friendly (no cookies), full control data, GDPR/PDPL compliance tanpa CMP banner. Event names persist across migration.
 
 ### 5.2 Event Tracking
-| Item | Priority | Effort | Notes |
-|------|----------|--------|-------|
-| Track search queries | 🟠 High | 1h | SearchBar search intent |
-| Track asset downloads | 🟠 High | 1h | Post-MVP monetization data |
-| Track share clicks | 🟡 Medium | 30m | Social engagement |
-| Track newsletter signup | 🔴 Critical | 15m | Already in NewsletterForm.tsx |
-| Track 404 errors | 🟠 High | 30m | Sentry or direct analytics |
+| Item | Priority | Effort | Status | Notes |
+|------|----------|--------|--------|-------|
+| Track search queries | 🟠 High | 1h | ⏳ TODO | SearchBar search intent — `search_query` via `umami?.track` deferred → P.11 |
+| Track asset downloads | 🟠 High | 1h | ✅ Done (2026-08-04) | `assets/[...slug].astro` — `asset_download` via `umami?.track` with flat `{ title, type }` |
+| Track share clicks | 🟡 Medium | 30m | ⏳ TODO | `share_twitter`/`share_facebook` via `umami?.track` deferred → P.11 |
+| Track newsletter signup | 🔴 Critical | 15m | ✅ Done (2026-08-04) | `NewsletterForm.tsx` — `newsletter_signup` via `umami?.track`; silent failure if script not yet loaded |
+| Track 404 errors | 🟠 High | 30m | ⏳ TODO | Direct analytics defers → Sentry for now; Umami event `404_error` optional → P.11 |
 
 ### 5.3 Monitoring Setup
 | Item | Priority | Effort | Status | Notes |
 |------|----------|--------|--------|-------|
-| Sentry sourcemaps upload | 🔴 Critical | 1h | ⏳ TODO | `astro.config.mjs` config |
-| Uptime monitoring (crontab) | 🟠 High | 30m | ⏳ TODO | Healthcheck endpoint |
-| Performance dashboard | 🟡 Medium | 4h | ⏳ TODO | Self-hosted Lighthouse CI |
-| Error rate alerts | 🟠 High | 1h | ⏳ TODO | Slack/Email notifications |
+| Sentry sourcemaps upload | 🔴 Critical | 1h | ✅ Done (2026-08-04) | `vite.build.sourcemap: true` in `astro.config.mjs`; auto-upload via integration `sourceMapsUploadOptions.enabled`; `.map` files now land in `dist/client/_astro/` (19 files at build time). Known vite warnings: `astro:content-render-imports` + `astro:transitions` sourcemaps non-blocking. |
+| Uptime monitoring (crontab) | 🟠 High | 30m | ✅ Done (2026-08-04) | `/api/health` endpoint created at `src/pages/api/health.ts`; returns `{status, version, uptime, ts}` JSON; `no-cache` cache-control; sitemap filter already excludes `/api/*` |
+| Performance dashboard | 🟡 Medium | 4h | ⏳ TODO | Self-hosted Lighthouse CI — defer to Sprint F-6 |
+| Error rate alerts | 🟠 High | 1h | ⏳ TODO | Sentry Alerts → Slack/Email — config manual in Sentry UI (Sprint F-5 closing gap) |
 
 ---
 
@@ -239,7 +240,7 @@ Images: WebP < 200KB per image
 | `node_modules` cache | 🔴 Critical | 15m | ⏳ TODO | pnpm CI install speedup |
 
 ### 9.3 Production Checklist
-- [ ] Site load `https://cupofcode.id` (no www redirect needed)
+- [ ] Site load `https://cupofcode.cc` (no www redirect needed)
 - [ ] All forms work (newsletter, contact)
 - [ ] SearchBar returns results for all pages
 - [ ] Sitemap includes only public pages
@@ -315,7 +316,7 @@ Approved: _________________ (Product Owner)
 
 ```bash
 # === Production Domain ===
-PUBLIC_SITE_URL=https://cupofcode.id
+PUBLIC_SITE_URL=https://cupofcode.cc
 
 # === Keystatic CMS ===
 KEYSTATIC_STORAGE_KIND=github
@@ -324,7 +325,7 @@ KEYSTATIC_GITHUB_REPO=cupofcode
 GITHUB_TOKEN=github_pat_...  # repo scope only
 
 # === Analytics ===
-PUBLIC_PLAUSIBLE_DOMAIN=cupofcode.id
+PUBLIC_PLAUSIBLE_DOMAIN=cupofcode.cc
 PUBLIC_PLAUSIBLE_SRC=https://plausible.io/js/script.js
 # or
 PUBLIC_UMAMI_SRC=https://umami.yourdomain.com/script.js
@@ -338,8 +339,8 @@ SENTRY_AUTH_TOKEN=...  # Sourcemaps upload
 
 # === Email (Resend) ===
 RESEND_API_KEY=re_...  
-EMAIL_FROM=newsletter@cupofcode.id
-EMAIL_ADMIN=admin@cupofcode.id
+EMAIL_FROM=newsletter@cupofcode.cc
+EMAIL_ADMIN=admin@cupofcode.cc
 ```
 
 ---

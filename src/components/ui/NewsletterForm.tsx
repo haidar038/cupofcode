@@ -1,12 +1,13 @@
-import { useState, type FormEvent } from "react";
+import { useState, type SyntheticEvent } from "react";
 import { Mail, Check, Loader } from "lucide-react";
 
 export default function NewsletterForm() {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
-  const [message, setMessage] = useState("");
+  // message state intentionally unused (setter only) — status icon swap conveys feedback
+  const [, setMessage] = useState("");
 
-  const handleSubmit = async (e: FormEvent) => {
+  const handleSubmit = async (e: SyntheticEvent<HTMLFormElement, SubmitEvent>) => {
     e.preventDefault();
     if (!email.trim()) return;
 
@@ -23,8 +24,8 @@ export default function NewsletterForm() {
         setMessage(data.message);
         setEmail("");
         // F-3 Analytics: Track event registration successful
-        if (typeof window !== "undefined" && typeof (window as any).plausible !== "undefined") {
-          (window as any).plausible("newsletter_signup");
+        if (typeof window !== "undefined" && typeof (window as any).umami?.track === "function") {
+          (window as any).umami.track("newsletter_signup");
         }
       } else {
         setStatus("error");
@@ -41,7 +42,7 @@ export default function NewsletterForm() {
       <label className="sr-only" htmlFor="footer-email">Email</label>
       <input
         id="footer-email"
-        className="min-w-0 flex-1 border-0 bg-transparent px-3 text-sm text-coc-text outline-none placeholder:text-coc-muted-soft"
+        className="min-w-0 flex-1 border-0 bg-transparent px-3 text-sm text-coc-surface outline-none placeholder:text-coc-muted-soft"
         type="email"
         placeholder="Masukkan email kamu..."
         value={email}

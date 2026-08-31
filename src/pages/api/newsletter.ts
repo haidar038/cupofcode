@@ -12,7 +12,7 @@ export const POST: APIRoute = async ({ request }) => {
 
     // Env validation
     const resendApiKey = import.meta.env.RESEND_API_KEY;
-    const emailFrom = import.meta.env.EMAIL_FROM ?? "Cup of Code <newsletter@cupofcode.id>";
+    const emailFrom = import.meta.env.EMAIL_FROM ?? "Cup of Code <newsletter@cupofcode.cc>";
 
     if (!email || !EMAIL_RE.test(email)) {
       return new Response(JSON.stringify({ success: false, message: "Email tidak valid." }), {
@@ -46,7 +46,7 @@ export const POST: APIRoute = async ({ request }) => {
         <!doctype html>
         <html>
           <body>
-            <p>Halo! Kau baru saja mengaktifkan langganan di cupofcode.id</p>
+            <p>Halo! Kau baru saja mengaktifkan langganan di cupofcode.cc</p>
             <p>Terima kasih!</p>
           </body>
         </html>`,

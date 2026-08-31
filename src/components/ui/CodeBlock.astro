@@ -1,0 +1,350 @@
+---
+import { highlightCodeLines } from "../../lib/highlight";
+
+interface Props {
+    /** Raw code text. Omit to render only the global styles + copy script. */
+    code?: string;
+    language?: string;
+    /** Optional label shown in the header (e.g. the section heading). */
+    label?: string;
+}
+
+const { code, language = "", label } = Astro.props;
+
+const raw = code !== undefined ? code.replace(/\n$/, "") : "";
+const lines = raw.split("\n");
+const langLabel = language || "text";
+
+// Server-side Shiki highlighting (build time, one-dark-pro theme).
+const highlighted = code !== undefined ? await highlightCodeLines(raw, language || "text") : null;
+---
+
+{
+    code !== undefined && (
+        <div class="code-viewer" data-code-viewer>
+            <div class="code-viewer__header">
+                <span class="code-viewer__dots" aria-hidden="true">
+                    <>
+                        <i />
+                        <i />
+                        <i />
+                    </>
+                </span>
+                <span class="code-viewer__lang">
+                    {label ? <span class="code-viewer__label">{label}</span> : null}
+                    <span class="code-viewer__lang-tag">{langLabel}</span>
+                </span>
+                <button type="button" class="code-viewer__copy" data-copy-all aria-label="Salin semua kode">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <>
+                            <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
+                            <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
+                        </>
+                    </svg>
+                    <span>Salin</span>
+                </button>
+            </div>
+            <div class="code-viewer__body">
+                <pre>
+                    <code>
+                        {lines.map((line, i) => {
+                            const hl = highlighted?.[i];
+                            return (
+                                <div class="code-line">
+                                    <span class="code-line__no" aria-hidden="true">
+                                        {i + 1}
+                                    </span>
+                                    {hl !== undefined ? <span class="code-line__text" set:html={hl} /> : <span class="code-line__text">{line === "" ? " " : line}</span>}
+                                    <button type="button" class="code-line__copy" data-copy-line aria-label={`Salin baris ${i + 1}`}>
+                                        <svg
+                                            width="12"
+                                            height="12"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            stroke-width="2.5"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            aria-hidden="true"
+                                        >
+                                            <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
+                                            <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            );
+                        })}
+                    </code>
+                </pre>
+            </div>
+        </div>
+    )
+}
+
+<style is:global>
+    /* ---- Dark editor-style code viewer (one-dark-pro palette) ---- */
+    .code-viewer {
+        margin: 1.5rem 0;
+        overflow: hidden;
+        border: 1px solid #21252b;
+        border-radius: 14px;
+        background: #282c34;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.18);
+    }
+    .code-viewer:first-child {
+        margin-top: 0;
+    }
+    .code-viewer:last-child {
+        margin-bottom: 0;
+    }
+    .code-viewer__header {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.65rem 1rem;
+        background: #21252b;
+        border-bottom: 1px solid #2c313a;
+    }
+    .code-viewer__dots {
+        display: inline-flex;
+        gap: 0.35rem;
+    }
+    .code-viewer__dots i {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #3a3a47;
+    }
+    .code-viewer__dots i:nth-child(1) {
+        background: #ff5f57;
+    }
+    .code-viewer__dots i:nth-child(2) {
+        background: #febc2e;
+    }
+    .code-viewer__dots i:nth-child(3) {
+        background: #28c840;
+    }
+    .code-viewer__lang {
+        display: flex;
+        min-width: 0;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.72rem;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+        color: #9aa0ab;
+    }
+    .code-viewer__label {
+        overflow: hidden;
+        max-width: 60%;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        color: #e6e6e6;
+    }
+    .code-viewer__lang-tag {
+        padding: 0.1rem 0.45rem;
+        border: 1px solid #2c313a;
+        border-radius: 6px;
+        background: #262b33;
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        text-transform: lowercase;
+    }
+    .code-viewer__copy {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        margin-left: auto;
+        padding: 0.3rem 0.65rem;
+        border: 1px solid #333a45;
+        border-radius: 8px;
+        background: transparent;
+        color: #a5aab3;
+        font-size: 0.72rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 150ms ease-in-out;
+    }
+    .code-viewer__copy:hover {
+        border-color: var(--color-accent);
+        color: #fff;
+        background: rgba(255, 187, 0, 0.1);
+    }
+    .code-viewer__copy.is-copied {
+        border-color: #28c840;
+        color: #28c840;
+    }
+    .code-viewer__body {
+        overflow-x: auto;
+    }
+    .code-viewer__body pre {
+        margin: 0;
+        padding: 0.75rem 0;
+        background: transparent;
+    }
+    .code-viewer__body code {
+        display: block;
+        min-width: max-content;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 0.82rem;
+        line-height: 1.7;
+        color: #abb2bf;
+    }
+    /* Neutralize prose inline-code styling (`.prose-coc code`) that would
+     otherwise paint the whole viewer with a light chip background. */
+    .code-viewer code {
+        background: transparent !important;
+        border: 0 !important;
+        border-radius: 0 !important;
+        padding: 0 !important;
+    }
+    .code-line {
+        position: relative;
+        display: flex;
+        align-items: stretch;
+        padding-right: 0.5rem;
+        transition: background 120ms ease-in-out;
+    }
+    .code-line:hover {
+        background: rgba(255, 255, 255, 0.05);
+    }
+    .code-line__no {
+        flex: 0 0 3rem;
+        padding-right: 1rem;
+        text-align: right;
+        color: #555a64;
+        user-select: none;
+    }
+    .code-line__text {
+        flex: 1 1 auto;
+        min-width: 0;
+        white-space: pre;
+        color: inherit;
+    }
+    .code-line__text span {
+        font-family: inherit;
+    }
+    .code-line__copy {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        align-self: center;
+        flex: 0 0 auto;
+        width: 1.55rem;
+        height: 1.55rem;
+        margin-left: 0.5rem;
+        border: 1px solid #333a45;
+        border-radius: 6px;
+        background: #262b33;
+        color: #8a919e;
+        opacity: 0;
+        cursor: pointer;
+        transition:
+            opacity 120ms ease-in-out,
+            color 150ms ease-in-out,
+            border-color 150ms ease-in-out;
+    }
+    .code-line:hover .code-line__copy,
+    .code-line__copy:focus-visible {
+        opacity: 1;
+    }
+    @media (hover: none) {
+        .code-line__copy {
+            opacity: 0.55;
+        }
+    }
+    .code-line__copy:hover {
+        border-color: var(--color-accent);
+        color: #fff;
+    }
+    .code-line__copy.is-copied {
+        border-color: #28c840;
+        color: #28c840;
+    }
+    .code-line__copy:focus {
+        outline: 2px solid var(--color-accent);
+        outline-offset: 1px;
+    }
+</style>
+
+<script>
+    async function copyText(text: string, button: HTMLElement, isLine = false) {
+        if (!text) return;
+        try {
+            await navigator.clipboard.writeText(text);
+        } catch {
+            // Fallback for non-secure contexts.
+            const ta = document.createElement("textarea");
+            ta.value = text;
+            ta.style.position = "fixed";
+            ta.style.opacity = "0";
+            document.body.appendChild(ta);
+            ta.select();
+            try {
+                document.execCommand("copy");
+            } catch {
+                /* ignore */
+            }
+            ta.remove();
+        }
+        if (isLine) {
+            showCopied(button);
+            return;
+        }
+        const original = button.innerHTML;
+        button.classList.add("is-copied");
+        button.innerHTML =
+            '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Tersalin!</span>';
+        setTimeout(() => {
+            button.classList.remove("is-copied");
+            button.innerHTML = original;
+        }, 1800);
+    }
+
+    const COPY_CHECK =
+        '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>';
+
+    function collectCode(viewer: HTMLElement): string {
+        const rows = viewer.querySelectorAll<HTMLElement>(".code-line__text");
+        return Array.from(rows)
+            .map((el) => el.textContent ?? "")
+            .join("\n");
+    }
+
+    function showCopied(button: HTMLElement) {
+        const original = button.innerHTML;
+        button.classList.add("is-copied");
+        button.innerHTML = COPY_CHECK;
+        setTimeout(() => {
+            button.classList.remove("is-copied");
+            button.innerHTML = original;
+        }, 1400);
+    }
+
+    // Delegated handler: copy the whole block via the top-right "Salin" button,
+    // or a single line via its hover copy button.
+    function wireCopyButtons() {
+        document.addEventListener("click", (event) => {
+            const target = event.target as HTMLElement;
+            const copyAll = target.closest<HTMLElement>("[data-copy-all]");
+            if (copyAll) {
+                const viewer = copyAll.closest<HTMLElement>(".code-viewer");
+                if (viewer) copyText(collectCode(viewer), copyAll);
+                return;
+            }
+            const copyLine = target.closest<HTMLElement>("[data-copy-line]");
+            if (copyLine) {
+                const line = copyLine.closest<HTMLElement>(".code-line");
+                const text = line?.querySelector<HTMLElement>(".code-line__text")?.textContent ?? "";
+                if (text.trim() !== "") {
+                    void copyText(text.replace(/\s+$/g, ""), copyLine, true);
+                }
+            }
+        });
+    }
+
+    const g = window as Window & { __codeBlockWired?: boolean };
+    if (!g.__codeBlockWired) {
+        g.__codeBlockWired = true;
+        wireCopyButtons();
+    }
+</script>

@@ -1,0 +1,161 @@
+---
+import { Download, ImageIcon, Sparkles } from "@lucide/astro";
+
+interface Props {
+  /**
+   * `post` mirrors the article card (thumbnail + title + description + date),
+   * `asset` mirrors the digital asset card (thumbnail + badge + title +
+   * description + price + download), `panel` is a plain card (snippets).
+   */
+  variant?: "post" | "asset" | "panel";
+}
+
+const { variant = "post" } = Astro.props;
+---
+
+{
+  variant === "post" && (
+    <div class="coming-soon coming-soon--post" data-animate>
+      <div class="coming-soon__thumb">
+        <div class="flex size-14 items-center justify-center rounded-2xl border border-dashed border-coc-line bg-coc-surface text-coc-muted-soft">
+          <Sparkles width="24" height="24" />
+        </div>
+      </div>
+      <div class="coming-soon__body">
+        <h3 class="mb-2 text-xl font-bold leading-snug text-coc-muted">Coming Soon</h3>
+        <p class="mb-6 line-clamp-2 text-sm text-coc-muted-soft">
+          Konten baru sedang disiapkan untuk kategori ini. Nantikan pembaruan berikutnya!
+        </p>
+        <div class="flex items-center gap-2">
+          <span class="inline-flex items-center gap-1.5 text-xs font-medium text-coc-muted-soft">
+            <span class="size-1.5 rounded-full bg-coc-line" />
+            Segera rilis
+          </span>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+{
+  variant === "asset" && (
+    <div class="coming-soon coming-soon--asset" data-animate>
+      <div class="coming-soon__thumb coming-soon__thumb--asset">
+        <div class="flex h-full w-full items-center justify-center text-coc-muted-soft">
+          <ImageIcon width="64" height="64" stroke-width="1.8" />
+        </div>
+        <span class="coming-soon__pill">Segera Hadir</span>
+      </div>
+      <div class="coming-soon__body">
+        <h3 class="mb-2 text-xl font-bold leading-snug text-coc-muted">Coming Soon</h3>
+        <p class="mb-6 line-clamp-2 grow text-sm text-coc-muted-soft">
+          Aset digital baru sedang disiapkan. Nantikan rilisnya di halaman ini!
+        </p>
+        <div class="mt-auto flex items-center justify-between border-t border-dashed border-coc-line pt-4">
+          <span class="text-sm font-bold text-coc-muted-soft">Segera</span>
+          <span class="flex size-8 items-center justify-center rounded-full border border-dashed border-coc-line bg-coc-surface text-coc-muted-soft">
+            <Download width="18" height="18" />
+          </span>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+{
+  variant === "panel" && (
+    <div class="coming-soon coming-soon--panel" data-animate>
+      <div class="coming-soon__body">
+        <span class="mb-5 inline-flex w-fit items-center gap-1.5 rounded-lg border border-dashed border-coc-line px-3 py-1 font-mono text-xs font-medium text-coc-muted-soft">
+          Segera Hadir
+        </span>
+        <h3 class="mb-3 text-2xl font-bold text-coc-muted">Coming Soon</h3>
+        <p class="mb-6 text-sm leading-relaxed text-coc-muted-soft">
+          Snippet baru sedang disiapkan. Nantikan pembaruan berikutnya!
+        </p>
+        <div class="mt-auto flex items-center justify-between border-t border-dashed border-coc-line pt-4 text-xs font-medium text-coc-muted-soft">
+          <span class="inline-flex items-center gap-1.5">
+            <Sparkles width="14" height="14" /> Segera rilis
+          </span>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+<style>
+  .coming-soon {
+    display: flex;
+    flex-direction: column;
+    border: 1.5px dashed var(--color-line);
+    background: color-mix(in srgb, var(--color-surface) 60%, transparent);
+    transition: border-color 200ms ease-in-out;
+  }
+  .coming-soon:hover {
+    border-color: color-mix(in srgb, var(--color-accent) 45%, var(--color-line));
+  }
+
+  /* --- Post variant: mirrors the article card --- */
+  .coming-soon--post {
+    gap: 1.5rem;
+    padding: 0;
+    border-radius: 0.75rem;
+    border: none;
+  }
+  .coming-soon--post .coming-soon__thumb {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    aspect-ratio: 391 / 249;
+    border-radius: 0.75rem;
+    border: 1.5px dashed var(--color-line);
+    background: var(--color-line-light);
+  }
+
+  /* --- Asset variant: mirrors the asset card --- */
+  .coming-soon--asset {
+    overflow: hidden;
+    border-radius: 1rem;
+  }
+  .coming-soon--asset .coming-soon__thumb {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    aspect-ratio: 391 / 249;
+    border-bottom: 1.5px dashed var(--color-line);
+    background: var(--color-line-light);
+  }
+  .coming-soon__pill {
+    position: absolute;
+    left: 1rem;
+    top: 1rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    border: 1px dashed var(--color-line);
+    background: color-mix(in srgb, var(--color-surface) 92%, transparent);
+    color: var(--color-muted-soft);
+    font-size: 0.75rem;
+    font-weight: 700;
+  }
+  .coming-soon--asset .coming-soon__body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    padding: 1.5rem;
+  }
+
+  /* --- Panel variant: mirrors the snippet card --- */
+  .coming-soon--panel {
+    gap: 1.25rem;
+    padding: 1.5rem;
+    border-radius: 1.5rem;
+  }
+  .coming-soon--panel .coming-soon__body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+  }
+</style>

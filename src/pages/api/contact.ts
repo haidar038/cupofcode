@@ -36,8 +36,8 @@ export const POST: APIRoute = async ({ request }) => {
     const ip = getClientIp(request);
 
     const resendApiKey = import.meta.env.RESEND_API_KEY;
-    const emailFrom = import.meta.env.EMAIL_FROM ?? "Cup of Code <hello@cupofcode.id>";
-    const emailAdmin = import.meta.env.EMAIL_ADMIN ?? "admin@cupofcode.id";
+    const emailFrom = import.meta.env.EMAIL_FROM ?? "Cup of Code <hello@cupofcode.cc>";
+    const emailAdmin = import.meta.env.EMAIL_ADMIN ?? "admin@cupofcode.cc";
 
     // Rate limit contact: 5 reqs/hour
     if (!rateLimit(`contact:${ip}`, 5, 3_600_000)) {

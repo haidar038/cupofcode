@@ -118,36 +118,54 @@ Location: src/emails/
 
 **Verification Command:**
 ```bash
-curl -I https://cupofcode.id/posts/panduan-lengkap-setup-tailwind-css-di-vite
+curl -I https://cupofcode.cc/posts/panduan-lengkap-setup-tailwind-css-di-vite
 # Check: Strict-Transport-Security, Content-Security-Policy, X-Frame-Options
 ```
 
 ---
 
-## Sprint F-5 — Analytics & Observability (2026-08-10 → 2026-08-11)
+## Sprint F-5 — Analytics & Observability (2026-08-04) ✅ Selesai
 
-### 5.1 Analytics Provider Setup
-- [ ] **Plausible** account created (privacy-friendly, self-hosted option)
-- [ ] Set env vars: `PUBLIC_PLAUSIBLE_DOMAIN`, `PUBLIC_PLAUSIBLE_SRC`
-- [ ] Add `<script>` tag ke `BaseHead.astro`
-- [ ] Verify events firing dengan `localStorage.debug = 'plausible'`
+### 5.1 Umami Migration Verification
+- [x] Verified `BaseHead.astro` menggunakan Umami script tag (`<script defer src={umamiSrc} data-website-id={umamiWebsiteId}/>`); **tidak ada** Plausible script/CSP remnants (`grep -ri "plausible" src/` → 0 hits di runtime code)
+- [x] CSP middleware (`src/middleware.ts`) memungkinkan origin Umami di `script-src` + `connect-src` — blok Plausible sudah dihapus sebelumnya, konfirmasi bersih
+- [x] `.env.example` masih mengandung `PUBLIC_PLAUSIBLE_*` (section komentar) — dicatat, cleanup di Sprint F-10 (documentation)
 
-### 5.2 Event Tracking Implementation
-| Event | Component File | Status |
+### 5.2 Event Track Swap (Plausible → Umami) ✅ Done
+| Event | File | Status |
 |-------|---------------|--------|
-| `search_query` | `SearchBar.tsx` | [ ] |
-| `asset_download` | `assets/[...slug].astro` | [ ] |
-| `share_twitter` | `posts/[...slug].astro` | [ ] |
-| `share_facebook` | `posts/[...slug].astro` | [ ] |
-| `newsletter_signup` | `NewsletterForm.tsx` | [ ] |
-| `contact_submit` | `contact.astro` | [ ] |
-| `404_error` | `404.astro` | [ ] |
+| `newsletter_signup` | `src/components/ui/NewsletterForm.tsx` | ✅ `window.umami?.track("newsletter_signup")` |
+| `contact_submit` | `src/pages/contact.astro` | ✅ `window.umami?.track("contact_submit")` |
+| `asset_download` | `src/pages/assets/[...slug].astro` | ✅ flat `{ title, type }` — no `props` nesting |
 
-### 5.3 Monitoring Setup
-- [ ] Sentry: verify error capture working
-- [ ] Sentry: upload sourcemaps via CI
-- [ ] Uptime: https://uptime.cupofcode.id (self-hosted) atau UptimeRobot
-- [ ] Performance: Google PageSpeed API weekly check (Cloudflare Workers)
+Semua event menggunakan **Umami v2 API**: `window.umami.track(event, flatData)`. Guard `typeof umami?.track === "function"` mencegah TypeError ketika script defer belum load.
+
+### 5.3 Code Quality Fixes (astro check hints)
+- [x] `NewsletterForm.tsx`: `FormEvent` deprecated → `SyntheticEvent<HTMLFormElement, SubmitEvent>` (match @types/react@19)
+- [x] `NewsletterForm.tsx`: unused `message` var → `[_, setMessage]` destructuring + comment
+- [x] `src/pages/index.astro`: unused `getEntry` import → removed
+- [x] `src/pages/posts/index.astro`: unused `getEntry`, `toneClass`, `Tone` type → removed
+- [x] `src/pages/snippets/index.astro`: unused `Copy` import → removed
+
+### 5.4 Sentry Sourcemaps Upload
+- [x] Added `vite.build.sourcemap: true` to `astro.config.mjs` — `.map` files generated di `dist/client/_astro/` (19 files)
+- [x] `sourceMapsUploadOptions.enabled: true` aktif via `sentry()` integration di `astro.config.mjs` (conditional on `PUBLIC_SENTRY_DSN`)
+- [x] `npx sentry-cli --version` available: **2.58.6** — verifikasi upload command: `npx sentry-cli sourcemaps upload ./dist/client` (post-build manual/CI)
+- [⚠️] Known non-blocking warning: `astro:content-render-imports` + `astro:transitions` sourcemaps broken (plugin tidak generate sourcemap). Tidak impact error capture; defer fix ke upstream fix.
+
+### 5.5 API Health Endpoint
+- [x] Created `src/pages/api/health.ts` — GET `/api/health` returns `{status: "ok", version: "1.1.2", uptime: <s>, ts: <ISO>}`
+- [x] `Cache-Control: no-cache, no-store` header (uptime robot friendly)
+- [x] Sitemap filter already excludes `/api/*` (dari `astro.config.mjs`)
+
+**Verification:**
+- `npx astro check` → **0 errors, 0 warnings, 12 hints** (was 17; −5 from unused vars + FormEvent fixes)
+- `npm run build` → sukses (17.52s); sourcemap files: **19** di `dist/client/_astro/`
+
+**Catatan luar scope (ditemukan, TIDAK dikerjakan):**
+- `package.json` script `dev`/`build` belum include `sentry-cli sourcemaps upload` — integrate di CI/CD (Sprint F-9 atau F-10)
+- `WARN [vite]` chunk size >500 kB (pre-existing, F-6 target)
+- Form `contact.astro` still uses `set:html` for GA inline script — CSP nonce deferred to Post-Launch F-11 (see Decision Log 2026-08-03)
 
 ---
 
@@ -223,16 +241,16 @@ CSS Total ≤ 50KB gzipped
 
 **URLs to Test:**
 ```
-https://cupofcode.id/ → Homepage
-https://cupofcode.id/posts → Posts listing
-https://cupofcode.id/posts/best-practices-keamanan-nodejs → Article
-https://cupofcode.id/assets → Assets listing
-https://cupofcode.id/assets/bento-grid-card → Asset detail
-https://cupofcode.id/snippets → Snippets listing
-https://cupofcode.id/about → About
-https://cupofcode.id/contact → Contact
-https://cupofcode.id/privacy → Privacy Policy
-https://cupofcode.id/terms → Terms of Service
+https://cupofcode.cc/ → Homepage
+https://cupofcode.cc/posts → Posts listing
+https://cupofcode.cc/posts/best-practices-keamanan-nodejs → Article
+https://cupofcode.cc/assets → Assets listing
+https://cupofcode.cc/assets/bento-grid-card → Asset detail
+https://cupofcode.cc/snippets → Snippets listing
+https://cupofcode.cc/about → About
+https://cupofcode.cc/contact → Contact
+https://cupofcode.cc/privacy → Privacy Policy
+https://cupofcode.cc/terms → Terms of Service
 ```
 
 ---
@@ -297,13 +315,13 @@ https://cupofcode.id/terms → Terms of Service
 | F-2 | 11 | 2 | 3 | 16 | 93% (15/16, 1 item deferred: hosting file aktual di `public/downloads/`) |
 | F-3 | 8 | 2 | 2 | 12 | 83% (10/12, 2 deferred → P.10: double opt-in + Upstash subscriber storage + unsubscribe flow) |
 | F-4 | 4 | 2 | 3 | 9 | 0% |
-| F-5 | 5 | 4 | 2 | 11 | 0% |
+| F-5 | 5 | 4 | 2 | 11 | 64% (7/11; 4 remaining → P.11: `search_query`, `share_*`, `244_error` events + UptimeRobot/Slack alert config) |
 | F-6 | 1 | 3 | 2 | 6 | 0% |
 | F-7 | 2 | 4 | 1 | 7 | 0% |
 | F-8 | 6 | 0 | 0 | 6 | 0% |
 | F-9 | 8 | 4 | 1 | 13 | 0% |
 | F-10 | 6 | 1 | 3 | 10 | 0% |
-| **Total** | **55** | **22** | **19** | **96** | **28%** (27/96) |
+| **Total** | **55** | **22** | **19** | **96** | **35%** (34/96) |
 
 **Target:** 75% items complete (72+) untuk hit **v1.2.0-release** (production ready).
 

@@ -1,7 +1,7 @@
 ---
 export const prerender = true;
 import { Image } from "astro:assets";
-import { getCollection, getEntry, render } from "astro:content";
+import { getCollection, getEntry } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import AuthorAvatar from "../../assets/coc-avatar.svg";
 import FeaturedImage from "../../assets/blog-placeholder-1.jpg";
@@ -9,59 +9,61 @@ import { SITE_TITLE, SITE_URL } from "../../consts";
 import { Clock, ImageIcon } from "@lucide/astro";
 import Breadcrumb from "../../components/Breadcrumb.astro";
 import BackToTop from "../../components/ui/BackToTop.tsx";
+import CodeBlock from "../../components/ui/CodeBlock.astro";
+import TableOfContents from "../../components/TableOfContents.astro";
+import { splitBody, renderProse, extractHeadings } from "../../lib/markdown";
 
 export async function getStaticPaths() {
-  const posts = await getCollection("posts");
-  return posts.map((post) => ({
-    params: { slug: post.id },
-    props: { post },
-  }));
+    const posts = await getCollection("posts");
+    return posts.map((post) => ({
+        params: { slug: post.id },
+        props: { post },
+    }));
 }
 
 const { post } = Astro.props;
-const { Content, headings } = await render(post);
 
 const category = await getEntry("categories", post.data.category);
+
+// Body is rendered through our own pipeline so every code block becomes a
+// Shiki-highlighted dark editor viewer and prose gets consistent typography.
+const bodySegments = splitBody(post.body || "");
+const headings = extractHeadings(post.body || "");
 const toneClass: Record<string, string> = {
-  yellow: "bg-coc-tag-yellow",
-  green: "bg-coc-tag-green",
-  pink: "bg-coc-tag-pink",
+    yellow: "bg-coc-tag-yellow",
+    green: "bg-coc-tag-green",
+    pink: "bg-coc-tag-pink",
 };
 
 const toc = headings.filter((h) => h.depth === 2);
 
 const allPosts = await getCollection("posts");
-const sameCategory = allPosts.filter(
-  (p) => p.id !== post.id && p.data.category === post.data.category
-);
-const otherPosts = allPosts.filter(
-  (p) => p.id !== post.id && p.data.category !== post.data.category
-);
+const sameCategory = allPosts.filter((p) => p.id !== post.id && p.data.category === post.data.category);
+const otherPosts = allPosts.filter((p) => p.id !== post.id && p.data.category !== post.data.category);
 const related = [...sameCategory, ...otherPosts].slice(0, 3);
 
 const relatedWithCategories = await Promise.all(
-  related.map(async (item) => ({
-    item,
-    category: await getEntry("categories", item.data.category),
-  })),
+    related.map(async (item) => ({
+        item,
+        category: await getEntry("categories", item.data.category),
+    })),
 );
 
 const authorName = "cup of code";
-const authorBio =
-  "Frontend enthusiast dan content writer yang membagikan tutorial coding, tips & trik, serta aset digital untuk membantu developer Indonesia berkembang.";
+const authorBio = "Frontend enthusiast dan content writer yang membagikan tutorial coding, tips & trik, serta aset digital untuk membantu developer Indonesia berkembang.";
 const authorSocialLinks = [
-  { label: "GitHub", url: "https://github.com/cupofcode" },
-  { label: "Twitter", url: "https://twitter.com/cupofcode" },
+    { label: "GitHub", url: "https://github.com/cupofcode" },
+    { label: "Twitter", url: "https://twitter.com/cupofcode" },
 ];
 const abs = (u: string) => new URL(u, SITE_URL).href;
 const pageUrl = abs(Astro.url.pathname);
 const formattedDate = post.data.publishDate
-  ? new Intl.DateTimeFormat("id-ID", {
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-    }).format(post.data.publishDate)
-  : null;
+    ? new Intl.DateTimeFormat("id-ID", {
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+      }).format(post.data.publishDate)
+    : null;
 
 const wordCount = post.body ? post.body.trim().split(/\s+/).length : 0;
 const readingTimeMinutes = Math.max(1, Math.ceil(wordCount / 200));
@@ -69,164 +71,121 @@ const readingTimeMinutes = Math.max(1, Math.ceil(wordCount / 200));
 const publishedISO = post.data.publishDate?.toISOString();
 
 const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "Article",
-  headline: post.data.title,
-  description: post.data.description || "",
-  image: abs(post.data.featured_image || FeaturedImage.src),
-  ...(publishedISO
-    ? { datePublished: publishedISO, dateModified: publishedISO }
-    : {}),
-  author: {
-    "@type": "Person",
-    name: authorName,
-    url: abs("/about"),
-  },
-  publisher: {
-    "@type": "Organization",
-    name: SITE_TITLE,
-    logo: {
-      "@type": "ImageObject",
-      url: abs("/favicon.svg"),
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: post.data.title,
+    description: post.data.description || "",
+    image: abs(post.data.featured_image || FeaturedImage.src),
+    ...(publishedISO ? { datePublished: publishedISO, dateModified: publishedISO } : {}),
+    author: {
+        "@type": "Person",
+        name: authorName,
+        url: abs("/about"),
     },
-  },
-  mainEntityOfPage: {
-    "@type": "WebPage",
-    "@id": pageUrl,
-  },
-  wordCount: wordCount,
-  timeRequired: `PT${readingTimeMinutes}M`,
+    publisher: {
+        "@type": "Organization",
+        name: SITE_TITLE,
+        logo: {
+            "@type": "ImageObject",
+            url: abs("/favicon.svg"),
+        },
+    },
+    mainEntityOfPage: {
+        "@type": "WebPage",
+        "@id": pageUrl,
+    },
+    wordCount: wordCount,
+    timeRequired: `PT${readingTimeMinutes}M`,
 };
 ---
 
 <BaseLayout
-  title={`${post.data.title} | ${SITE_TITLE}`}
-  description={post.data.description ?? post.data.title}
-  image={post.data.featured_image ? post.data.featured_image : FeaturedImage.src}
-  type="article"
+    title={`${post.data.title} | ${SITE_TITLE}`}
+    description={post.data.description ?? post.data.title}
+    image={post.data.featured_image ? post.data.featured_image : FeaturedImage.src}
+    type="article"
 >
-      <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
-      <Breadcrumb
-        items={[
-          { label: "Artikel", href: "/posts" },
-          ...(category ? [{ label: category.data.label, href: `/posts?cat=${post.data.category}` }] : []),
-          { label: post.data.title },
-        ]}
-      />
-      <!-- Article header -->
-      <header
-        class="mx-auto max-w-3xl justify-start items-center flex flex-col"
-      >
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+    <Breadcrumb items={[{ label: "Artikel", href: "/posts" }, ...(category ? [{ label: category.data.label, href: `/posts?cat=${post.data.category}` }] : []), { label: post.data.title }]} />
+    <!-- Article header -->
+    <header class="mx-auto max-w-3xl justify-start items-center flex flex-col">
         {
-          category && (
-            <p
-              class:list={[
-                "mb-5 inline-block rounded-full px-3 py-1 text-xs font-semibold leading-4 text-[#212121]",
-                toneClass[category.data.tone] ?? "bg-coc-tag-yellow",
-              ]}
-            >
-              {category.data.label}
-            </p>
-          )
+            category && (
+                <p class:list={["mb-5 inline-block rounded-full px-3 py-1 text-xs font-semibold leading-4 text-[#212121]", toneClass[category.data.tone] ?? "bg-coc-tag-yellow"]}>
+                    {category.data.label}
+                </p>
+            )
         }
 
-        <h1
-          class="font-coc-display text-3xl text-center leading-1.2 text-coc-text sm:text-4xl lg:text-[2.75rem]"
-        >
-          {post.data.title}
+        <h1 class="font-coc-display text-3xl text-center leading-1.2 text-coc-text sm:text-4xl lg:text-[2.75rem]">
+            {post.data.title}
         </h1>
 
-        <div
-          class="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-coc-muted"
-        >
-          <span class="inline-flex items-center gap-2 font-medium">
-            <img
-              src={AuthorAvatar.src}
-              alt={`${authorName} avatar`}
-              class="size-5 rounded-full"
-            />
-            {authorName}
-          </span>
-          {
-            formattedDate && (
-              <span class="inline-flex items-center gap-1.5">
-                <span class="h-1 w-1 rounded-full bg-coc-muted-soft" />
+        <div class="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-coc-muted">
+            <span class="inline-flex items-center gap-2 font-medium">
+                <img src={AuthorAvatar.src} alt={`${authorName} avatar`} class="size-5 rounded-full" />
+                {authorName}
+            </span>
+            {
+                formattedDate && (
+                    <span class="inline-flex items-center gap-1.5">
+                        <span class="h-1 w-1 rounded-full bg-coc-muted-soft" />
+                        <Clock width="15" height="15" />
+                        {formattedDate}
+                    </span>
+                )
+            }
+            <span class="inline-flex items-center gap-1.5">
+                <span class="h-1 w-1 rounded-full bg-coc-muted-soft"></span>
                 <Clock width="15" height="15" />
-                {formattedDate}
-              </span>
-            )
-          }
-          <span class="inline-flex items-center gap-1.5">
-            <span class="h-1 w-1 rounded-full bg-coc-muted-soft" />
-            <Clock width="15" height="15" />
-            {readingTimeMinutes} menit baca
-          </span>
+                {readingTimeMinutes} menit baca
+            </span>
         </div>
-      </header>
+    </header>
 
-      <!-- Hero image -->
-      <div class="mt-8">
+    <!-- Hero image -->
+    <div class="mt-8">
         {
-          post.data.featured_image ? (
-            <Image
-              src={post.data.featured_image}
-              alt={post.data.title}
-              width={1200}
-              height={600}
-              loading="eager"
-              fetchpriority="high"
-              class="aspect-2/1 w-full rounded-3xl object-cover shadow-var(--shadow-lg)"
-            />
-          ) : (
-            <Image
-              src={FeaturedImage}
-              alt={post.data.title}
-              loading="eager"
-              fetchpriority="high"
-              class="aspect-2/1 w-full rounded-3xl object-cover shadow-var(--shadow-lg)"
-            />
-          )
+            post.data.featured_image ? (
+                <Image
+                    src={post.data.featured_image}
+                    alt={post.data.title}
+                    width={1200}
+                    height={600}
+                    loading="eager"
+                    fetchpriority="high"
+                    class="aspect-2/1 w-full rounded-3xl object-cover shadow-var(--shadow-lg)"
+                />
+            ) : (
+                <Image src={FeaturedImage} alt={post.data.title} loading="eager" fetchpriority="high" class="aspect-2/1 w-full rounded-3xl object-cover shadow-var(--shadow-lg)" />
+            )
         }
-      </div>
+    </div>
 
-      <!-- Content + Table of contents -->
-      <div class="mt-12 grid grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-14">
+    <!-- Content + Table of contents -->
+    <div class="mt-12 grid grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-14">
         <!-- Sidebar TOC -->
         {
-          toc.length > 0 && (
-            <aside class="hidden lg:col-span-3 lg:block">
-              <div class="sticky top-6 space-y-4">
-                <h2 class="text-sm font-bold uppercase tracking-wider text-coc-text">
-                  Daftar Isi
-                </h2>
-                <nav aria-label="Daftar isi" class="space-y-3">
-                  {toc.map((h) => (
-                    <a
-                      href={`#${h.slug}`}
-                      class="toc-link flex items-start gap-3 text-sm leading-6 text-coc-muted transition-colors hover:text-coc-text"
-                    >
-                      <span class="toc-dot mt-2 size-1.5 shrink-0 rounded-full border border-coc-line transition-colors" />
-                      {h.text}
-                    </a>
-                  ))}
-                </nav>
-              </div>
-            </aside>
-          )
+            toc.length > 0 && (
+                <aside class="hidden lg:col-span-3 lg:block">
+                    <div class="sticky top-6">
+                        <TableOfContents headings={toc} />
+                    </div>
+                </aside>
+            )
         }
 
         <!-- Article body -->
-        <article
-          class:list={[
-            "post-content min-w-0 lg:col-span-9",
-            toc.length > 0 ? "" : "lg:col-start-3",
-          ]}
-        >
-          <Content />
+        <article class:list={["post-content prose-coc min-w-0 lg:col-span-9", toc.length > 0 ? "" : "lg:col-start-3"]}>
+            {
+                bodySegments.map((segment) =>
+                    segment.type === "code" ? <CodeBlock code={segment.code} language={segment.lang} label={segment.label} /> : <div set:html={renderProse(segment.markdown)} />,
+                )
+            }
         </article>
-      </div>
-      <!-- Author Bio -->
-      <div class="my-14 flex items-start gap-5 rounded-3xl border border-coc-line bg-coc-surface p-6 md:p-8">
+    </div>
+    <!-- Author Bio -->
+    <div class="my-14 flex items-start gap-5 rounded-3xl border border-coc-line bg-coc-surface p-6 md:p-8">
         <img
           src={AuthorAvatar.src}
           alt={`Foto ${authorName}`}
@@ -250,231 +209,92 @@ const jsonLd = {
         </div>
       </div>
 
-      <!-- Share -->
-      <div
-        class="flex flex-col items-center justify-center gap-4 border-b border-coc-line pb-14 text-center"
-      >
+    <!-- Share -->
+    <div class="mt-[1.1rem] flex flex-col items-center justify-center gap-4 border-b border-coc-line pb-14 text-center">
         <p class="font-medium text-coc-muted">Bagikan artikel ini</p>
         <div class="flex items-center gap-5 text-coc-muted">
-          <a
-            href={`https://wa.me/?text=${encodeURIComponent(post.data.title + " " + pageUrl)}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="transition-colors hover:text-coc-accent"
-            aria-label="Bagikan ke WhatsApp"
-            ><svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg></a
-          >
-          <a
-            href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(pageUrl)}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="transition-colors hover:text-coc-accent"
-            aria-label="Bagikan ke Facebook"
-            ><svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a
-          >
-          <a
-            href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(post.data.title)}&url=${encodeURIComponent(pageUrl)}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="transition-colors hover:text-coc-accent"
-            aria-label="Bagikan ke Twitter"
-            ><svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a
-          >
+            <a
+                href={`https://wa.me/?text=${encodeURIComponent(post.data.title + " " + pageUrl)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="transition-colors hover:text-coc-accent"
+                aria-label="Bagikan ke WhatsApp"
+                ><svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"
+                    ><path
+                        d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"
+                    ></path></svg
+                ></a
+            >
+            <a
+                href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(pageUrl)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="transition-colors hover:text-coc-accent"
+                aria-label="Bagikan ke Facebook"
+                ><svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"
+                    ><path
+                        d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"
+                    ></path></svg
+                ></a
+            >
+            <a
+                href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(post.data.title)}&url=${encodeURIComponent(pageUrl)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="transition-colors hover:text-coc-accent"
+                aria-label="Bagikan ke Twitter"
+                ><svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"
+                    ><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg
+                ></a
+            >
         </div>
-      </div>
+    </div>
 
-      <!-- Related articles -->
-      {
+    <!-- Related articles -->
+    {
         related.length > 0 && (
-          <section class="mt-16" aria-label="Artikel lainnya">
-            <h2 class="mb-8 font-coc-body text-2xl font-bold text-coc-text">
-              Artikel Lainnya
-            </h2>
-            <div class="grid gap-10 sm:grid-cols-3 lg:gap-x-14 lg:gap-y-12">
-              {relatedWithCategories.map(({ item, category: cat }) => (
-                <article class="flex flex-col items-start gap-5 transition hover:-translate-y-0.5">
-                  <a
-                    class="flex aspect-391/249 w-full items-center justify-center rounded-3xl bg-[#d9d9d9] text-[#aaa]"
-                    href={`/posts/${item.id}`}
-                    aria-label={`Baca artikel ${item.data.title}`}
-                    title={item.data.title}
-                  >
-                    <ImageIcon width="96" height="96" stroke-width="1.8" />
-                  </a>
-                  <div class="flex flex-col items-start gap-3">
-                    {cat && (
-                      <span
-                        class:list={[
-                          "rounded-full px-3 py-1 text-xs leading-4 text-[#212121]",
-                          toneClass[cat.data.tone] ?? "bg-coc-tag-yellow",
-                        ]}
-                      >
-                        {cat.data.label}
-                      </span>
-                    )}
-                    <h3 class="text-xl font-bold leading-7 text-coc-text">
-                      <a
-                        href={`/posts/${item.id}`}
-                        class="hover:text-coc-accent"
-                      >
-                        {item.data.title}
-                      </a>
-                    </h3>
-                    {item.data.description && (
-                      <p class="line-clamp-2 text-base leading-6 text-coc-muted">
-                        {item.data.description}
-                      </p>
-                    )}
-                  </div>
-                </article>
-              ))}
-            </div>
-          </section>
+            <section class="mt-16" aria-label="Artikel lainnya">
+                <h2 class="mb-8 font-coc-body text-2xl font-bold text-coc-text">Artikel Lainnya</h2>
+                <div class="grid gap-10 sm:grid-cols-3 lg:gap-x-14 lg:gap-y-12">
+                    {relatedWithCategories.map(({ item, category: cat }) => (
+                        <article class="flex flex-col items-start gap-5 transition hover:-translate-y-0.5">
+                            <a
+                                class="flex aspect-391/249 w-full items-center justify-center overflow-hidden rounded-3xl bg-[#d9d9d9] text-[#aaa]"
+                                href={`/posts/${item.id}`}
+                                aria-label={`Baca artikel ${item.data.title}`}
+                                title={item.data.title}
+                            >
+                                {item.data.featured_image ? (
+                                    <Image
+                                        src={item.data.featured_image}
+                                        alt={item.data.title}
+                                        width={800}
+                                        height={509}
+                                        sizes="(max-width: 640px) 100vw, 33vw"
+                                        densities={[1, 2]}
+                                        class="h-full w-full object-cover transition duration-200 hover:scale-[1.02]"
+                                        loading="lazy"
+                                    />
+                                ) : (
+                                    <div class="flex h-full w-full items-center justify-center rounded-3xl bg-linear-to-br from-coc-line-light to-coc-line text-coc-muted-soft">
+                                        <ImageIcon width="96" height="96" stroke-width="1.8" />
+                                    </div>
+                                )}
+                            </a>
+                            <div class="flex flex-col items-start gap-3">
+                                {cat && <span class:list={["rounded-full px-3 py-1 text-xs leading-4 text-[#212121]", toneClass[cat.data.tone] ?? "bg-coc-tag-yellow"]}>{cat.data.label}</span>}
+                                <h3 class="text-xl font-bold leading-7 text-coc-text">
+                                    <a href={`/posts/${item.id}`} class="hover:text-coc-accent">
+                                        {item.data.title}
+                                    </a>
+                                </h3>
+                                {item.data.description && <p class="line-clamp-2 text-base leading-6 text-coc-muted">{item.data.description}</p>}
+                            </div>
+                        </article>
+                    ))}
+                </div>
+            </section>
         )
-      }
-      <BackToTop client:idle />
-    </BaseLayout>
-
-    <style is:global>
-      .post-content h2 {
-        font-family: var(--font-body);
-        font-size: 1.75rem;
-        line-height: 1.3;
-        font-weight: bold;
-        color: var(--color-text);
-        margin: 2.75rem 0 1rem;
-        scroll-margin-top: 6rem;
-      }
-      .post-content > p:first-of-type {
-        margin-top: 0;
-      }
-      .post-content p {
-        margin: 1.1rem 0;
-        line-height: 1.75;
-        color: var(--color-muted);
-      }
-      .post-content ul,
-      .post-content ol {
-        margin: 1.25rem 0;
-        padding-left: 1.5rem;
-      }
-      .post-content ul {
-        list-style: disc;
-      }
-      .post-content ol {
-        list-style: decimal;
-      }
-      .post-content li {
-        margin: 0.6rem 0;
-        line-height: 1.75;
-        color: var(--color-muted);
-      }
-      .post-content li::marker {
-        color: var(--color-accent);
-      }
-      .post-content strong {
-        color: var(--color-text);
-        font-weight: 700;
-      }
-      .post-content em {
-        font-style: italic;
-      }
-      .post-content a {
-        color: var(--color-text);
-        text-decoration: underline;
-        text-underline-offset: 3px;
-        text-decoration-color: var(--color-accent);
-      }
-      .post-content a:hover {
-        color: var(--color-accent);
-      }
-      .post-content code {
-        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-        font-size: 0.875em;
-        background: var(--color-line-light);
-        border: 1px solid var(--color-line);
-        border-radius: 6px;
-        padding: 0.15em 0.4em;
-      }
-      .post-content blockquote {
-        margin: 1.5rem 0;
-        padding: 1rem 1.25rem;
-        background: var(--color-coc-tag-yellow);
-        border-left: 4px solid var(--color-accent);
-        border-radius: 0 12px 12px 0;
-        color: var(--color-text);
-      }
-      .post-content blockquote p {
-        margin: 0;
-        color: var(--color-text);
-      }
-
-      /* Active Table of Contents item */
-      .toc-link.is-active {
-        color: var(--color-text);
-        font-weight: 700;
-      }
-      .toc-link.is-active .toc-dot {
-        background: var(--color-accent);
-        border-color: transparent;
-      }
-    </style>
-
-    <script>
-      const links = Array.from(
-        document.querySelectorAll<HTMLAnchorElement>(".toc-link"),
-      );
-      const targets = links
-        .map((link) => {
-          const id = link.getAttribute("href")?.slice(1) ?? "";
-          const heading = document.getElementById(id);
-          return heading ? { id, link, heading } : null;
-        })
-        .filter(
-          (
-            t,
-          ): t is {
-            id: string;
-            link: HTMLAnchorElement;
-            heading: HTMLElement;
-          } => t !== null,
-        );
-
-      if (targets.length) {
-        const setActive = (id: string) => {
-          for (const { link, id: linkId } of targets) {
-            link.classList.toggle("is-active", linkId === id);
-          }
-        };
-
-        // Default: first item active until the user scrolls.
-        let activeId = targets[0].id;
-        setActive(activeId);
-
-        // A heading becomes "active" once it crosses into the top portion of the viewport.
-        const observer = new IntersectionObserver(
-          (entries) => {
-            for (const entry of entries) {
-              if (entry.isIntersecting) {
-                activeId = entry.target.id;
-                setActive(activeId);
-              }
-            }
-          },
-          { rootMargin: "0px 0px -75% 0px", threshold: 0 },
-        );
-        targets.forEach(({ heading }) => observer.observe(heading));
-
-        // Make sure the last section stays highlighted when scrolled to the very bottom.
-        const onScroll = () => {
-          const nearBottom =
-            window.innerHeight + window.scrollY >=
-            document.body.offsetHeight - 4;
-          if (nearBottom) {
-            activeId = targets[targets.length - 1].id;
-            setActive(activeId);
-          }
-        };
-        window.addEventListener("scroll", onScroll, { passive: true });
-      }
-    </script>
+    }
+    <BackToTop client:idle />
+</BaseLayout>

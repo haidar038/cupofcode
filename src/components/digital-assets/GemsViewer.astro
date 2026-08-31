@@ -1,5 +1,5 @@
 ---
-import CopyButton from "../ui/CopyButton.tsx";
+import CodeBlock from "../ui/CodeBlock.astro";
 import { ChevronDown, ChevronUp, Gem, Zap } from "@lucide/astro";
 
 interface Props {
@@ -12,25 +12,24 @@ const { instructions, exampleBefore, exampleAfter, tips } = Astro.props;
 const hasExample = Boolean(exampleBefore && exampleAfter);
 ---
 
-<div class="rounded-3xl border border-coc-line bg-coc-surface overflow-hidden">
-  <div class="flex items-center justify-between border-b border-coc-line bg-gray-50 px-6 py-4">
-    <h3 class="flex items-center gap-2 font-bold text-coc-text">
-      <span class="rounded-lg bg-indigo-100 p-2 text-indigo-700">
-        <Gem width="16" height="16" />
-      </span>
-      System Instructions (Gem)
-    </h3>
-    <CopyButton text={instructions} label="Salin Instructions" client:idle />
+<div class="overflow-hidden rounded-3xl border border-coc-line bg-coc-surface">
+  <div class="flex items-center gap-2.5 border-b border-coc-line bg-gray-50 px-6 py-4">
+    <span class="rounded-lg bg-indigo-100 p-2 text-indigo-700">
+      <Gem width="16" height="16" />
+    </span>
+    <h3 class="font-bold text-coc-text">System Instructions (Gem)</h3>
   </div>
 
-  <div class="relative">
-    <div
-      class="max-h-96 overflow-y-auto bg-[#1e1e2e] p-6 font-mono text-sm leading-relaxed text-gray-300"
-      tabindex="0"
-      aria-label="Instruksi system bisa di-scroll dengan keyboard"
-    >
-      <pre class="whitespace-pre-wrap break-words">{instructions}</pre>
-    </div>
+  <div class="bg-coc-bg p-2 sm:p-4">
+    {
+      instructions ? (
+        <CodeBlock code={instructions} language="text" label="System Instructions" />
+      ) : (
+        <p class="px-4 py-8 text-center text-sm text-coc-muted-soft">
+          Belum ada instruksi untuk gem ini.
+        </p>
+      )
+    }
   </div>
 
   {hasExample && (
