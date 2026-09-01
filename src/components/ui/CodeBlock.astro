@@ -11,75 +11,31 @@ interface Props {
 
 const { code, language = "", label } = Astro.props;
 
-const raw = code !== undefined ? code.replace(/\n$/, "") : "";
-const lines = raw.split("\n");
-const langLabel = language || "text";
-
-// Server-side Shiki highlighting (build time, one-dark-pro theme).
-const highlighted = code !== undefined ? await highlightCodeLines(raw, language || "text") : null;
+// `body` is rendered as a single inline HTML string. The Astro/Vite JSX
+// formatter inserts stray whitespace text nodes (newlines + indent) between
+// tags inside `<pre>`/`<code>`, which the browser renders as visible gaps.
+// Building the markup server-side and injecting it with `set:html` sidesteps
+// the formatter entirely.
+let body = "";
+if (code !== undefined) {
+    const raw = code.replace(/\n$/, "");
+    const lines = raw.split("\n");
+    const highlighted = await highlightCodeLines(raw, language || "text");
+    const langLabel = language || "text";
+    const escape = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    const labelHtml = label ? `<span class="code-viewer__label">${escape(label)}</span>` : "";
+    const linesHtml = lines
+        .map((line, i) => {
+            const hl = highlighted?.[i];
+            const text = hl !== undefined ? `<span class="code-line__text">${hl}</span>` : `<span class="code-line__text">${line === "" ? " " : escape(line)}</span>`;
+            return `<div class="code-line"><span class="code-line__no" aria-hidden="true">${i + 1}</span>${text}</div>`;
+        })
+        .join("");
+    body = `<div class="code-viewer" data-code-viewer><div class="code-viewer__header"><span class="code-viewer__dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="code-viewer__lang">${labelHtml}<span class="code-viewer__lang-tag">${langLabel}</span></span><button type="button" class="code-viewer__copy" data-copy-all aria-label="Salin semua kode"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span>Salin</span></button></div><div class="code-viewer__body"><pre class="code-viewer__pre"><code>${linesHtml}</code></pre></div></div>`;
+}
 ---
 
-{
-    code !== undefined && (
-        <div class="code-viewer" data-code-viewer>
-            <div class="code-viewer__header">
-                <span class="code-viewer__dots" aria-hidden="true">
-                    <>
-                        <i />
-                        <i />
-                        <i />
-                    </>
-                </span>
-                <span class="code-viewer__lang">
-                    {label ? <span class="code-viewer__label">{label}</span> : null}
-                    <span class="code-viewer__lang-tag">{langLabel}</span>
-                </span>
-                <button type="button" class="code-viewer__copy" data-copy-all aria-label="Salin semua kode">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                        <>
-                            <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
-                            <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
-                        </>
-                    </svg>
-                    <span>Salin</span>
-                </button>
-            </div>
-            <div class="code-viewer__body">
-                <pre>
-                    <code>
-                        {lines.map((line, i) => {
-                            const hl = highlighted?.[i];
-                            return (
-                                <div class="code-line">
-                                    <span class="code-line__no" aria-hidden="true">
-                                        {i + 1}
-                                    </span>
-                                    {hl !== undefined ? <span class="code-line__text" set:html={hl} /> : <span class="code-line__text">{line === "" ? " " : line}</span>}
-                                    <button type="button" class="code-line__copy" data-copy-line aria-label={`Salin baris ${i + 1}`}>
-                                        <svg
-                                            width="12"
-                                            height="12"
-                                            viewBox="0 0 24 24"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            stroke-width="2.5"
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                            aria-hidden="true"
-                                        >
-                                            <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
-                                            <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
-                                        </svg>
-                                    </button>
-                                </div>
-                            );
-                        })}
-                    </code>
-                </pre>
-            </div>
-        </div>
-    )
-}
+{body && <Fragment set:html={body} />}
 
 <style is:global>
     /* ---- Dark editor-style code viewer (one-dark-pro palette) ---- */
@@ -176,12 +132,14 @@ const highlighted = code !== undefined ? await highlightCodeLines(raw, language 
     .code-viewer__body {
         overflow-x: auto;
     }
-    .code-viewer__body pre {
+    .code-viewer__body pre,
+    .code-viewer__pre {
         margin: 0;
         padding: 0.75rem 0;
         background: transparent;
     }
-    .code-viewer__body code {
+    .code-viewer__body code,
+    .code-viewer__pre code {
         display: block;
         min-width: max-content;
         font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
@@ -200,7 +158,7 @@ const highlighted = code !== undefined ? await highlightCodeLines(raw, language 
     .code-line {
         position: relative;
         display: flex;
-        align-items: stretch;
+        align-items: center;
         padding-right: 0.5rem;
         transition: background 120ms ease-in-out;
     }
@@ -212,6 +170,7 @@ const highlighted = code !== undefined ? await highlightCodeLines(raw, language 
         padding-right: 1rem;
         text-align: right;
         color: #555a64;
+        line-height: 1;
         user-select: none;
     }
     .code-line__text {
@@ -223,51 +182,10 @@ const highlighted = code !== undefined ? await highlightCodeLines(raw, language 
     .code-line__text span {
         font-family: inherit;
     }
-    .code-line__copy {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        align-self: center;
-        flex: 0 0 auto;
-        width: 1.55rem;
-        height: 1.55rem;
-        margin-left: 0.5rem;
-        border: 1px solid #333a45;
-        border-radius: 6px;
-        background: #262b33;
-        color: #8a919e;
-        opacity: 0;
-        cursor: pointer;
-        transition:
-            opacity 120ms ease-in-out,
-            color 150ms ease-in-out,
-            border-color 150ms ease-in-out;
-    }
-    .code-line:hover .code-line__copy,
-    .code-line__copy:focus-visible {
-        opacity: 1;
-    }
-    @media (hover: none) {
-        .code-line__copy {
-            opacity: 0.55;
-        }
-    }
-    .code-line__copy:hover {
-        border-color: var(--color-accent);
-        color: #fff;
-    }
-    .code-line__copy.is-copied {
-        border-color: #28c840;
-        color: #28c840;
-    }
-    .code-line__copy:focus {
-        outline: 2px solid var(--color-accent);
-        outline-offset: 1px;
-    }
 </style>
 
 <script>
-    async function copyText(text: string, button: HTMLElement, isLine = false) {
+    async function copyText(text: string, button: HTMLElement) {
         if (!text) return;
         try {
             await navigator.clipboard.writeText(text);
@@ -286,10 +204,6 @@ const highlighted = code !== undefined ? await highlightCodeLines(raw, language 
             }
             ta.remove();
         }
-        if (isLine) {
-            showCopied(button);
-            return;
-        }
         const original = button.innerHTML;
         button.classList.add("is-copied");
         button.innerHTML =
@@ -300,9 +214,6 @@ const highlighted = code !== undefined ? await highlightCodeLines(raw, language 
         }, 1800);
     }
 
-    const COPY_CHECK =
-        '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>';
-
     function collectCode(viewer: HTMLElement): string {
         const rows = viewer.querySelectorAll<HTMLElement>(".code-line__text");
         return Array.from(rows)
@@ -310,35 +221,14 @@ const highlighted = code !== undefined ? await highlightCodeLines(raw, language 
             .join("\n");
     }
 
-    function showCopied(button: HTMLElement) {
-        const original = button.innerHTML;
-        button.classList.add("is-copied");
-        button.innerHTML = COPY_CHECK;
-        setTimeout(() => {
-            button.classList.remove("is-copied");
-            button.innerHTML = original;
-        }, 1400);
-    }
-
-    // Delegated handler: copy the whole block via the top-right "Salin" button,
-    // or a single line via its hover copy button.
+    // Delegated handler: copy the whole block via the top-right "Salin" button.
     function wireCopyButtons() {
         document.addEventListener("click", (event) => {
             const target = event.target as HTMLElement;
             const copyAll = target.closest<HTMLElement>("[data-copy-all]");
-            if (copyAll) {
-                const viewer = copyAll.closest<HTMLElement>(".code-viewer");
-                if (viewer) copyText(collectCode(viewer), copyAll);
-                return;
-            }
-            const copyLine = target.closest<HTMLElement>("[data-copy-line]");
-            if (copyLine) {
-                const line = copyLine.closest<HTMLElement>(".code-line");
-                const text = line?.querySelector<HTMLElement>(".code-line__text")?.textContent ?? "";
-                if (text.trim() !== "") {
-                    void copyText(text.replace(/\s+$/g, ""), copyLine, true);
-                }
-            }
+            if (!copyAll) return;
+            const viewer = copyAll.closest<HTMLElement>(".code-viewer");
+            if (viewer) void copyText(collectCode(viewer), copyAll);
         });
     }
 
