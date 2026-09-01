@@ -1,4 +1,35 @@
+# =====================================================
+# Cup of Code — robots.txt
+# https://cupofcode.cc/sitemap-index.xml
+# =====================================================
+
+# Default: izinkan semua bot crawl semua halaman publik
 User-agent: *
 Allow: /
+Disallow: /keystatic/
+Disallow: /keystatic
+Disallow: /api/
+Disallow: /api
+Disallow: /_astro/
 
+# Block SEO scraper bots (membebani server, tidak ada value tambah)
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
+
+User-agent: BLEXBot
+Disallow: /
+
+# Sitemap — WAJIB ada di robots.txt (Google best practice)
 Sitemap: https://cupofcode.cc/sitemap-index.xml
+
+# Host (opsional, untuk Yandex Baidu; Google/Bing ignore)
+Host: https://cupofcode.cc

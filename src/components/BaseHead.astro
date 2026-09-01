@@ -33,6 +33,11 @@ const gaId = import.meta.env.PUBLIC_GA_ID;
 <meta name="generator" content={Astro.generator} />
 <meta name="theme-color" content="#ffbb00" />
 
+<!-- Google Search Console Verification -->
+{import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION && (
+    <meta name="google-site-verification" content={import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION} />
+)}
+
 <!-- Web Fonts: preconnect + stylesheet (display=swap cegah FOIT) -->
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

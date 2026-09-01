@@ -257,6 +257,93 @@ $ npx astro build
 
 ---
 
+*Last updated: 2026-09-01*
+
+---
+
+## [Sprint F-12] — 2026-09-01 — SEO Hardening (robots.txt & Sitemap)
+
+**Status:** ✅ Selesai (build verified)
+**Tujuan:** Optimalkan SEO discoverability untuk Google Search Console
+**Plan:** `.kilo/plans/1788094537142-seo-robots-sitemap-plan.md`
+
+### Task List
+
+- [x] **F-12.1** Rewrite `public/robots.txt` — explicit allow/disallow, block 5 SEO scraper bots (AhrefsBot, SemrushBot, MJ12bot, DotBot, BLEXBot), sitemap declaration, Host directive
+- [x] **F-12.2** Update sitemap config (`astro.config.mjs`) — `startsWith` filter (fix substring false match), exclude `/404` dan `/_astro/`, tambah `serialize` callback dengan priority & changefreq per path category
+- [x] **F-12.3** Tambah conditional Google Search Console verification meta tag di `BaseHead.astro` (render hanya jika `PUBLIC_GOOGLE_SITE_VERIFICATION` di-set)
+- [x] **F-12.4** Dokumentasikan `PUBLIC_GOOGLE_SITE_VERIFICATION` di `.env.example`
+- [x] **F-12.5** `npx astro check` → 0 errors
+- [x] **F-12.6** `npx astro build` → sukses
+- [x] **F-12.7** Inspect `.vercel/output/static/robots.txt` & `sitemap-0.xml` → valid, exclude `/keystatic` & `/api`
+
+### Perubahan Teknis
+
+**`public/robots.txt`** — Diperluas dari 4 baris jadi 30+ baris:
+- Default `User-agent: *` Allow `/`
+- Disallow `/keystatic/`, `/keystatic`, `/api/`, `/api`, `/_astro/`
+- Block 5 SEO scraper bots agresif
+- Sitemap & Host declaration ke `https://cupofcode.cc`
+
+**`astro.config.mjs` sitemap integration:**
+- Filter: `!page.startsWith('/keystatic') && !page.startsWith('/api/') && !page.startsWith('/_astro/') && page !== '/404'`
+- Serialize callback: priority & changefreq disesuaikan per kategori (homepage 1.0/weekly, listing 0.8/weekly, posts detail 0.9/monthly, info 0.5/yearly, legal 0.3/yearly)
+- Path normalization untuk handle trailing slash (`/about/` vs `/about`)
+- `lastmod` belum di-set eksplisit (Opsi C dari plan) — acceptable untuk MVP, bisa di-upgrade di Sprint F-13 dengan field `lastModified` di content schema
+
+**`src/components/BaseHead.astro`:**
+- Tambah conditional render `<meta name="google-site-verification" content={...} />` setelah `<meta name="generator" />`
+- Aman untuk dev: tag tidak muncul jika env var tidak di-set
+
+**`.env.example`:**
+- Tambah section "Google Search Console" dengan dokumentasi cara mendapat kode verifikasi
+
+### Verifikasi Build
+
+```
+$ npx astro check
+Result (51 files): 0 errors, 0 warnings, 14 hints
+
+$ npx astro build
+[build] ✓ Completed in 53.87s
+[@astrojs/sitemap] sitemap-index.xml created at dist\client
+[build] Complete!
+
+$ cat .vercel/output/static/robots.txt
+# Cup of Code — robots.txt
+# https://cupofcode.cc/sitemap-index.xml
+User-agent: *
+Allow: /
+Disallow: /keystatic/
+...
+Sitemap: https://cupofcode.cc/sitemap-index.xml
+
+$ cat .vercel/output/static/sitemap-0.xml
+<urlset>...18 URLs (homepage + listing + posts + assets + snippets + legal)...</urlset>
+- Homepage: priority 1.0, weekly
+- /posts, /assets, /snippets: priority 0.8, weekly
+- /posts/* (5 artikel): priority 0.9, monthly
+- /about, /contact: priority 0.5, yearly
+- /privacy, /terms: priority 0.3, yearly
+- /keystatic, /api: excluded ✓
+```
+
+### Next Steps (USER — Manual Verification)
+
+1. Setup Google Search Console property `https://cupofcode.cc` (URL Prefix method, HTML tag verification)
+2. Set `PUBLIC_GOOGLE_SITE_VERIFICATION` di Vercel env vars (Production)
+3. Commit & push ke `main` → Vercel auto-redeploy
+4. Verify meta tag live: `curl -s https://cupofcode.cc | grep google-site-verification`
+5. Submit `https://cupofcode.cc/sitemap-index.xml` ke GSC Sitemaps
+6. Monitor Coverage & Enhancements tab di GSC (1-7 hari first crawl)
+
+### Catatan & Trade-offs
+
+- `lastmod` kosong untuk semua URL (pakai Opsi C: file mtime fallback). Google accept sitemap tanpa `lastmod`, tapi `publishDate` di frontmatter belum di-expose. Bisa di-upgrade di Sprint F-13 dengan menambah field `lastModified` di `src/content.config.ts` schema posts.
+- Block 5 bot SEO scraper = defense-in-depth (mereka biasanya respect robots.txt, tapi beberapa scrape via residential IP)
+
+---
+
 *Last updated: 2026-08-31*
 
 ---
