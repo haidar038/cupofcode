@@ -1,14 +1,15 @@
 ---
 export const prerender = true;
 import { getCollection } from "astro:content";
+import { Image } from "astro:assets";
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import FeaturedImage from "../../assets/blog-placeholder-1.jpg";
 import { SITE_TITLE } from "../../consts";
-import { Download, FileCode, Gem } from "@lucide/astro";
+import { Download, FileCode, Gem, ImageIcon } from "@lucide/astro";
 import Breadcrumb from "../../components/Breadcrumb.astro";
 import BackToTop from "../../components/ui/BackToTop.tsx";
 import CodeBlock from "../../components/ui/CodeBlock.astro";
 import TableOfContents from "../../components/TableOfContents.astro";
-import ComponentPreview from "../../components/digital-assets/ComponentPreview.astro";
 import PromptFiller from "../../components/digital-assets/PromptFiller.tsx";
 import GemsViewer from "../../components/digital-assets/GemsViewer.astro";
 import { splitBody, renderProse, extractHeadings, type CodeSegment } from "../../lib/markdown";
@@ -24,7 +25,6 @@ export async function getStaticPaths() {
 const { asset } = Astro.props;
 
 // --- Type-safe narrowing helpers ---
-const isComponent = asset.data.type === "component";
 const isPrompt = asset.data.type === "prompt";
 const isGem = asset.data.type === "gem";
 
@@ -43,15 +43,6 @@ let gemExampleBefore = "";
 let gemExampleAfter = "";
 let gemTips: string[] = [];
 const consumedIndexes = new Set<number>();
-
-if (isComponent) {
-  // All code blocks are shown in the Source Code panel — keep them out of the
-  // body flow so they are not rendered twice.
-  for (const seg of codeSegments) {
-    const idx = segments.indexOf(seg);
-    if (idx !== -1) consumedIndexes.add(idx);
-  }
-}
 
 if (isPrompt) {
   const firstCode = codeSegments[0];
@@ -114,9 +105,23 @@ const typeBadgeColors: Record<string, string> = {
   <div class="grid grid-cols-1 items-start gap-x-12 gap-y-10 lg:grid-cols-12">
     <div class="min-w-0 lg:col-span-8">
       <div class="mb-8 w-full overflow-hidden rounded-3xl border border-coc-line bg-gray-100">
-        <div class="flex aspect-2/1 w-full items-center justify-center text-gray-300">
-          <FileCode width="96" height="96" stroke-width="1.2" />
-        </div>
+        {
+          asset.data.featured_image ? (
+            <Image
+              src={asset.data.featured_image}
+              alt={asset.data.title}
+              width={1200}
+              height={600}
+              loading="eager"
+              fetchpriority="high"
+              class="aspect-2/1 w-full object-cover"
+            />
+          ) : (
+            <div class="flex aspect-2/1 w-full items-center justify-center text-gray-300">
+              <ImageIcon width="96" height="96" stroke-width="1.2" />
+            </div>
+          )
+        }
       </div>
 
       <div class="space-y-8">
@@ -140,13 +145,6 @@ const typeBadgeColors: Record<string, string> = {
         <hr class="border-coc-line" />
 
         <!-- ============ TYPE-SPECIFIC VIEWER ============ -->
-        {isComponent && (
-          <ComponentPreview
-            blocks={codeSegments}
-            format={asset.data.format}
-          />
-        )}
-
         {isPrompt && (
           <PromptFiller
             template={promptTemplate}
@@ -259,7 +257,7 @@ const typeBadgeColors: Record<string, string> = {
           )}
         </div>
 
-        <div class="flex items-center gap-3 rounded-xl border border-coc-line bg-gray-50 p-4">
+        <!-- <div class="flex items-center gap-3 rounded-xl border border-coc-line bg-gray-50 p-4">
           <div class="flex size-10 items-center justify-center rounded-full bg-coc-dark text-coc-accent">
             <Gem width="20" height="20" />
           </div>
@@ -267,7 +265,7 @@ const typeBadgeColors: Record<string, string> = {
             <p class="text-xs font-medium text-coc-muted">Dibuat oleh</p>
             <p class="text-sm font-bold text-coc-text">Cup of Code Team</p>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>

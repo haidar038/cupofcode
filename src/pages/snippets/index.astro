@@ -1,16 +1,18 @@
 ---
 export const prerender = true;
 import { getCollection } from "astro:content";
+import { Image } from "astro:assets";
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import FeaturedImage from "../../assets/blog-placeholder-1.jpg";
 import { SITE_TITLE } from "../../consts";
-import { Clock } from "@lucide/astro";
+import { Clock, ImageIcon } from "@lucide/astro";
 import SearchBar from "../../components/ui/SearchBar.tsx";
 import BackToTop from "../../components/ui/BackToTop.tsx";
 import ScrollAnimations from "../../components/ScrollAnimations.astro";
 import Pagination from "../../components/Pagination.astro";
 import ComingSoonCard from "../../components/ComingSoonCard.astro";
 
-const SNIPPETS_PER_PAGE = 9;
+const SNIPPETS_PER_PAGE = 6;
 
 const snippets = await getCollection("snippets");
 const sortedSnippets = [...snippets].sort((a, b) => a.data.title.localeCompare(b.data.title));
@@ -24,83 +26,95 @@ const missing = Math.max(0, SNIPPETS_PER_PAGE - pageSnippets.length);
 const placeholders = sortedSnippets.length > 0 ? Array.from({ length: missing }) : [];
 
 const langColors: Record<string, string> = {
-  typescript: "border-blue-200 bg-blue-50 text-blue-700",
-  javascript: "border-yellow-200 bg-yellow-50 text-yellow-700",
-  css: "border-pink-200 bg-pink-50 text-pink-700",
-  html: "border-orange-200 bg-orange-50 text-orange-700",
+    typescript: "border-blue-200 bg-blue-50 text-blue-700",
+    javascript: "border-yellow-200 bg-yellow-50 text-yellow-700",
+    css: "border-pink-200 bg-pink-50 text-pink-700",
+    html: "border-orange-200 bg-orange-50 text-orange-700",
 };
 
 const searchItems = sortedSnippets.map((s) => ({
-  title: s.data.title,
-  description: s.data.description,
-  url: `/snippets/${s.id}`,
-  category: s.data.language,
+    title: s.data.title,
+    description: s.data.description,
+    url: `/snippets/${s.id}`,
+    category: s.data.language,
 }));
 ---
 
-<BaseLayout
-  title={`Snippet Library | ${SITE_TITLE}`}
-  description="Koleksi potongan kode esensial, fungsi utilitas, dan trik optimasi siap pakai."
->
-  <header class="mx-auto mb-12 max-w-3xl text-center">
-    <p class="mb-5 inline-flex items-center gap-2 rounded-full bg-coc-tag-yellow px-3 py-1.5 text-xs font-bold text-[#212121]">
-      Today I Learned
-    </p>
-    <h1 class="mb-5 font-coc-display text-4xl tracking-tight text-coc-text md:text-5xl">
-      Snippet Library
-    </h1>
-    <p class="mx-auto text-lg leading-relaxed text-coc-muted">
-      Koleksi potongan kode esensial, fungsi utilitas, dan trik optimasi siap pakai. Salin dengan satu klik untuk mempercepat alur kerja harian kamu.
-    </p>
-  </header>
+<BaseLayout title={`Snippet Library | ${SITE_TITLE}`} description="Koleksi potongan kode esensial, fungsi utilitas, dan trik optimasi siap pakai.">
+    <header class="mx-auto mb-12 max-w-3xl text-center">
+        <p class="mb-5 inline-flex items-center gap-2 rounded-full bg-coc-tag-yellow px-3 py-1.5 text-xs font-bold text-[#212121]">Today I Learned</p>
+        <h1 class="mb-5 font-coc-display text-4xl tracking-tight text-coc-text md:text-5xl">Snippet Library</h1>
+        <p class="mx-auto text-lg leading-relaxed text-coc-muted">
+            Koleksi potongan kode esensial, fungsi utilitas, dan trik optimasi siap pakai. Salin dengan satu klik untuk mempercepat alur kerja harian kamu.
+        </p>
+    </header>
 
-  <div class="mx-auto mb-10 max-w-md">
-    <SearchBar items={searchItems} placeholder="Cari snippet..." client:idle />
-  </div>
-
-  {sortedSnippets.length > 0 ? (
-    <div class="mx-auto max-w-7xl pb-18">
-      <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-        {pageSnippets.map((snippet) => (
-          <a data-animate
-            href={`/snippets/${snippet.id}`}
-            class="group flex flex-col rounded-3xl border border-coc-line bg-coc-surface p-6 transition-all duration-300 md:p-8 hover:scale-[1.01] hover:shadow-md"
-          >
-            <div class="mb-5 flex items-start justify-between">
-              <span
-                class:list={[
-                  "flex items-center gap-1.5 rounded-lg border px-3 py-1 font-mono text-xs font-medium",
-                  langColors[snippet.data.language] || "border-gray-200 bg-gray-50 text-gray-700",
-                ]}
-              >
-                {snippet.data.language}
-              </span>
-            </div>
-            <h3 class="mb-3 cursor-pointer text-2xl font-bold text-coc-text transition-colors group-hover:text-coc-accent">
-              {snippet.data.title}
-            </h3>
-            <p class="mb-6 text-sm leading-relaxed text-coc-muted">
-              {snippet.data.description}
-            </p>
-            <div class="mt-auto flex items-center justify-between border-t border-coc-line pt-4 text-xs font-medium text-coc-muted-soft">
-              <span class="flex items-center gap-1.5">
-                <Clock width="14" height="14" /> Lihat detail
-              </span>
-            </div>
-          </a>
-        ))}
-        {placeholders.map(() => (
-          <ComingSoonCard variant="panel" />
-        ))}
-      </div>
-
-      <Pagination page={page} totalPages={totalPages} basePath="/snippets" />
+    <div class="mx-auto mb-10 max-w-md">
+        <SearchBar items={searchItems} placeholder="Cari snippet..." client:idle />
     </div>
-  ) : (
-    <div class="flex flex-col items-center justify-center py-20 text-center">
-      <p class="text-lg text-coc-muted">Belum ada snippet tersedia.</p>
-    </div>
-  )}
-  <BackToTop client:idle />
-  <ScrollAnimations />
+
+    {
+        sortedSnippets.length > 0 ? (
+            <div class="mx-auto max-w-7xl pb-18">
+                <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+                    {pageSnippets.map((snippet) => (
+                        <a
+                            data-animate
+                            href={`/snippets/${snippet.id}`}
+                            class="group flex flex-col rounded-3xl border border-coc-line bg-coc-surface transition-all duration-300 md:p-0 hover:scale-[1.01]"
+                        >
+                            <div class="relative aspect-391/249 w-full overflow-hidden rounded-t-3xl bg-[#d9d9d9]">
+                                {snippet.data.featured_image ? (
+                                    <Image
+                                        src={snippet.data.featured_image}
+                                        alt={snippet.data.title}
+                                        width={800}
+                                        height={512}
+                                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                                        densities={[1, 2]}
+                                        class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                                        loading="lazy"
+                                    />
+                                ) : (
+                                    <div class="flex h-full w-full items-center justify-center text-[#aaa]">
+                                        <ImageIcon width="64" height="64" stroke-width="1.8" />
+                                    </div>
+                                )}
+                            </div>
+                            <div class="flex flex-1 flex-col p-6">
+                                <div class="mb-5 flex items-start justify-between">
+                                    <span
+                                        class:list={[
+                                            "flex items-center gap-1.5 rounded-lg border px-3 py-1 font-mono text-xs font-medium",
+                                            langColors[snippet.data.language] || "border-gray-200 bg-gray-50 text-gray-700",
+                                        ]}
+                                    >
+                                        {snippet.data.language}
+                                    </span>
+                                </div>
+                                <h3 class="mb-3 cursor-pointer text-2xl font-bold text-coc-text transition-colors group-hover:text-coc-accent">{snippet.data.title}</h3>
+                                <p class="mb-6 text-sm leading-relaxed text-coc-muted">{snippet.data.description}</p>
+                                <div class="mt-auto flex items-center justify-between border-t border-coc-line pt-4 text-xs font-medium text-coc-muted-soft">
+                                    <span class="flex items-center gap-1.5">
+                                        <Clock width="14" height="14" /> Lihat detail
+                                    </span>
+                                </div>
+                            </div>
+                        </a>
+                    ))}
+                    {placeholders.map(() => (
+                        <ComingSoonCard variant="panel" />
+                    ))}
+                </div>
+
+                <Pagination page={page} totalPages={totalPages} basePath="/snippets" />
+            </div>
+        ) : (
+            <div class="flex flex-col items-center justify-center py-20 text-center">
+                <p class="text-lg text-coc-muted">Belum ada snippet tersedia.</p>
+            </div>
+        )
+    }
+    <BackToTop client:idle />
+    <ScrollAnimations />
 </BaseLayout>

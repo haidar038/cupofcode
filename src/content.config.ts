@@ -29,6 +29,7 @@ const snippets = defineCollection({
 		title: z.string(),
 		description: z.string(),
 		language: z.enum(["typescript", "javascript", "css", "html"]).default("typescript"),
+		featured_image: z.string().optional(),
 	}),
 });
 
@@ -46,6 +47,7 @@ const digitalAssets = defineCollection({
 		format: z.string().optional(), // Untuk Component (misal: "Tailwind, React")
 		fileSize: z.string().optional(), // Untuk Component / Gem (misal: "2.4 MB")
 		variables: z.array(z.string()).optional(), // Untuk Prompt (misal: ["Tone", "Topik"])
+		featured_image: z.string().optional(),
 		// URL/file download asset (dipakai untuk gate premium + tracking event)
 		downloadUrl: z
 			.string()

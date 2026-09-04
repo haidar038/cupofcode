@@ -14,8 +14,8 @@ const { headings, title = "Daftar Isi" } = Astro.props;
     <nav aria-label="Daftar isi" class="space-y-1">
         {
             headings.map((h) => (
-                <a href={`#${h.slug}`} class="toc-link flex items-start gap-3 rounded-lg px-2 py-2 text-sm leading-6 text-coc-muted transition-colors hover:bg-coc-line-light hover:text-coc-text">
-                    <span class="toc-dot mt-2 size-1.5 shrink-0 rounded-full border border-coc-line transition-colors" />
+                <a href={`#${h.slug}`} class="toc-link flex items-start gap-3 rounded-lg px-2 py-1 text-sm leading-6 text-coc-muted transition-colors hover:bg-coc-line-light hover:text-coc-text">
+                    <span class="toc-dot mt-2 size-1.5 shrink-0 rounded-full bg-coc-line transition-colors" />
                     <span class="toc-text">{h.text}</span>
                 </a>
             ))

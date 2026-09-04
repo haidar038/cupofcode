@@ -1,9 +1,11 @@
 ---
 export const prerender = true;
 import { getCollection } from "astro:content";
+import { Image } from "astro:assets";
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import FeaturedImage from "../../assets/blog-placeholder-1.jpg";
 import { SITE_TITLE } from "../../consts";
-import { Copy, FileCode } from "@lucide/astro";
+import { Copy, FileCode, ImageIcon } from "@lucide/astro";
 import Breadcrumb from "../../components/Breadcrumb.astro";
 import BackToTop from "../../components/ui/BackToTop.tsx";
 import CodeBlock from "../../components/ui/CodeBlock.astro";
@@ -42,7 +44,25 @@ const langColors: Record<string, string> = {
     ]}
   />
 
-  <div class="grid grid-cols-1 items-start gap-10 lg:grid-cols-12">
+  <div class="mt-8">
+    {
+      snippet.data.featured_image ? (
+        <Image
+          src={snippet.data.featured_image}
+          alt={snippet.data.title}
+          width={1200}
+          height={600}
+          loading="eager"
+          fetchpriority="high"
+          class="aspect-2/1 w-full rounded-3xl object-cover shadow-var(--shadow-lg)"
+        />
+      ) : (
+        <Image src={FeaturedImage} alt={snippet.data.title} loading="eager" fetchpriority="high" class="aspect-2/1 w-full rounded-3xl object-cover shadow-var(--shadow-lg)" />
+      )
+    }
+  </div>
+
+  <div class="mt-10 grid grid-cols-1 items-start gap-10 lg:grid-cols-12">
     <article class="min-w-0 lg:col-span-8">
       <div class="mb-5 flex items-start justify-between">
         <span

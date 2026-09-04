@@ -1,5 +1,6 @@
 ---
 title: Bento Grid Card
+featured_image: https://res.cloudinary.com/dpthmmblu/image/upload/v1788537387/bento-card-thumbnail_rbbwul.avif
 description: A modern, customizable card component using Tailwind CSS that adapts to bento box grid layouts
 type: component
 isFree: true
@@ -30,7 +31,7 @@ npm install lucide-react clsx tailwind-merge
 |------|------|---------|-----------|
 | items | `BentoItem[]` | — | Array item yang akan ditampilkan |
 | className | `string` | `''` | Class tambahan untuk kustomisasi |
-| columns | `3 \| 4` | `3` | Jumlah kolom grid |
+| columns | `3 \ 4` | `3` | Jumlah kolom grid |
 
 ### BentoItem
 
@@ -39,10 +40,10 @@ npm install lucide-react clsx tailwind-merge
 | title | `string` | Judul card |
 | description | `string` | Deskripsi singkat |
 | icon | `LucideIcon` | Icon dari lucide-react |
-| color | `'yellow' \| 'dark' \| 'white' \| 'green'` | Warna background |
-| span | `'1x1' \| '2x1' \| '1x2' \| '2x2'` | Ukuran span grid |
+| color | `yellow` `dark` `white` `green` | Warna background |
+| span | `1x1` `2x1` `1x2` `2x2` | Ukuran span grid |
 
-## Kode Komponen
+### Kode Komponen
 
 ```tsx
 import { type LucideIcon } from 'lucide-react';
