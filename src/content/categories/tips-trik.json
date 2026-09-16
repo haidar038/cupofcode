@@ -1,4 +1,5 @@
 {
   "label": "Tips & Trik",
-  "tone": "pink"
+  "tone": "pink",
+  "description": "Kumpulan praktik praktis untuk membantu developer menyelesaikan problem sehari-hari dengan lebih cepat dan rapi. Bahas debugging, workflow, optimasi, keamanan, dan keputusan teknis yang sering muncul dalam pengembangan produk."
 }

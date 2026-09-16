@@ -1,0 +1,891 @@
+---
+title: "AI Bisa Bikin Web App. Kodenya Udah Bener Belom?"
+featured_image: https://res.cloudinary.com/dpthmmblu/image/upload/v1788805820/ai-generated-code-problems_kwzojj.avif
+category: tips-trik
+description: "AI sekarang bisa bikin web app dalam hitungan menit. Tapi kalau kode yang dihasilkan AI kelihatan jalan, apakah itu berarti software-nya udah benar? Yuk bahas kenapa AI bisa mempercepat development, tapi tetap nggak bisa menggantikan fundamental, testing, security, dan engineering judgment."
+publishDate: 2026-09-15
+featured: true
+---
+
+<!-- Blog Content -->
+# Kode Buatan AI Kelihatan Bener. Terus, Kenapa Bisa Salah?
+
+> **Masalah engineering yang sering nggak kelihatan di balik software yang “udah jalan” di era AI generatif.**
+
+Kalau belakangan ini kamu sering lihat konten **“bikin web app cuma pakai prompt”**, mungkin kamu pernah punya pikiran yang sama: *“Serius? Sekarang bikin aplikasi segampang ini?”*
+
+Jawabannya: **untuk bikin sesuatu yang kelihatan jalan, iya, bisa sesimpel itu.**
+
+Tapi justru di situlah bagian menariknya. Karena bikin sesuatu yang **kelihatan bekerja** dan bikin software yang **beneran bisa dipercaya** adalah dua hal yang beda banget.
+
+AI udah ngubah cara software dibuat. Sekarang, seseorang bisa cukup ngejelasin idenya pakai bahasa biasa, lalu dalam waktu singkat mendapatkan interface, API, database, sampai aplikasi yang udah bisa di-deploy.
+
+Dan itu jelas perkembangan yang nyata. Bahkan, menurut gue, ini salah satu perubahan paling menarik di dunia software belakangan ini.
+
+Tapi ada satu masalah yang sering banget ketutup oleh kemudahan itu:
+
+> **Software yang bisa berjalan belum tentu software yang benar.**
+
+Sebuah aplikasi bisa kelihatan rapi, tombolnya jalan, data muncul, login berhasil, bahkan udah online, tapi tetap bisa punya celah keamanan, business rule yang salah, struktur data yang rapuh, biaya operasional yang nggak terkendali, atau arsitektur yang bikin pusing saat mau dikembangin lagi.
+
+Artikel ini bukan tulisan **anti-AI**, dan juga bukan **anti-no-code**. Justru sebaliknya. AI itu tool yang sangat berguna buat developer, creator, freelancer, founder, sampai product builder.
+
+Yang perlu dibenerin justru cara kita memahami kemampuan AI:
+
+> **AI bisa nurunin hambatan buat bikin software. Tapi AI nggak menghapus kompleksitas software engineering.**
+
+---
+
+## Jadi, sebenarnya artikel ini mau menjawab apa?
+
+- Mengapa software buatan AI bisa bekerja tetapi tetap salah?
+- Apa sebenarnya yang dibuktikan oleh kalimat “aplikasinya udah jalan”?
+- Fundamental apa yang tetap penting ketika sebagian besar kode ditulis oleh AI?
+- Mengapa keamanan, integritas data, dan maintainability mudah terlewat?
+- Bagaimana pemula bisa menggunakan AI tanpa jadi bergantung kepadanya?
+- Seperti apa workflow pengembangan software berbantuan AI yang bertanggung jawab?
+
+---
+
+# 1. Demo yang terlalu meyakinkan
+
+## “Saya cuma mengetik prompt, dan sekarang udah punya aplikasi.”
+
+Ada alasan kenapa development berbasis AI terasa revolusioner.
+
+Untuk pertama kalinya, jarak antara **ide** dan **prototype software** bisa dipangkas cuma dengan bahasa sehari-hari. Kita tinggal jelasin dashboard, landing page, alur booking, CRUD tool, atau sistem bisnis sederhana, lalu AI bisa ngeluarin kode yang kelihatannya udah lengkap banget.
+
+Hasilnya bisa langsung terlihat.
+
+Tombol berfungsi. Form bisa dikirim. Data muncul. Halaman login tersedia. Tampilan responsive. Bahkan aplikasinya bisa di-deploy.
+
+Buat pemula, pengalaman kayak gini memang bisa bikin mindset berubah total:
+
+> “Ternyata saya juga bisa membuat software.”
+
+Dan, ya, kesimpulan itu **sebagian memang bener**.
+
+Barrier buat bikin prototype memang turun drastis. Tapi barrier buat bikin software yang bisa **dioperasikan, diamankan, di-debug, dikembangin, dan dipertanggungjawabkan dengan benar** belum hilang begitu aja.
+
+> **Bedanya di sini**
+>
+> AI generatif ngubah biaya dan kecepatan bikin kode. Tapi problem engineering yang harus diselesaikan kode itu tetap ada.
+
+Masalahnya, sebuah demo cuma nunjukin sebagian kecil dari proses software development.
+
+Yang terlihat:
+
+- UI
+- tombol
+- form
+- hasil query
+- halaman login
+- deployment
+
+Yang sering banget nggak kelihatan:
+
+- data model
+- aturan bisnis
+- authorization
+- validasi input
+- failure recovery
+- dependency risk
+- backup
+- observability
+- biaya operasional
+- maintainability
+
+Makanya, kalimat seperti **“tuh kan, AI bisa bikin aplikasi dalam 10 menit”** sebenarnya nggak cukup buat menilai kualitas engineering.
+
+Demo 10 menit bisa kelihatan keren banget, tapi di saat yang sama hampir nggak memberi bukti bahwa sistemnya beneran layak dipakai di production.
+
+---
+
+# 2. “Udah jalan” bukan standar engineering
+
+“Udah jalan” biasanya cuma berarti satu hal:
+
+> **Happy path menghasilkan output yang terlihat benar.**
+
+Software engineering nanyanya jauh lebih luas dari itu.
+
+| Pertanyaan | Apa yang sedang diuji? |
+| --- | --- |
+| Apakah fitur ini bekerja? | Fungsi dasar pada alur yang diharapkan. |
+| Apakah fitur ini gagal dengan aman? | Perilaku ketika input invalid, service down, timeout, partial failure, atau state nggak terduga. |
+| Apakah fitur ini aman? | Apakah user yang nggak berhak bisa mengakses, mengubah, atau mengetahui data/capability yang seharusnya terlindungi. |
+| Apakah implementasinya benar? | Apakah perilakunya sesuai requirement, business rule, dan invariant yang sebenarnya. |
+| Apakah mudah dipelihara? | Apakah developer lain bisa memahami, menguji, mengubah, dan mengembangkan sistem. |
+| Apakah sistemnya operable? | Apakah sistem bisa di-deploy, dimonitor, di-backup, dipulihkan, dan didukung ketika terjadi masalah. |
+| Apakah arsitekturnya sesuai skala? | Apakah pilihan arsitektur sesuai dengan load, volume data, constraint platform, dan arah perubahan produk. |
+
+Cara gampang buat lihat bedanya adalah pisahin **execution success** dan **engineering success**.
+
+```text
+Prompt
+  ↓
+Kode di-generate
+  ↓
+Aplikasi berjalan
+  ↓
+UI terlihat benar
+
+```
+
+Itu membuktikan sangat sedikit.
+
+Workflow yang lebih dekat dengan software engineering adalah:
+
+```text
+Requirements
+  ↓
+Design
+  ↓
+Architecture
+  ↓
+Data model
+  ↓
+Security model
+  ↓
+Implementation
+  ↓
+Testing
+  ↓
+Validation
+  ↓
+Deployment controls
+  ↓
+Observability
+  ↓
+Maintenance
+
+```
+
+Aplikasi yang jalan itu **baru syarat awal**.
+
+Bukan garis finish.
+
+---
+
+# 3. Sebenarnya AI jago di bagian mana?
+
+Ngomongin risiko AI-assisted development bukan berarti kita harus berhenti pakai AI.
+
+Justru sebaliknya: ada bukti eksperimen bahwa coding assistant bisa ningkatin produktivitas secara signifikan untuk tugas-tugas tertentu.
+
+Dalam sebuah studi terkontrol ke 95 developer profesional yang mengerjakan tugas HTTP server menggunakan JavaScript, kelompok yang menggunakan GitHub Copilot menyelesaikan tugas rata-rata **55% lebih cepat** dan punya tingkat penyelesaian yang lebih tinggi. \[1\]
+
+Tapi ada satu detail yang penting banget:
+
+> **Peserta studinya adalah developer.**
+
+AI cuma jadi leverage buat mereka. Mereka tetap punya konteks, tetap bisa menilai solusi, dan tetap bisa ngecek hasilnya lewat testing.
+
+Dari sini, mental model yang lebih sehat untuk AI-assisted development mulai terlihat:
+
+> **Gunakan AI untuk mengurangi pekerjaan mekanis, mempersempit search space, dan mempercepat iterasi, tetapi tetap pertahankan ownership manusia ke requirement, trade-off, validasi, dan keputusan release.**
+
+## \#\#\# AI paling berguna buat apa, sih?
+
+AI sangat masuk akal dipakai buat:
+
+- membuat scaffolding, boilerplate, dan test fixture;
+- menjelaskan API, library, code path, dan error message yang belum dikenal;
+- menghasilkan beberapa alternatif implementasi atau kandidat refactor;
+- membuat draft unit test, dokumentasi, migration, dan type definition;
+- membantu membandingkan pilihan arsitektur dan menemukan edge case;
+- mempercepat debugging setelah developer berhasil mengisolasi sumber masalah dan mampu mengevaluasi solusi yang diusulkan.
+
+> **Aturan praktis**
+>
+> Pakai AI ketika bikin draft dari nol itu makan waktu, sementara ngecek draft hasil AI masih cukup gampang buat kamu lakukan sendiri.
+>
+> Semakin mahal konsekuensi dari jawaban yang salah, dan semakin sulit bagi reviewer untuk memverifikasi jawaban itu secara independen, semakin hati-hati kita harus menggunakannya.
+
+---
+
+# 4. Apa aja yang tersembunyi di balik sebuah web app?
+
+Web app modern itu bukan satu benda yang berdiri sendirian.
+
+Ia adalah kumpulan kontrak antara user, interface, service, storage, infrastructure, dan proses operasional.
+
+```text
+Product requirements
+        ↓
+User flows / UX
+        ↓
+Application architecture
+        ↓
+Data model + invariants
+        ↓
+Authentication + authorization
+        ↓
+Business logic
+        ↓
+UI + API implementation
+        ↓
+Testing + validation
+        ↓
+Deployment + secrets + configuration
+        ↓
+Monitoring + backup + recovery
+        ↓
+Maintenance + change
+
+```
+
+AI bisa membantu hampir di setiap kotak pada diagram itu.
+
+Nah, justru di sinilah fundamental jadi penting.
+
+Tanpa fundamental, kamu bisa aja nggak punya **mental model** yang cukup buat ngerti dan ngecek apa yang baru aja dihasilkan AI.
+
+Pemula mungkin bakal nanya:
+
+> “Prompt apa yang harus saya pakai supaya halaman login-nya bisa bekerja?”
+
+Tapi pertanyaan engineering yang lebih penting justru:
+
+> “Apa model authentication-nya? Di mana session state disimpan? Bagaimana permission ditegakkan? Apa yang terjadi ketika token kedaluwarsa? Dan bagaimana kita mencegah satu user membaca data milik user lain?”
+
+Pertanyaan kedua memang lebih ribet.
+
+Karena yang dibahas adalah **perilaku sistem**, bukan cuma “gimana caranya bikin kodenya.”
+
+Dan justru pertanyaan kayak inilah yang akhirnya melindungi user beneran.
+
+---
+
+# 5. Lima cara kode buatan AI bisa salah
+
+## 1. Salah secara fungsional tetapi cuma di luar happy path
+
+Kode hasil AI sering banget fokus ke kasus yang kelihatan paling jelas dari prompt.
+
+Misalnya requirement-nya:
+
+> “User bisa meng-upload file.”
+
+Implementasi pertamanya mungkin cuma berhasil menangani:
+
+- file PNG normal;
+- ukuran kecil;
+- koneksi normal;
+- satu kali upload.
+
+Tapi apakah sistemnya juga aman kalau ketemu:
+
+- file 200 MB;
+- file dengan format nggak valid;
+- duplicate upload;
+- timeout;
+- payload berbahaya;
+- client yang terputus di tengah proses;
+- storage yang gagal?
+
+Belum tentu juga.
+
+**Demo-nya kelihatan bener. Kontrak sistemnya belum tentu lengkap.**
+
+---
+
+## 2. Salah secara keamanan
+
+Masalah keamanan bahaya banget karena aplikasi bisa berperilaku **persis seperti yang diharapkan**, tapi aksesnya jatuh ke orang yang salah.
+
+OWASP Top 10:2025 tetap menempatkan **Broken Access Control** sebagai risiko utama aplikasi web, bersama dengan kategori seperti security misconfiguration, software supply-chain failures, cryptographic failures, injection, insecure design, authentication failures, software/data integrity failures, logging and alerting failures, serta mishandling exceptional conditions. \[2\]
+
+Misalnya UI menampilkan:
+
+> “kamu berhasil login.”
+
+Tapi engineering tetap harus nanya:
+
+- Apa yang membuktikan identitas user?
+- Apa yang membuktikan permission?
+- Siapa yang bisa memanggil endpoint ini secara langsung?
+- Bisakah user mengganti ID di request?
+- Apakah secret terekspos ke client?
+- Apakah error message membocorkan informasi sensitif?
+
+---
+
+## 3. Salah secara arsitektur
+
+Implementasi yang dihasilkan AI bisa memenuhi requirement saat ini sambil menciptakan coupling yang sangat buruk.
+
+Untuk prototype kecil, hal itu mungkin masih bisa diterima.
+
+Namun ketika sistem tumbuh, fitur berikutnya bisa jadi jauh lebih mahal untuk dikembangkan.
+
+Arsitektur bukan cuma soal “kodenya kelihatan keren”.
+
+Arsitektur adalah kumpulan keputusan yang nentuin **seberapa gampang sistem itu berubah**.
+
+Stack yang sangat masuk akal untuk internal tool kecil belum tentu tepat untuk:
+
+- produk multi-tenant;
+- workload dengan volume tinggi;
+- sistem dengan requirement security ketat;
+- sistem yang memerlukan auditability;
+- aplikasi yang akan berkembang cepat.
+
+---
+
+## 4. Salah secara operasional
+
+Software production itu hidup di dunia nyata, dan dunia nyata terus berubah.
+
+Dependency di-update.
+
+Credential expire.
+
+Quota mentok.
+
+API berubah.
+
+Data makin banyak.
+
+User berperilaku nggak terduga.
+
+Service bisa outage.
+
+Potongan kode bisa aja bener saat pertama kali dibuat, tapi ternyata nggak cukup buat kondisi production.
+
+Hal ini sangat relevan pada managed platform yang punya quota, execution limit, storage behavior, atau service rule tertentu.
+
+Google, misalnya, mendokumentasikan quota dan limitation untuk Apps Script. Jika quota tertentu terlampaui, eksekusi script bisa dihentikan. \[5\]
+
+Jadi, **“jalan sekarang” nggak sama dengan “aman dan tetap layak dipakai ketika kondisinya berubah.”**
+
+---
+
+## 5. Salah secara semantik
+
+Ini justru salah satu kategori yang paling tricky.
+
+Kodenya bisa valid secara syntax, logiknya masuk akal, dan tetap mengimplementasikan **business rule yang salah**.
+
+Misalnya requirement-nya:
+
+> “Customer bisa membatalkan order sampai shipment diberangkatkan.”
+
+Implementasinya membutuhkan definisi domain yang jelas.
+
+Bagaimana jika model mengasumsikan bahwa “diberangkatkan” berarti adanya `tracking_number`, sementara sistem bisnis sebenarnya menggunakan field `shipment_status`?
+
+Kodenya bisa kelihatan masuk akal banget.
+
+Tapi tetap salah.
+
+Kamu nggak bisa memperbaiki requirement yang ambigu cuma dengan terus-terusan ngecek syntax.
+
+Informasi yang hilang itu seharusnya diberesin dari **requirements dan data model**.
+
+---
+
+# 6. Security: bagian yang “cukup bagus” bisa jadi mahal banget
+
+Security perlu dibahas khusus karena dia bukan sesuatu yang bisa kamu lihat dari UI.
+
+User nggak bisa mengetahui dari tampilan UI yang polished apakah authorization udah benar-benar ditegakkan.
+
+NIST melalui Secure Software Development Framework (SSDF) untuk generative AI dan dual-use foundation models memberikan rekomendasi yang secara khusus menekankan secure coding practices, pengelolaan input dan output, validation, testing ke komponen AI yang diperoleh, serta integrasi pertimbangan khusus AI ke dalam praktik software development. \[3\]\[4\]
+
+Jadi pelajarannya bukan:
+
+> “Kode buatan AI pasti nggak aman.”
+
+Bukti yang ada nggak mendukung klaim sesederhana itu.
+
+Klaim yang lebih tepat justru:
+
+> **Output AI tetap harus masuk ke proses validasi. Makin besar dampak software-nya, makin ketat juga proses validasinya.**
+
+## Contoh kecil: authentication bukan authorization
+
+Bayangin sebuah aplikasi punya endpoint:
+
+```http
+GET /api/orders/4821
+
+```
+
+User udah login.
+
+Request berhasil.
+
+Halaman tampil normal.
+
+Semuanya terlihat baik.
+
+Tetapi apa yang terjadi apabila user lain yang juga udah login meminta:
+
+```http
+GET /api/orders/4821
+
+```
+
+Kalau server cuma ngecek:
+
+```text
+“User ini udah login belum?”
+
+```
+
+dan nggak memeriksa:
+
+```text
+“User ini emang berhak ngakses order 4821 nggak?”
+
+```
+
+maka aplikasi bisa kena **broken access control**.
+
+UI-nya tetap bisa sempurna.
+
+> **Apa yang nggak bisa dibuktikan cuma dari screenshot?**
+>
+> Screenshot nggak bisa memberi tahu apakah server menegakkan object-level authorization, apakah secret disimpan cuma di server, apakah database policy benar, atau apakah race condition bisa merusak integritas data.
+>
+> Semua itu adalah **system-level properties**.
+
+## Kode buatan AI membutuhkan threat model, bukan sekadar screenshot
+
+Setiap kali bikin fitur yang nyentuh data atau permission, biasain nanya empat hal ini:
+
+1. Siapa yang diperbolehkan melakukan aksi ini?
+2. Data apa yang boleh mereka baca atau ubah?
+3. Apa yang bisa dikendalikan atau dimanipulasi oleh attacker?
+4. Apa yang terjadi ketika proses gagal di tengah jalan?
+
+Empat pertanyaan ini kelihatannya sederhana, tapi cukup kuat buat nemuin banyak defect yang nggak bakal kelihatan dari demo doang.
+
+---
+
+# 7. Jebakan ketergantungan: ketika kita nggak ngerti sistemnya
+
+Ada beda besar antara:
+
+> **“Saya menggunakan AI untuk coding.”**
+
+dan:
+
+> **“Saya nggak bisa coding tanpa AI.”**
+
+Yang pertama itu pilihan engineering.
+
+Yang kedua bisa berubah jadi **single point of failure**.
+
+Bayangin freelancer ngirim aplikasi yang bahkan nggak bisa dia jelasin tanpa balik nanya ke model yang bikin aplikasi itu.
+
+Lalu proyek mengalami masalah yang nggak dijelaskan di prompt.
+
+Apa yang terjadi?
+
+Bagaimana jika AI memberikan dua solusi yang saling bertentangan?
+
+Bagaimana jika platform berubah?
+
+Bagaimana jika client meminta requirement baru yang nggak pernah dipikirkan ketika prompt pertama dibuat?
+
+Masalah utamanya bukan sekadar bergantung ke satu tool.
+
+Masalah besarnya adalah:
+
+> **Ketergantungan tanpa mental model.**
+
+## Loop “screenshot lalu tanyakan ke AI”
+
+Pola yang sangat umum adalah:
+
+```text
+Error
+  ↓
+Screenshot
+  ↓
+Prompt
+  ↓
+Patch
+  ↓
+Error lain
+  ↓
+AI fix
+  ↓
+Error lain
+  ↓
+AI fix
+  ↓
+“Sudah jalan?”
+  ↓
+Production
+
+```
+
+Loop itu bisa bekerja untuk masalah yang dangkal.
+
+Tetapi jadi berbahaya ketika developer nggak pernah bertanya:
+
+> **“Invariant apa yang sedang dilanggar, dan di mana invariant itu seharusnya ditegakkan?”**
+
+Nah, di sinilah beda antara **ngobatin gejala** dan **memahami sistem**.
+
+Ketika developer memahami underlying model, AI bisa jadi debugging partner.
+
+Ketika nggak, AI bisa berubah jadi **mesin pembuat patch tanpa akhir**.
+
+Project-nya kelihatan produktif.
+
+Padahal complexity tersembunyinya terus numpuk.
+
+---
+
+# 8. AI seharusnya memperkuat pemahaman, bukan menggantikannya
+
+Mental model yang lebih sehat bukan:
+
+> **AI versus programmer**
+
+melainkan:
+
+> **Programmer dengan leverage yang lebih baik.**
+
+```text
+Fundamentals + AI
+       ↓
+Eksperimen lebih cepat
+       ↓
+Lebih banyak pilihan implementasi
+       ↓
+Feedback loop lebih cepat
+       ↓
+Software lebih baik
+
+```
+
+Sebaliknya:
+
+```text
+Tanpa fundamental + AI
+       ↓
+Produksi kode lebih cepat
+       ↓
+Unknowns bertambah lebih cepat
+       ↓
+Debugging semakin sulit
+       ↓
+Hidden risk semakin tinggi
+
+```
+
+Tujuan belajar fundamental bukan buat maksa orang hafal syntax dulu baru boleh bikin sesuatu.
+
+Tujuannya adalah punya **kosakata konsep** yang cukup buat:
+
+- mengajukan pertanyaan yang tepat;
+- menantang jawaban AI;
+- mengenali jawaban yang mencurigakan;
+- memahami batas sistem;
+- mengambil keputusan ketika AI salah.
+
+## \#\#\# Cara pakai AI yang lebih sehat buat pemula
+
+- Minta AI jelasin konsepnya dulu sebelum nyuruh AI ngerjain satu task penuh.
+- Minta AI bikin plan dan nyebutin asumsi sebelum masuk implementasi.
+- Minta model nyebutin edge case dan failure mode secara jelas.
+- Review kode sedikit demi sedikit, jangan langsung copas satu sistem penuh secara buta.
+- Jalankan test, inspect network layer, dan verifikasi perilaku aktual, jangan cuma mempercayai hasil visual.
+- Pertahankan source of truth milik manusia untuk requirements, data rules, dan architecture decisions.
+
+---
+
+# 9. Workflow AI-assisted development yang tetap waras
+
+Workflow berbantuan AI nggak harus lambat.
+
+Kuncinya adalah **memindahkan validasi lebih awal**, bukan menghilangkannya.
+
+## 1. Definisikan requirement
+
+Tuliskan:
+
+- apa yang bisa dilakukan user;
+- apa yang nggak boleh dilakukan;
+- apa yang harus selalu benar;
+- business rule apa yang berlaku.
+
+Jangan memulai dengan:
+
+> “Tulis kodenya.”
+
+Mulailah dengan:
+
+> “Inilah masalah yang harus diselesaikan.”
+
+## 2. Minta AI menemukan asumsi
+
+Minta model mengidentifikasi:
+
+- ambiguity;
+- dependency;
+- edge case;
+- failure mode;
+- requirement yang belum lengkap.
+
+## 3. Pilih arsitektur
+
+Tentukan:
+
+- frontend;
+- backend;
+- storage;
+- authentication;
+- deployment.
+
+Pilihan harus mengikuti **problem**, bukan sekadar tool yang sedang trending.
+
+## 4. Rancang data dan permission
+
+Sebelum mengandalkan generated CRUD, definisikan:
+
+- entity;
+- relationship;
+- constraint;
+- ownership;
+- role;
+- access rule;
+- invariant.
+
+## 5. Generate dalam potongan kecil
+
+Bangun:
+
+- satu feature;
+- satu module;
+- satu boundary;
+
+dalam satu waktu, dengan interface dan test yang jelas.
+
+## 6. Validasi output
+
+Lakukan:
+
+- automated tests;
+- linting;
+- type checking;
+- security checks;
+- manual scenarios;
+- failure-case testing.
+
+## 7. Review constraint operasional
+
+Periksa:
+
+- quota;
+- platform limit;
+- cost;
+- dependency;
+- secrets;
+- backup;
+- logging;
+- rollback strategy.
+
+## 8. Ship dengan ownership
+
+Harus ada manusia yang cukup ngerti sistemnya buat:
+
+- memperbaikinya;
+- menjelaskannya;
+- mengembangkannya;
+- dan mempertanggungjawabkannya;
+
+tanpa bergantung pada model yang sama yang menghasilkan kode itu.
+
+> **Perubahan workflow yang paling penting**
+>
+> Jangan minta AI menggantikan software engineering process.
+>
+> Minta AI bikin setiap tahap software engineering process jadi lebih cepat.
+
+---
+
+# 10. Fundamental minimum yang sebenarnya perlu kamu pelajari
+
+“Belajar fundamental” kadang terdengar seperti gatekeeping kalau dibungkus sebagai daftar ribuan halaman yang katanya harus dikuasai sebelum boleh bikin apa pun.
+
+Padahal bukan itu intinya.
+
+Pemula nggak perlu jadi master dulu.
+
+Mereka cuma perlu punya **mental model yang berguna**, lalu mengembangkannya sambil jalan lewat project yang mereka bangun.
+
+| Fundamental | Kenapa penting? | Pertanyaan awal |
+| --- | --- | --- |
+| HTML, CSS, dan browser basics | Memahami apa yang benar-benar dirender dan diminta oleh browser. | Apa yang berjalan di browser, dan apa yang terjadi di server? |
+| JavaScript / TypeScript | Memahami flow program, state, data, dan contract. | Data apa yang masuk ke function ini, dan apa yang dijaminnya? |
+| HTTP / API | Memahami request, response, status code, dan boundary. | Siapa yang memanggil endpoint ini, dan apa yang boleh dikembalikan? |
+| Data modeling / SQL | Memahami persistence, relationship, constraint, dan query. | Apa yang harus selalu benar mengenai data ini? |
+| Authentication / authorization | Memahami perbedaan identity dan permission. | Bagaimana server mengetahui apa yang boleh dilakukan user ini? |
+| Git / version control | Membuat perubahan bisa dibalik dan memungkinkan kolaborasi. | Apakah saya bisa dengan aman membatalkan perubahan ini? |
+| Testing | Mengubah asumsi jadi pemeriksaan yang bisa diulang. | Bagaimana saya tahu ini masih benar besok? |
+| Deployment / operations | Memahami apa yang terjadi setelah “works on my machine”. | Bagaimana saya mengamati, memulihkan, dan memperbarui sistem ini? |
+
+Segitu aja udah cukup buat ngubah AI dari **oracle** jadi **tool**.
+
+Kita nggak perlu hafal atau kuasai setiap framework.
+
+Kita butuh cukup fundamental buat ngerti **boundary dari sistem yang kita bangun**.
+
+---
+
+# 11. Checklist sebelum nge-ship kode buatan AI
+
+Sebelum fitur hasil AI dilempar ke user beneran, pertanyaan-pertanyaan ini senggaknya harus bisa kamu jawab.
+
+Seberapa dalam kamu ngeceknya tentu tergantung risk level.
+
+Tapi pertanyaannya tetap relevan hampir di semua project.
+
+## Requirements
+
+- Apakah expected behavior bisa dijelaskan tanpa ambiguity?
+- Apakah assumption dan business rule penting udah didokumentasikan?
+- Apakah kita tahu apa yang harus terjadi pada input invalid atau unexpected?
+
+## Code
+
+- Apakah implementasi sesuai requirement, bukan cuma sesuai prompt?
+- Apakah human maintainer bisa menjelaskan code path yang penting?
+- Apakah setiap dependency memang dibutuhkan dan dipahami?
+
+## Security
+
+- Apakah authentication dan authorization ditegakkan di server ketika dibutuhkan?
+- Apakah secret nggak masuk ke client code atau source control?
+- Apakah input divalidasi dan output ditangani secara aman?
+- Apakah seorang user bisa mengakses data user lain cuma dengan mengganti identifier atau request?
+- Apakah abuse case udah dipertimbangkan, bukan cuma normal user flow?
+
+## Data
+
+- Apakah relationship, uniqueness rule, dan invariant penting benar-benar ditegakkan?
+- Apa yang terjadi jika dua request mengubah data yang sama secara bersamaan?
+- Apakah tersedia backup dan recovery plan untuk data yang penting?
+
+## Testing
+
+- Apakah automated test mencakup behavior yang kritis?
+- Apakah failure path dan edge case udah diuji?
+- Apakah realistic user flow udah diuji secara manual?
+
+## Operations
+
+- Apakah kita memahami quota, limit, cost, dan failure mode platform?
+- Apakah kita bisa melihat apa yang terjadi di production melalui logging atau monitoring?
+- Apakah kita tahu cara melakukan rollback ketika release bermasalah?
+
+---
+
+# 12. Kesimpulan: jadi, sebenarnya masalahnya di mana?
+
+## Standarnya bukan “Apakah AI yang membuatnya?”
+
+AI generatif udah bikin software creation jauh lebih gampang diakses.
+
+Dan menurut gue, itu hal yang layak dirayakan.
+
+AI bisa membantu pemula membuat prototype, membantu developer berpengalaman bekerja lebih cepat, dan membuat eksperimen yang sebelumnya mahal jadi jauh lebih murah.
+
+Tapi aksesibilitas juga bawa tanggung jawab baru:
+
+> **Kita harus makin jago ngebedain output yang kelihatan meyakinkan dari sistem yang beneran bisa dipercaya.**
+
+Sebuah aplikasi hasil generate AI bisa:
+
+- berhasil di-compile;
+- berhasil di-deploy;
+- terlihat indah;
+- memenuhi kebutuhan demo;
+- dan tetap nggak aman.
+
+Ia juga bisa:
+
+- salah secara semantic;
+- sulit dipelihara;
+- rapuh secara operasional;
+- buruk secara arsitektur;
+- atau dibangun di atas platform yang memang nggak cocok untuk problem itu.
+
+Semua ini bukan berarti pemula harus takut mulai bikin software.
+
+Justru pemula butuh janji yang lebih jujur daripada:
+
+> “Kamu nggak perlu belajar apa pun lagi.”
+
+Janji yang lebih sehat justru:
+
+> **Kamu nggak perlu belajar semuanya sebelum mulai. Tapi makin penting software yang kamu bangun, makin banyak hal yang harus kamu pahami supaya kamu tahu apa yang sebenarnya jadi tanggung jawabmu.**
+
+### Pertanyaan yang lebih penting
+
+Jangan berhenti di:
+
+> **“Apakah aplikasinya udah bekerja?”**
+
+Tanya juga:
+
+> **“Bisakah kita menjelaskannya, mengujinya, mengamankannya, memeliharanya, dan bertanggung jawab atasnya?”**
+
+Karena pada akhirnya, AI seharusnya **memperkuat pemahaman**, bukan menggantikannya.
+
+Dan standar software yang bagus bukan:
+
+> **“AI berhasil membuatnya.”**
+
+Tapi:
+
+> **“Kita memahami apa yang kita kirim.”**
+
+---
+
+## Sumber dan bacaan lanjutan
+
+**\[1\] GitHub Research - Quantifying GitHub Copilot’s impact on developer productivity and happiness**
+[https://github.blog/news-insights/research/research-quantifying-github-copilots-impact-on-developer-productivity-and-happiness/](https://github.blog/news-insights/research/research-quantifying-github-copilots-impact-on-developer-productivity-and-happiness/)
+
+**\[2\] OWASP - Top 10:2025**
+[https://owasp.org/Top10/2025/](https://owasp.org/Top10/2025/)
+
+**\[3\] NIST SP 800-218A - Secure Software Development Practices for Generative AI and Dual-Use Foundation Models**
+[https://csrc.nist.gov/pubs/sp/800/218/a/final](https://csrc.nist.gov/pubs/sp/800/218/a/final)
+
+**\[4\] NIST - SP 800-218A publication overview and update history**
+[https://www.nist.gov/publications/secure-software-development-practices-generative-ai-and-dual-use-foundation-models-ssdf](https://www.nist.gov/publications/secure-software-development-practices-generative-ai-and-dual-use-foundation-models-ssdf)
+
+**\[5\] Google Developers - Apps Script quotas and limitations**
+[https://developers.google.com/apps-script/guides/services/quotas](https://developers.google.com/apps-script/guides/services/quotas)
+
+**\[6\] Google Gemini Apps Help - Get started with Gems in Gemini Apps**
+[https://support.google.com/gemini/answer/15236321?hl=en](https://support.google.com/gemini/answer/15236321?hl=en)
+
+**\[7\] Google Gemini Apps Help - Tips for creating custom Gems**
+[https://support.google.com/gemini/answer/15235603?hl=en](https://support.google.com/gemini/answer/15235603?hl=en)
+
+**\[8\] OWASP GenAI Security Project - LLM09:2025 Misinformation**
+[https://genai.owasp.org/llmrisk/llm092025-misinformation/](https://genai.owasp.org/llmrisk/llm092025-misinformation/)
+
+**\[9\] OWASP GenAI Security Project - OWASP GenAI LLM Top 10 2026**
+[https://genai.owasp.org/resource/owasp-genai-llm-top-10-2026/](https://genai.owasp.org/resource/owasp-genai-llm-top-10-2026/)
+
+---
+
+> **Catatan sumber**
+>
+> Artikel ini nggak menyatakan bahwa kode hasil AI secara inheren nggak aman. Argumennya adalah bahwa output yang dihasilkan AI harus divalidasi karena correctness dan security adalah property dari sistem, sementara language model bisa menghasilkan output yang salah, misleading, atau nggak lengkap.
+>
+> Artikel ini juga nggak menyatakan bahwa Gemini Gems, Apps Script, atau spreadsheet adalah teknologi yang buruk. Teknologi punya domain penggunaan, trade-off, constraint, dan batasannya masing-masing. Pertanyaan yang lebih tepat adalah apakah sebuah teknologi sesuai dengan requirement, risk profile, scale, dan kebutuhan operasional sistem tertentu.
+
+> **Catatan status**
+>
+> Draft sumber disiapkan untuk editorial review pada **8 September 2026**. Kapabilitas produk, quota, security guidance, dan perilaku tool AI bisa berubah. Verifikasi kembali dokumentasi yang ditautkan sebelum publikasi apabila sebuah klaim bergantung pada kondisi produk atau kebijakan yang berlaku saat ini.

@@ -187,22 +187,11 @@ if (code !== undefined) {
 <script>
     async function copyText(text: string, button: HTMLElement) {
         if (!text) return;
+        if (!navigator.clipboard?.writeText) return;
         try {
             await navigator.clipboard.writeText(text);
         } catch {
-            // Fallback for non-secure contexts.
-            const ta = document.createElement("textarea");
-            ta.value = text;
-            ta.style.position = "fixed";
-            ta.style.opacity = "0";
-            document.body.appendChild(ta);
-            ta.select();
-            try {
-                document.execCommand("copy");
-            } catch {
-                /* ignore */
-            }
-            ta.remove();
+            return;
         }
         const original = button.innerHTML;
         button.classList.add("is-copied");

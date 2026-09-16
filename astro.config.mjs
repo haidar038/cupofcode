@@ -92,13 +92,11 @@ export default defineConfig({
         sentry({
             project: "javascript-astro",
             org: "cup-of-code-r9",
-            authToken: import.meta.env.SENTRY_AUTH_TOKEN || '',
-            dsn: import.meta.env.PUBLIC_SENTRY_DSN || '',
-            environment: import.meta.env.PUBLIC_SITE_URL?.includes('localhost') ? 'development' : 'production',
+            authToken: import.meta.env.SENTRY_AUTH_TOKEN,
             sourceMapsUploadOptions: {
-                enabled: import.meta.env.PUBLIC_SENTRY_DSN ? true : false,
+                enabled: Boolean(import.meta.env.SENTRY_AUTH_TOKEN),
             },
-        }),
+        })
     ],
     adapter: vercel(),
     vite: {

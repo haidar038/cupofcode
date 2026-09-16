@@ -1,4 +1,5 @@
 {
   "label": "Tutorial",
-  "tone": "green"
+  "tone": "green",
+  "description": "Panduan langkah demi langkah untuk membangun website dan aplikasi dengan fondasi yang jelas. Pelajari konsep, tools, dan praktik web development melalui contoh yang bisa diuji serta dikembangkan kembali."
 }

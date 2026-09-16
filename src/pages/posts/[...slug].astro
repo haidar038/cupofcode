@@ -6,6 +6,7 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import AuthorAvatar from "../../assets/coc-avatar.svg";
 import FeaturedImage from "../../assets/blog-placeholder-1.jpg";
 import { SITE_TITLE, SITE_URL } from "../../consts";
+import { AUTHOR_BIO, AUTHOR_ID, AUTHOR_NAME, AUTHOR_ROLE, AUTHOR_URL, ORGANIZATION_ID } from "../../lib/seo";
 import { Clock, ImageIcon } from "@lucide/astro";
 import Breadcrumb from "../../components/Breadcrumb.astro";
 import BackToTop from "../../components/ui/BackToTop.tsx";
@@ -49,12 +50,6 @@ const relatedWithCategories = await Promise.all(
     })),
 );
 
-const authorName = "cup of code";
-const authorBio = "Frontend enthusiast dan content writer yang membagikan tutorial coding, tips & trik, serta aset digital untuk membantu developer Indonesia berkembang.";
-const authorSocialLinks = [
-    { label: "GitHub", url: "https://github.com/cupofcode" },
-    { label: "Twitter", url: "https://twitter.com/cupofcode" },
-];
 const abs = (u: string) => new URL(u, SITE_URL).href;
 const pageUrl = abs(Astro.url.pathname);
 const formattedDate = post.data.publishDate
@@ -72,18 +67,25 @@ const publishedISO = post.data.publishDate?.toISOString();
 
 const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "Article",
+    "@type": "BlogPosting",
+    "@id": `${pageUrl}#article`,
     headline: post.data.title,
     description: post.data.description || "",
-    image: abs(post.data.featured_image || FeaturedImage.src),
+    image: [abs(post.data.featured_image || FeaturedImage.src)],
     ...(publishedISO ? { datePublished: publishedISO, dateModified: publishedISO } : {}),
+    url: pageUrl,
+    inLanguage: "id-ID",
     author: {
         "@type": "Person",
-        name: authorName,
-        url: abs("/about"),
+        "@id": AUTHOR_ID,
+        name: AUTHOR_NAME,
+        url: abs(AUTHOR_URL),
+        jobTitle: AUTHOR_ROLE,
+        description: AUTHOR_BIO,
     },
     publisher: {
         "@type": "Organization",
+        "@id": ORGANIZATION_ID,
         name: SITE_TITLE,
         logo: {
             "@type": "ImageObject",
@@ -105,8 +107,8 @@ const jsonLd = {
     image={post.data.featured_image ? post.data.featured_image : FeaturedImage.src}
     type="article"
 >
-    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
-    <Breadcrumb items={[{ label: "Artikel", href: "/posts" }, ...(category ? [{ label: category.data.label, href: `/posts?cat=${post.data.category}` }] : []), { label: post.data.title }]} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+    <Breadcrumb items={[{ label: "Artikel", href: "/posts" }, ...(category ? [{ label: category.data.label, href: `/posts/${post.data.category}` }] : []), { label: post.data.title }]} />
     <!-- Article header -->
     <header class="mx-auto max-w-3xl justify-start items-center flex flex-col">
         {
@@ -123,8 +125,8 @@ const jsonLd = {
 
         <div class="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-coc-muted">
             <span class="inline-flex items-center gap-2 font-medium">
-                <img src={AuthorAvatar.src} alt={`${authorName} avatar`} class="size-5 rounded-full" />
-                {authorName}
+                <img src={AuthorAvatar.src} alt={`${AUTHOR_NAME} avatar`} class="size-5 rounded-full" />
+                {AUTHOR_NAME}
             </span>
             {
                 formattedDate && (

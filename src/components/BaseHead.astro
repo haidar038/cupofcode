@@ -1,21 +1,22 @@
 ---
-import '../styles/global.css';
-import type { ImageMetadata } from 'astro';
-import FallbackImage from '../assets/blog-placeholder-1.jpg';
-import { SITE_URL, SITE_TITLE, TWITTER_HANDLE } from '../consts';
+import "../styles/global.css";
+import type { ImageMetadata } from "astro";
+import FallbackImage from "../assets/blog-placeholder-1.jpg";
+import { SITE_URL, SITE_TITLE, TWITTER_HANDLE } from "../consts";
 
 interface Props {
-	title: string;
-	description: string;
-	image?: ImageMetadata | string;
-	type?: string;
+    title: string;
+    description: string;
+    image?: ImageMetadata | string;
+    type?: string;
+    robots?: string;
 }
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site || SITE_URL);
 
-const { title, description, image = FallbackImage, type = "website" } = Astro.props;
+const { title, description, image = FallbackImage, type = "website", robots } = Astro.props;
 const imageSrc = typeof image === "string" ? image : image.src;
-const fullImageUrl = imageSrc.startsWith('http') ? imageSrc : new URL(imageSrc, Astro.url).href;
+const fullImageUrl = imageSrc.startsWith("http") ? imageSrc : new URL(imageSrc, Astro.url).href;
 
 const umamiSrc = import.meta.env.PUBLIC_UMAMI_SRC;
 const umamiWebsiteId = import.meta.env.PUBLIC_UMAMI_WEBSITE_ID;
@@ -32,19 +33,15 @@ const gaId = import.meta.env.PUBLIC_GA_ID;
 <link rel="manifest" href="/manifest.json" />
 <meta name="generator" content={Astro.generator} />
 <meta name="theme-color" content="#ffbb00" />
+{robots && <meta name="robots" content={robots} />}
 
 <!-- Google Search Console Verification -->
-{import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION && (
-    <meta name="google-site-verification" content={import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION} />
-)}
+{import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION && <meta name="google-site-verification" content={import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION} />}
 
 <!-- Web Fonts: preconnect + stylesheet (display=swap cegah FOIT) -->
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link
-  rel="stylesheet"
-  href="https://fonts.googleapis.com/css2?family=Cal+Sans&family=Inter:wght@400;500;600;700&display=swap"
-/>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cal+Sans&family=Inter:wght@400;500;600;700&display=swap" />
 
 <!-- Canonical URL -->
 <link rel="canonical" href={canonicalURL} />
@@ -76,31 +73,30 @@ const gaId = import.meta.env.PUBLIC_GA_ID;
 
 <!-- PWA: Service Worker -->
 <script is:inline>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function() {
-      navigator.serviceWorker.register('/sw.js').catch(function() {});
-    });
-  }
+    if ("serviceWorker" in navigator) {
+        window.addEventListener("load", function () {
+            navigator.serviceWorker.register("/sw.js").catch(function () {});
+        });
+    }
 </script>
 
 <!-- Analytics: Umami -->
-{
-  umamiSrc && umamiWebsiteId && (
-    <script defer src={umamiSrc} data-website-id={umamiWebsiteId} />
-  )
-}
+{umamiSrc && umamiWebsiteId && <script is:inline defer src={umamiSrc} data-website-id={umamiWebsiteId} />}
 
 <!-- Analytics: Google -->
 {
-  gaId && (
-    <>
-      <script async src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`} />
-      <script set:html={`
+    gaId && (
+        <>
+            <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`} />
+            <script
+                is:inline
+                set:html={`
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
         gtag('config', '${gaId}');
-      `} />
-    </>
-  )
+      `}
+            />
+        </>
+    )
 }

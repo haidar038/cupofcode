@@ -9,7 +9,6 @@ import SearchBar from "../../components/ui/SearchBar.tsx";
 import BackToTop from "../../components/ui/BackToTop.tsx";
 import ScrollAnimations from "../../components/ScrollAnimations.astro";
 import Pagination from "../../components/Pagination.astro";
-import ComingSoonCard from "../../components/ComingSoonCard.astro";
 
 const ASSETS_PER_PAGE = 6;
 
@@ -20,9 +19,6 @@ const totalPages = Math.max(1, Math.ceil(sortedAssets.length / ASSETS_PER_PAGE))
 const rawPage = Number.parseInt(Astro.url.searchParams.get("page") ?? "1", 10);
 const page = Number.isNaN(rawPage) ? 1 : Math.min(Math.max(rawPage, 1), totalPages);
 const pageAssets = sortedAssets.slice((page - 1) * ASSETS_PER_PAGE, page * ASSETS_PER_PAGE);
-
-const missing = Math.max(0, ASSETS_PER_PAGE - pageAssets.length);
-const placeholders = sortedAssets.length > 0 ? Array.from({ length: missing }) : [];
 
 const typeLabels: Record<string, string> = {
     component: "UI Component",
@@ -44,7 +40,11 @@ const searchItems = sortedAssets.map((a) => ({
 }));
 ---
 
-<BaseLayout title={`Aset Digital | ${SITE_TITLE}`} description="Kumpulan UI components, AI prompts, dan Custom Gems siap pakai untuk mempercepat workflow coding kamu.">
+<BaseLayout
+    title={`Aset Digital | ${SITE_TITLE}`}
+    description="Kumpulan UI components, AI prompts, dan Custom Gems siap pakai untuk mempercepat workflow coding kamu."
+    robots={page > 1 ? "noindex,follow" : undefined}
+>
     <header class="mx-auto mb-8 max-w-3xl text-center">
         <p class="mb-6 inline-block rounded-full bg-coc-tag-yellow px-3 py-1 text-xs font-semibold text-[#212121]">Jelajahi</p>
         <h1 class="mb-6 font-coc-display text-4xl leading-tight tracking-tight text-coc-text md:text-5xl">Aset Digital</h1>
@@ -104,9 +104,6 @@ const searchItems = sortedAssets.map((a) => ({
                                 </div>
                             </div>
                         </a>
-                    ))}
-                    {placeholders.map(() => (
-                        <ComingSoonCard variant="asset" />
                     ))}
                 </div>
 

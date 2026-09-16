@@ -1,4 +1,5 @@
 {
   "label": "Aset Digital",
-  "tone": "yellow"
+  "tone": "yellow",
+  "description": "Koleksi resource digital gratis untuk mendukung proses belajar dan membangun produk, mulai dari UI component, prompt AI, hingga Custom Gems yang dapat disesuaikan dengan workflow developer."
 }

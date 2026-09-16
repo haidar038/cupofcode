@@ -1,0 +1,115 @@
+---
+export const prerender = true;
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Breadcrumb from "../../components/Breadcrumb.astro";
+import Pagination from "../../components/Pagination.astro";
+import { SITE_TITLE, SITE_URL } from "../../consts";
+
+const POSTS_PER_PAGE = 6;
+
+export async function getStaticPaths() {
+    const [categories, posts] = await Promise.all([getCollection("categories"), getCollection("posts")]);
+
+    return categories
+        .filter((category) => category.id !== "aset-digital")
+        .map((category) => ({
+            params: { category: category.id },
+            props: {
+                category,
+                posts: posts.filter((post) => post.data.category === category.id).sort((a, b) => (b.data.publishDate?.getTime() ?? 0) - (a.data.publishDate?.getTime() ?? 0)),
+            },
+        }));
+}
+
+const { category, posts } = Astro.props;
+const rawPage = Number.parseInt(Astro.url.searchParams.get("page") ?? "1", 10);
+const totalPages = Math.max(1, Math.ceil(posts.length / POSTS_PER_PAGE));
+const page = Number.isNaN(rawPage) ? 1 : Math.min(Math.max(rawPage, 1), totalPages);
+const pagePosts = posts.slice((page - 1) * POSTS_PER_PAGE, page * POSTS_PER_PAGE);
+const categoryUrl = new URL(`/posts/${category.id}`, SITE_URL).href;
+const breadcrumbItems = [
+    { name: "Beranda", url: new URL("/", SITE_URL).href },
+    { name: "Artikel", url: new URL("/posts", SITE_URL).href },
+    { name: category.data.label, url: categoryUrl },
+];
+const collectionLd = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "@id": `${categoryUrl}#collection`,
+    url: categoryUrl,
+    name: `${category.data.label} | ${SITE_TITLE}`,
+    description: category.data.description,
+    isPartOf: { "@id": `${SITE_URL}/#website` },
+    breadcrumb: { "@id": `${categoryUrl}#breadcrumb` },
+    mainEntity: {
+        "@type": "ItemList",
+        itemListElement: posts.map((post, index) => ({
+            "@type": "ListItem",
+            position: index + 1,
+            url: new URL(`/posts/${post.id}`, SITE_URL).href,
+            name: post.data.title,
+        })),
+    },
+};
+const breadcrumbLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "@id": `${categoryUrl}#breadcrumb`,
+    itemListElement: breadcrumbItems.map((item, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: item.name,
+        item: item.url,
+    })),
+};
+---
+
+<BaseLayout title={`${category.data.label} | ${SITE_TITLE}`} description={category.data.description} robots={page > 1 ? "noindex,follow" : undefined}>
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(collectionLd)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbLd)} />
+
+    <Breadcrumb items={[{ label: "Artikel", href: "/posts" }, { label: category.data.label }]} />
+
+    <header class="mx-auto mb-12 max-w-3xl text-center">
+        <p class="mb-5 inline-flex rounded-full bg-coc-tag-yellow px-3 py-1.5 text-xs font-bold text-[#212121]">Kategori Artikel</p>
+        <h1 class="mb-5 font-coc-display text-4xl tracking-tight text-coc-text md:text-5xl">
+            {category.data.label}
+        </h1>
+        <p class="text-lg leading-relaxed text-coc-muted">{category.data.description}</p>
+    </header>
+
+    {
+        pagePosts.length > 0 ? (
+            <section class="mx-auto max-w-6xl" aria-labelledby="category-articles">
+                <h2 id="category-articles" class="sr-only">
+                    Artikel dalam kategori {category.data.label}
+                </h2>
+                <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+                    {pagePosts.map((post) => (
+                        <article class="flex flex-col border-t border-coc-line pt-6">
+                            <p class="mb-3 text-xs font-medium text-coc-muted-soft">
+                                {post.data.publishDate
+                                    ? new Intl.DateTimeFormat("id-ID", {
+                                          day: "numeric",
+                                          month: "long",
+                                          year: "numeric",
+                                      }).format(post.data.publishDate)
+                                    : "Artikel"}
+                            </p>
+                            <h3 class="text-xl font-bold leading-snug text-coc-text">
+                                <a href={`/posts/${post.id}`} class="transition-colors hover:text-coc-accent">
+                                    {post.data.title}
+                                </a>
+                            </h3>
+                            {post.data.description && <p class="mt-3 text-sm leading-relaxed text-coc-muted">{post.data.description}</p>}
+                        </article>
+                    ))}
+                </div>
+                <Pagination page={page} totalPages={totalPages} basePath={`/posts/${category.id}`} />
+            </section>
+        ) : (
+            <p class="py-20 text-center text-lg text-coc-muted">Belum ada artikel dalam kategori ini.</p>
+        )
+    }
+</BaseLayout>

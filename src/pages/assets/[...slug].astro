@@ -3,9 +3,8 @@ export const prerender = true;
 import { getCollection } from "astro:content";
 import { Image } from "astro:assets";
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import FeaturedImage from "../../assets/blog-placeholder-1.jpg";
 import { SITE_TITLE } from "../../consts";
-import { Download, FileCode, Gem, ImageIcon } from "@lucide/astro";
+import { Download, FileCode, ImageIcon } from "@lucide/astro";
 import Breadcrumb from "../../components/Breadcrumb.astro";
 import BackToTop from "../../components/ui/BackToTop.tsx";
 import CodeBlock from "../../components/ui/CodeBlock.astro";
@@ -13,6 +12,7 @@ import TableOfContents from "../../components/TableOfContents.astro";
 import PromptFiller from "../../components/digital-assets/PromptFiller.tsx";
 import GemsViewer from "../../components/digital-assets/GemsViewer.astro";
 import { splitBody, renderProse, extractHeadings, type CodeSegment } from "../../lib/markdown";
+import { AUTHOR_ID, AUTHOR_NAME, ORGANIZATION_ID } from "../../lib/seo";
 
 export async function getStaticPaths() {
   const assets = await getCollection("digitalAssets");
@@ -88,6 +88,22 @@ const typeBadgeColors: Record<string, string> = {
   prompt: "bg-purple-50 text-purple-700 border-purple-200",
   gem: "bg-green-50 text-green-700 border-green-200",
 };
+
+const siteUrl = import.meta.env.PUBLIC_SITE_URL || "https://cupofcode.cc";
+const pageUrl = new URL(`/assets/${asset.id}`, siteUrl).href;
+const assetLd = {
+  "@context": "https://schema.org",
+  "@type": asset.data.type === "component" ? "SoftwareSourceCode" : "CreativeWork",
+  "@id": `${pageUrl}#resource`,
+  name: asset.data.title,
+  description: asset.data.description,
+  url: pageUrl,
+  inLanguage: "id-ID",
+  author: { "@id": AUTHOR_ID, name: AUTHOR_NAME },
+  publisher: { "@id": ORGANIZATION_ID },
+  isAccessibleForFree: asset.data.isFree,
+  ...(asset.data.format ? { programmingLanguage: asset.data.format } : {}),
+};
 ---
 
 <BaseLayout
@@ -95,6 +111,7 @@ const typeBadgeColors: Record<string, string> = {
   description={asset.data.description}
   type="article"
 >
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(assetLd)} />
   <Breadcrumb
     items={[
       { label: "Aset Digital", href: "/assets" },

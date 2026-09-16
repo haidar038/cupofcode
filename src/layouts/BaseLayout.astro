@@ -3,54 +3,32 @@ import BaseHead from "../components/BaseHead.astro";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import { ClientRouter } from "astro:transitions";
-import { SITE_TITLE, SITE_DESCRIPTION, SITE_URL } from "../consts";
+import { buildWebsiteGraph } from "../lib/seo";
 
 export interface Props {
-  title: string;
-  description: string;
-  image?: string;
-  type?: string;
+    title: string;
+    description: string;
+    image?: string;
+    type?: string;
+    robots?: string;
 }
 
-const { title, description, image, type } = Astro.props;
-
-const websiteLd = {
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  name: SITE_TITLE,
-  url: SITE_URL,
-  description: SITE_DESCRIPTION,
-  inLanguage: "id-ID",
-};
-
-const orgLd = {
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  name: SITE_TITLE,
-  url: SITE_URL,
-  logo: new URL("/favicon.svg", SITE_URL).href,
-  sameAs: [
-    "https://github.com/cupofcode",
-    "https://twitter.com/cupofcode",
-  ],
-};
+const { title, description, image, type, robots } = Astro.props;
+const websiteGraph = buildWebsiteGraph();
 ---
 
 <!doctype html>
 <html lang="id" class="">
-  <head>
-    <ClientRouter />
-    <BaseHead {title} {description} {image} {type} />
-    <script type="application/ld+json" set:html={JSON.stringify(websiteLd)} />
-    <script type="application/ld+json" set:html={JSON.stringify(orgLd)} />
-  </head>
-  <body class="bg-coc-bg text-coc-text">
-    <Header />
-    <main
-      class="mx-auto w-full max-w-360 overflow-x-clip px-4 py-10 sm:px-6 sm:py-12 lg:px-20 lg:py-18 xl:px-30"
-    >
-      <slot />
-    </main>
-    <Footer />
-  </body>
+    <head>
+        <ClientRouter />
+        <BaseHead {title} {description} {image} {type} {robots} />
+        <script is:inline type="application/ld+json" set:html={JSON.stringify(websiteGraph)} />
+    </head>
+    <body class="bg-coc-bg text-coc-text">
+        <Header />
+        <main class="mx-auto w-full max-w-360 overflow-x-clip px-4 py-10 sm:px-6 sm:py-12 lg:px-20 lg:py-18 xl:px-30">
+            <slot />
+        </main>
+        <Footer />
+    </body>
 </html>

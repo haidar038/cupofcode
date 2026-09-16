@@ -3,14 +3,12 @@ export const prerender = true;
 import { getCollection } from "astro:content";
 import { Image } from "astro:assets";
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import FeaturedImage from "../../assets/blog-placeholder-1.jpg";
 import { SITE_TITLE } from "../../consts";
 import { Clock, ImageIcon } from "@lucide/astro";
 import SearchBar from "../../components/ui/SearchBar.tsx";
 import BackToTop from "../../components/ui/BackToTop.tsx";
 import ScrollAnimations from "../../components/ScrollAnimations.astro";
 import Pagination from "../../components/Pagination.astro";
-import ComingSoonCard from "../../components/ComingSoonCard.astro";
 
 const SNIPPETS_PER_PAGE = 6;
 
@@ -21,9 +19,6 @@ const totalPages = Math.max(1, Math.ceil(sortedSnippets.length / SNIPPETS_PER_PA
 const rawPage = Number.parseInt(Astro.url.searchParams.get("page") ?? "1", 10);
 const page = Number.isNaN(rawPage) ? 1 : Math.min(Math.max(rawPage, 1), totalPages);
 const pageSnippets = sortedSnippets.slice((page - 1) * SNIPPETS_PER_PAGE, page * SNIPPETS_PER_PAGE);
-
-const missing = Math.max(0, SNIPPETS_PER_PAGE - pageSnippets.length);
-const placeholders = sortedSnippets.length > 0 ? Array.from({ length: missing }) : [];
 
 const langColors: Record<string, string> = {
     typescript: "border-blue-200 bg-blue-50 text-blue-700",
@@ -40,7 +35,7 @@ const searchItems = sortedSnippets.map((s) => ({
 }));
 ---
 
-<BaseLayout title={`Snippet Library | ${SITE_TITLE}`} description="Koleksi potongan kode esensial, fungsi utilitas, dan trik optimasi siap pakai.">
+<BaseLayout title={`Snippet Library | ${SITE_TITLE}`} description="Koleksi potongan kode esensial, fungsi utilitas, dan trik optimasi siap pakai." robots={page > 1 ? "noindex,follow" : undefined}>
     <header class="mx-auto mb-12 max-w-3xl text-center">
         <p class="mb-5 inline-flex items-center gap-2 rounded-full bg-coc-tag-yellow px-3 py-1.5 text-xs font-bold text-[#212121]">Today I Learned</p>
         <h1 class="mb-5 font-coc-display text-4xl tracking-tight text-coc-text md:text-5xl">Snippet Library</h1>
@@ -101,9 +96,6 @@ const searchItems = sortedSnippets.map((s) => ({
                                 </div>
                             </div>
                         </a>
-                    ))}
-                    {placeholders.map(() => (
-                        <ComingSoonCard variant="panel" />
                     ))}
                 </div>
 

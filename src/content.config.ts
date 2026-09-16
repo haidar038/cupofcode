@@ -19,6 +19,7 @@ const categories = defineCollection({
 	schema: z.object({
 		label: z.string(),
 		tone: z.enum(["yellow", "green", "pink"]),
+		description: z.string().min(40),
 	}),
 });
 

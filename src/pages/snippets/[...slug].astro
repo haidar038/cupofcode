@@ -5,19 +5,20 @@ import { Image } from "astro:assets";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import FeaturedImage from "../../assets/blog-placeholder-1.jpg";
 import { SITE_TITLE } from "../../consts";
-import { Copy, FileCode, ImageIcon } from "@lucide/astro";
+import { Copy, FileCode } from "@lucide/astro";
 import Breadcrumb from "../../components/Breadcrumb.astro";
 import BackToTop from "../../components/ui/BackToTop.tsx";
 import CodeBlock from "../../components/ui/CodeBlock.astro";
 import TableOfContents from "../../components/TableOfContents.astro";
 import { splitBody, renderProse, extractHeadings } from "../../lib/markdown";
+import { AUTHOR_ID, AUTHOR_NAME, ORGANIZATION_ID } from "../../lib/seo";
 
 export async function getStaticPaths() {
-  const snippets = await getCollection("snippets");
-  return snippets.map((snippet) => ({
-    params: { slug: snippet.id },
-    props: { snippet },
-  }));
+    const snippets = await getCollection("snippets");
+    return snippets.map((snippet) => ({
+        params: { slug: snippet.id },
+        props: { snippet },
+    }));
 }
 
 const { snippet } = Astro.props;
@@ -25,155 +26,161 @@ const bodySegments = splitBody(snippet.body || "");
 const toc = extractHeadings(snippet.body || "").filter((h) => h.depth === 2);
 
 const langColors: Record<string, string> = {
-  typescript: "border-blue-200 bg-blue-50 text-blue-700",
-  javascript: "border-yellow-200 bg-yellow-50 text-yellow-700",
-  css: "border-pink-200 bg-pink-50 text-pink-700",
-  html: "border-orange-200 bg-orange-50 text-orange-700",
+    typescript: "border-blue-200 bg-blue-50 text-blue-700",
+    javascript: "border-yellow-200 bg-yellow-50 text-yellow-700",
+    css: "border-pink-200 bg-pink-50 text-pink-700",
+    html: "border-orange-200 bg-orange-50 text-orange-700",
+};
+
+const pageUrl = new URL(`/snippets/${snippet.id}`, import.meta.env.PUBLIC_SITE_URL || "https://cupofcode.cc").href;
+const snippetLd = {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "@id": `${pageUrl}#article`,
+    headline: snippet.data.title,
+    description: snippet.data.description,
+    url: pageUrl,
+    inLanguage: "id-ID",
+    author: { "@id": AUTHOR_ID, name: AUTHOR_NAME },
+    publisher: { "@id": ORGANIZATION_ID },
+    programmingLanguage: snippet.data.language,
+    isPartOf: { "@id": `${import.meta.env.PUBLIC_SITE_URL || "https://cupofcode.cc"}/#website` },
 };
 ---
 
-<BaseLayout
-  title={`${snippet.data.title} | ${SITE_TITLE}`}
-  description={snippet.data.description}
-  type="article"
->
-  <Breadcrumb
-    items={[
-      { label: "Snippets", href: "/snippets" },
-      { label: snippet.data.title },
-    ]}
-  />
+<BaseLayout title={`${snippet.data.title} | ${SITE_TITLE}`} description={snippet.data.description} type="article">
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(snippetLd)} />
+    <Breadcrumb items={[{ label: "Snippets", href: "/snippets" }, { label: snippet.data.title }]} />
 
-  <div class="mt-8">
-    {
-      snippet.data.featured_image ? (
-        <Image
-          src={snippet.data.featured_image}
-          alt={snippet.data.title}
-          width={1200}
-          height={600}
-          loading="eager"
-          fetchpriority="high"
-          class="aspect-2/1 w-full rounded-3xl object-cover shadow-var(--shadow-lg)"
-        />
-      ) : (
-        <Image src={FeaturedImage} alt={snippet.data.title} loading="eager" fetchpriority="high" class="aspect-2/1 w-full rounded-3xl object-cover shadow-var(--shadow-lg)" />
-      )
-    }
-  </div>
-
-  <div class="mt-10 grid grid-cols-1 items-start gap-10 lg:grid-cols-12">
-    <article class="min-w-0 lg:col-span-8">
-      <div class="mb-5 flex items-start justify-between">
-        <span
-          class:list={[
-            "flex items-center gap-1.5 rounded-lg border px-3 py-1 font-mono text-xs font-medium",
-            langColors[snippet.data.language] || "border-gray-200 bg-gray-50 text-gray-700",
-          ]}
-        >
-          {snippet.data.language}
-        </span>
-      </div>
-
-      <h1 class="mb-4 font-coc-display text-3xl font-bold leading-tight text-coc-text md:text-4xl">
-        {snippet.data.title}
-      </h1>
-      <p class="mb-8 text-lg leading-relaxed text-coc-muted">
-        {snippet.data.description}
-      </p>
-
-      <div class="rounded-2xl border border-coc-line bg-coc-surface p-6 md:p-8">
-        <div class="prose-coc">
-          {
-            bodySegments.map((segment) =>
-              segment.type === "code" ? (
-                <CodeBlock
-                  code={segment.code}
-                  language={segment.lang}
-                  label={segment.label}
+    <div class="mt-8">
+        {
+            snippet.data.featured_image ? (
+                <Image
+                    src={snippet.data.featured_image}
+                    alt={snippet.data.title}
+                    width={1200}
+                    height={758}
+                    sizes="(max-width: 768px) 100vw, 60vw"
+                    densities={[1, 2]}
+                    loading="eager"
+                    fetchpriority="high"
+                    class="aspect-462/292 h-full w-full rounded-3xl object-cover shadow-var(--shadow-lg) transition duration-200 hover:scale-[1.02]"
                 />
-              ) : (
-                <div set:html={renderProse(segment.markdown)} />
-              ),
+            ) : (
+                <Image
+                    src={FeaturedImage}
+                    alt={snippet.data.title}
+                    width={1200}
+                    height={758}
+                    sizes="(max-width: 768px) 100vw, 60vw"
+                    densities={[1, 2]}
+                    loading="eager"
+                    fetchpriority="high"
+                    class="aspect-462/292 h-full w-full rounded-3xl object-cover shadow-var(--shadow-lg) transition duration-200 hover:scale-[1.02]"
+                />
             )
-          }
-        </div>
-      </div>
-    </article>
+        }
+    </div>
 
-    <aside class="space-y-6 lg:col-span-4 lg:sticky lg:top-6 lg:self-start">
-      {
-        toc.length > 0 && (
-          <div class="hidden rounded-3xl border border-coc-line bg-coc-surface p-6 lg:block">
-            <TableOfContents headings={toc} />
-          </div>
-        )
-      }
+    <div class="mt-10 grid grid-cols-1 items-start gap-10 lg:grid-cols-12">
+        <article class="min-w-0 lg:col-span-8">
+            <div class="mb-5 flex items-start justify-between">
+                <span
+                    class:list={[
+                        "flex items-center gap-1.5 rounded-lg border px-3 py-1 font-mono text-xs font-medium",
+                        langColors[snippet.data.language] || "border-gray-200 bg-gray-50 text-gray-700",
+                    ]}
+                >
+                    {snippet.data.language}
+                </span>
+            </div>
 
-      <div class="rounded-3xl border border-coc-line bg-coc-surface p-6">
-        <h3 class="mb-4 text-sm font-bold uppercase tracking-wider text-coc-text">
-          Info Snippet
-        </h3>
-        <div class="space-y-4 text-sm">
-          <div class="flex items-center justify-between border-b border-coc-line py-2">
-            <span class="text-coc-muted">Bahasa</span>
-            <span class="font-semibold text-coc-text">{snippet.data.language}</span>
-          </div>
-        </div>
+            <h1 class="mb-4 font-coc-display text-3xl font-bold leading-tight text-coc-text md:text-4xl">
+                {snippet.data.title}
+            </h1>
+            <p class="mb-8 text-lg leading-relaxed text-coc-muted">
+                {snippet.data.description}
+            </p>
 
-        <button
-          id="copy-all-code"
-          class="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-coc-dark px-6 py-3 font-bold text-white transition-all hover:bg-black"
-        >
-          <Copy width="18" height="18" />
-          Salin Semua Kode
-        </button>
-        <p class="mt-3 flex items-start gap-1.5 text-xs leading-5 text-coc-muted-soft">
-          <FileCode width="14" height="14" class="mt-0.5 shrink-0" />
-          Setiap blok kode punya tombol "Salin" di pojok kanan atas untuk menyalin seluruh kode.
-        </p>
-      </div>
-    </aside>
-  </div>
-  <BackToTop client:idle />
+            <div class="rounded-2xl border border-coc-line bg-coc-surface p-6 md:p-8">
+                <div class="prose-coc">
+                    {
+                        bodySegments.map((segment) =>
+                            segment.type === "code" ? <CodeBlock code={segment.code} language={segment.lang} label={segment.label} /> : <div set:html={renderProse(segment.markdown)} />,
+                        )
+                    }
+                </div>
+            </div>
+        </article>
+
+        <aside class="space-y-6 lg:col-span-4 lg:sticky lg:top-6 lg:self-start">
+            {
+                toc.length > 0 && (
+                    <div class="hidden rounded-3xl border border-coc-line bg-coc-surface p-6 lg:block">
+                        <TableOfContents headings={toc} />
+                    </div>
+                )
+            }
+
+            <div class="rounded-3xl border border-coc-line bg-coc-surface p-6">
+                <h3 class="mb-4 text-sm font-bold uppercase tracking-wider text-coc-text">Info Snippet</h3>
+                <div class="space-y-4 text-sm">
+                    <div class="flex items-center justify-between border-b border-coc-line py-2">
+                        <span class="text-coc-muted">Bahasa</span>
+                        <span class="font-semibold text-coc-text">{snippet.data.language}</span>
+                    </div>
+                </div>
+
+                <button id="copy-all-code" class="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-coc-dark px-6 py-3 font-bold text-white transition-all hover:bg-black">
+                    <Copy width="18" height="18" />
+                    Salin Semua Kode
+                </button>
+                <p class="mt-3 flex items-start gap-1.5 text-xs leading-5 text-coc-muted-soft">
+                    <FileCode width="14" height="14" class="mt-0.5 shrink-0" />
+                    Setiap blok kode punya tombol "Salin" di pojok kanan atas untuk menyalin seluruh kode.
+                </p>
+            </div>
+        </aside>
+    </div>
+    <BackToTop client:idle />
 </BaseLayout>
 
 <script>
-  // Collect every code block on the page and copy them in order.
-  function copyAllCode(button: HTMLButtonElement) {
-    const blocks = Array.from(document.querySelectorAll<HTMLElement>(".code-viewer"));
-    const text = blocks
-      .map((viewer) => {
-        const rows = viewer.querySelectorAll<HTMLElement>(".code-line__text");
-        return Array.from(rows)
-          .map((el) => el.textContent ?? "")
-          .join("\n");
-      })
-      .join("\n\n");
+    // Collect every code block on the page and copy them in order.
+    function copyAllCode(button: HTMLButtonElement) {
+        const blocks = Array.from(document.querySelectorAll<HTMLElement>(".code-viewer"));
+        const text = blocks
+            .map((viewer) => {
+                const rows = viewer.querySelectorAll<HTMLElement>(".code-line__text");
+                return Array.from(rows)
+                    .map((el) => el.textContent ?? "")
+                    .join("\n");
+            })
+            .join("\n\n");
 
-    if (!text) return;
-    navigator.clipboard.writeText(text).then(() => {
-      const original = button.innerHTML;
-      button.innerHTML =
-        '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Tersalin!';
-      setTimeout(() => {
-        button.innerHTML = original;
-      }, 1800);
-    });
-  }
-
-  const run = () => {
-    const button = document.getElementById("copy-all-code") as HTMLButtonElement | null;
-    if (button && !button.dataset.wired) {
-      button.dataset.wired = "true";
-      button.addEventListener("click", () => copyAllCode(button));
+        if (!text) return;
+        navigator.clipboard.writeText(text).then(() => {
+            const original = button.innerHTML;
+            button.innerHTML =
+                '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Tersalin!';
+            setTimeout(() => {
+                button.innerHTML = original;
+            }, 1800);
+        });
     }
-  };
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", run);
-  } else {
-    run();
-  }
-  document.addEventListener("astro:page-load", run);
+    const run = () => {
+        const button = document.getElementById("copy-all-code") as HTMLButtonElement | null;
+        if (button && !button.dataset.wired) {
+            button.dataset.wired = "true";
+            button.addEventListener("click", () => copyAllCode(button));
+        }
+    };
+
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", run);
+    } else {
+        run();
+    }
+    document.addEventListener("astro:page-load", run);
 </script>

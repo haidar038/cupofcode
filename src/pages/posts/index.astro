@@ -8,7 +8,6 @@ import SearchBar from "../../components/ui/SearchBar.tsx";
 import BackToTop from "../../components/ui/BackToTop.tsx";
 import ScrollAnimations from "../../components/ScrollAnimations.astro";
 import Pagination from "../../components/Pagination.astro";
-import ComingSoonCard from "../../components/ComingSoonCard.astro";
 
 const POSTS_PER_PAGE = 6;
 
@@ -35,11 +34,6 @@ const rawPage = Number.parseInt(Astro.url.searchParams.get("page") ?? "1", 10);
 const page = Number.isNaN(rawPage) ? 1 : Math.min(Math.max(rawPage, 1), totalPages);
 const pagePosts = sortedPosts.slice((page - 1) * POSTS_PER_PAGE, page * POSTS_PER_PAGE);
 
-// Fill the rest of the 3x3 grid with "coming soon" placeholders so the page
-// never looks sparse.
-const missing = Math.max(0, POSTS_PER_PAGE - pagePosts.length);
-const placeholders = sortedPosts.length > 0 ? Array.from({ length: missing }) : [];
-
 const categoryLabel = new Map<string, string>();
 for (const c of categories) {
     categoryLabel.set(c.id, c.data.label);
@@ -55,7 +49,8 @@ const searchItems = posts.map((p) => ({
 
 <BaseLayout
     title={`${selectedCategory ? selectedCategory.data.label + " — " : "Semua Artikel"} | ${SITE_TITLE}`}
-    description={selectedCategory ? `Kumpulan artikel kategori ${selectedCategory.data.label}` : "Daftar semua artikel cup of code."}
+    description={selectedCategory?.data.description ?? "Daftar semua artikel Cup of Code tentang coding, web development, UI/UX, dan AI."}
+    robots={cat || page > 1 ? "noindex,follow" : undefined}
 >
     <header class="mx-auto mb-8 flex max-w-3xl flex-col items-center text-center">
         <p class="mb-6 inline-block rounded-full bg-coc-tag-yellow px-3 py-1 text-xs font-semibold text-[#212121]">
@@ -65,7 +60,7 @@ const searchItems = posts.map((p) => ({
             {selectedCategory ? selectedCategory.data.label : "Semua Artikel"}
         </h1>
         <p class="mx-auto max-w-2xl text-base leading-relaxed text-coc-muted md:text-lg">
-            {selectedCategory ? `Kumpulan artikel dalam kategori ${selectedCategory.data.label}.` : "Koleksi tutorial, tips & trik, dan panduan untuk membantu perjalanan coding kamu."}
+            {selectedCategory?.data.description ?? "Koleksi tutorial, tips & trik, dan panduan untuk membantu perjalanan coding kamu."}
         </p>
     </header>
 
@@ -113,9 +108,6 @@ const searchItems = posts.map((p) => ({
                                 </div>
                             </div>
                         </a>
-                    ))}
-                    {placeholders.map(() => (
-                        <ComingSoonCard variant="post" />
                     ))}
                 </div>
 

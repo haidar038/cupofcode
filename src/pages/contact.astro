@@ -116,7 +116,7 @@ import { Send } from "@lucide/astro";
                 <button
                     type="submit"
                     id="contact-submit"
-                    class="mt-4 flex w-full items-center justify-center gap-2 rounded-full bg-coc-dark py-4 text-sm font-semibold text-white transition-colors hover:bg-black disabled:cursor-not-allowed disabled:opacity-60"
+                    class="mt-4 flex w-full items-center justify-center gap-2 rounded-full bg-coc-dark py-4 text-sm font-semibold text-white transition-colors hover:bg-coc-accent disabled:cursor-not-allowed disabled:opacity-60"
                 >
                     <Send width="18" height="18" />
                     Kirim Pesan
@@ -157,12 +157,12 @@ import { Send } from "@lucide/astro";
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify(data),
                     });
-                const result = await res.json().catch(() => ({}));
-                setFeedback(result.message ?? "Terjadi kesalahan.", res.ok);
-                if (res.ok) form.reset();
-                if (res.ok && typeof (window as any).umami?.track === "function") {
-                    (window as any).umami.track("contact_submit");
-                }
+                    const result = await res.json().catch(() => ({}));
+                    setFeedback(result.message ?? "Terjadi kesalahan.", res.ok);
+                    if (res.ok) form.reset();
+                    if (res.ok && typeof (window as any).umami?.track === "function") {
+                        (window as any).umami.track("contact_submit");
+                    }
                 } catch {
                     setFeedback("Terjadi kesalahan jaringan. Coba lagi.", false);
                 } finally {

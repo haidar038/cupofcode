@@ -4,119 +4,107 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import { Image } from "astro:assets";
 import { BookOpen, Eye } from "@lucide/astro";
 import { SITE_TITLE } from "../consts";
+import { AUTHOR_BIO, AUTHOR_NAME, AUTHOR_ROLE } from "../lib/seo";
 
-const heroImage =
-  "https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=2072&auto=format&fit=crop";
+const heroImage = "https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=2072&auto=format&fit=crop";
 ---
 
-<BaseLayout
-  title={`Tentang - ${SITE_TITLE}`}
-  description="Kenali Cup of Code, visi, dan fokus konten yang dibagikan."
->
-  <!-- Header Section -->
-  <header class="mx-auto mb-12 flex max-w-3xl flex-col items-center justify-start text-center">
-    <h1 class="mb-6 font-coc-display text-4xl leading-tight tracking-tight text-coc-text md:text-5xl">
-      Membangun Komunitas<br />Lewat Baris Kode<span class="text-coc-accent">.</span>
-    </h1>
-    <p class="mx-auto text-lg leading-relaxed text-coc-muted md:text-xl">
-      Cup of Code adalah ruang digital di mana eksplorasi teknologi, desain antarmuka, dan efisiensi
-      ngoding diseduh menjadi bacaan ringan yang mencerahkan.
-    </p>
-  </header>
+<BaseLayout title={`Tentang - ${SITE_TITLE}`} description="Kenali Cup of Code, visi, dan fokus konten yang dibagikan.">
+    <!-- Header Section -->
+    <header class="mx-auto mb-12 flex max-w-3xl flex-col items-center justify-start text-center">
+        <h1 class="mb-6 font-coc-display text-4xl leading-tight tracking-tight text-coc-text md:text-5xl">
+            Membangun Komunitas<br />Lewat Baris Kode<span class="text-coc-accent">.</span>
+        </h1>
+        <p class="mx-auto text-lg leading-relaxed text-coc-muted md:text-xl">
+            Cup of Code adalah ruang digital di mana eksplorasi teknologi, desain antarmuka, dan efisiensi ngoding diseduh menjadi bacaan ringan yang mencerahkan.
+        </p>
+    </header>
 
-  <!-- Hero Image -->
-  <div class="mx-auto mb-16 px-4 sm:px-0">
-    <Image
-      src={heroImage}
-      alt="Setup komputer untuk coding"
-      width={2072}
-      height={1295}
-      sizes="(max-width: 640px) 100vw, 80vw"
-      class="h-75 w-full rounded-3xl object-cover shadow-sm md:h-112"
-      loading="eager"
-    />
-  </div>
-
-  <!-- Story Section -->
-  <article class="prose-coc mx-auto max-w-3xl space-y-6 text-[17px] leading-[1.8] text-coc-muted">
-    <h2 class="mb-6 text-2xl font-bold text-coc-text md:text-3xl">Kisah di Balik Layar</h2>
-
-    <p>
-      Semua berawal dari kebutuhan simpel: pengen nyimpen catatan pribadi tentang <em>bug</em> yang
-      pernah diselesaiin, dokumentasi setup yang sering kelupaan, dan trik desain yang bikin
-      antarmuka jadi lebih manusiawi.
-    </p>
-
-    <p>
-      Tapi, catatan-catatan itu rasanya terlalu berharga kalau cuma disimpan sendiri. Nah, dari
-      situlah <strong>Cup of Code</strong> lahir!
-    </p>
-
-    <p>
-      Kami percaya kalau ilmu tentang <em>software development</em> dan <em>UI/UX design</em> itu
-      hak semua orang. Di era sekarang, siapa aja harusnya bisa akses ilmu ini secara gratis, tanpa
-      perlu terbebani biaya mahal buat beli buku, kursus, atau kelas mentoring yang harganya
-      selangit.
-    </p>
-
-    <p>
-      Sekarang kita emang hidup di zaman AI, di mana bikin web app atau komponen desain keliatannya
-      gampang dan instan banget. Tapi jujur, kami resah melihat banyak narasi di luar sana yang
-      bilang kalau{" "}
-      <span class="rounded bg-[#fff0c8] px-1.5 py-0.5 font-medium text-[#7a5a00]">
-        &ldquo;fundamental dan dasar coding itu udah gak penting lagi, tinggal modal copas prompt AI
-        aja pasti beres.&rdquo;
-      </span>{" "}
-      Padahal kenyataannya gak semudah itu. Tanpa tahu dasarnya, kita gak bakal tahu gimana cara
-      nanganin error yang rumit, mikirin keamanan data, sampai ngurusin skalabilitas aplikasi ke
-      depannya.
-    </p>
-
-    <p>
-      Di Cup of Code, kami pengen nerapin inklusivitas yang sesungguhnya. Kami pengen nunjukkin
-      kalau AI itu adalah alat bantu buat efisiensi kerja, bukan pengganti logika dasar kita sebagai
-      developer. Kami gak mau kamu cuma bisa &lsquo;salin-tempel&rsquo; tanpa tahu apa yang terjadi
-      di balik layar.
-    </p>
-
-    <p>
-      Makanya, lewat blog ini, kami gak cuma berbagi tutorial yang mudah dipahami, tapi juga bakal
-      nyediain aset-aset digital secara <strong>100% gratis!</strong> Mulai dari template siap
-      pakai, <em>UI components</em>, sampai racikan <em>prompt</em> AI yang efektif. Semuanya bisa
-      kamu akses kapan aja buat bahan eksperimen kamu sendiri.
-    </p>
-
-    <p class="pt-2 font-medium text-coc-text">
-      Yuk, kita belajar bareng dengan cara yang sehat, jujur, dan beneran bikin skill kamu
-      berkembang!
-    </p>
-  </article>
-
-  <!-- Two Column Box -->
-  <div class="mx-auto mt-18 grid grid-cols-1 gap-10 rounded-4xl border border-coc-line bg-coc-surface/50 p-8 backdrop-blur-sm md:grid-cols-2 md:gap-16 md:p-12">
-    <!-- Item 1 -->
-    <div>
-      <div class="mb-6 flex h-12 w-12 items-center justify-center rounded-xl bg-coc-tag-yellow text-coc-accent">
-        <Eye width="26" height="26" />
-      </div>
-      <h3 class="mb-3 text-xl font-bold text-coc-text">Visi Kami</h3>
-      <p class="leading-relaxed text-coc-muted">
-        Pengen jadi tempat sharing paling &ldquo;bersih&rdquo; dan relevan buat belajar coding,
-        desain, dan AI secara sehat, mulai dari yang baru merintis sampai yang udah profesional.
-      </p>
+    <!-- Hero Image -->
+    <div class="mx-auto mb-16 px-4 sm:px-0">
+        <Image
+            src={heroImage}
+            alt="Setup komputer untuk coding"
+            width={2072}
+            height={1295}
+            sizes="(max-width: 640px) 100vw, 80vw"
+            class="h-75 w-full rounded-3xl object-cover shadow-sm md:h-112"
+            loading="eager"
+        />
     </div>
 
-    <!-- Item 2 -->
-    <div>
-      <div class="mb-6 flex h-12 w-12 items-center justify-center rounded-xl bg-[#e6f7ea] text-[#16a34a]">
-        <BookOpen width="26" height="26" />
-      </div>
-      <h3 class="mb-3 text-xl font-bold text-coc-text">Apa yang Dibahas?</h3>
-      <p class="leading-relaxed text-coc-muted">
-        Kita bakal ngulik ekosistem Front-End (React, Next.js, CSS), UI/UX (Figma), sampai integrasi
-        AI (ChatGPT &amp; Gemini) lewat Web App, Apps Script, dan Spreadsheet secara mendalam tapi
-        gampang dipahami.
-      </p>
+    <!-- Story Section -->
+    <article class="prose-coc mx-auto max-w-3xl space-y-6 text-[17px] leading-[1.8] text-coc-muted">
+        <h2 class="mb-6 text-2xl font-bold text-coc-text md:text-3xl">Kisah di Balik Layar</h2>
+
+        <p>
+            Semua berawal dari kebutuhan simpel: pengen nyimpen catatan pribadi tentang <em>bug</em> yang pernah diselesaiin, dokumentasi setup yang sering kelupaan, dan trik desain yang bikin antarmuka
+            jadi lebih manusiawi.
+        </p>
+
+        <p>
+            Tapi, catatan-catatan itu rasanya terlalu berharga kalau cuma disimpan sendiri. Nah, dari situlah <strong>Cup of Code</strong> lahir!
+        </p>
+
+        <p>
+            Kami percaya kalau ilmu tentang <em>software development</em> dan <em>UI/UX design</em> itu hak semua orang. Di era sekarang, siapa aja harusnya bisa akses ilmu ini secara gratis, tanpa perlu
+            terbebani biaya mahal buat beli buku, kursus, atau kelas mentoring yang harganya selangit.
+        </p>
+
+        <p>
+            Sekarang kita emang hidup di zaman AI, di mana bikin web app atau komponen desain keliatannya gampang dan instan banget. Tapi jujur, kami resah melihat banyak narasi di luar sana yang
+            bilang kalau{" "}
+            <span class="rounded bg-coc-tag-yellow px-1.5 py-0.5 font-medium text-[#7a5a00]">
+                &ldquo;fundamental dan dasar coding itu udah gak penting lagi, tinggal modal copas prompt AI aja pasti beres.&rdquo;
+            </span>{" "}
+            Padahal kenyataannya gak semudah itu. Tanpa tahu dasarnya, kita gak bakal tahu gimana cara nanganin error yang rumit, mikirin keamanan data, sampai ngurusin skalabilitas aplikasi ke depannya.
+        </p>
+
+        <p>
+            Di Cup of Code, kami pengen nerapin inklusivitas yang sesungguhnya. Kami pengen nunjukkin kalau AI itu adalah alat bantu buat efisiensi kerja, bukan pengganti logika dasar kita sebagai
+            developer. Kami gak mau kamu cuma bisa &lsquo;salin-tempel&rsquo; tanpa tahu apa yang terjadi di balik layar.
+        </p>
+
+        <p>
+            Makanya, lewat blog ini, kami gak cuma berbagi tutorial yang mudah dipahami, tapi juga bakal nyediain aset-aset digital secara <strong>100% gratis!</strong> Mulai dari template siap pakai, <em
+                >UI components</em
+            >, sampai racikan <em>prompt</em> AI yang efektif. Semuanya bisa kamu akses kapan aja buat bahan eksperimen kamu sendiri.
+        </p>
+
+        <p class="pt-2 font-medium text-coc-text">Yuk, kita belajar bareng dengan cara yang sehat, jujur, dan beneran bikin skill kamu berkembang!</p>
+    </article>
+
+    <!-- Two Column Box -->
+    <div class="mx-auto mt-18 grid grid-cols-1 gap-10 rounded-4xl border border-coc-line bg-coc-surface/50 p-8 backdrop-blur-sm md:grid-cols-2 md:gap-16 md:p-12">
+        <!-- Item 1 -->
+        <div>
+            <div class="mb-6 flex h-12 w-12 items-center justify-center rounded-xl bg-coc-tag-yellow text-coc-accent">
+                <Eye width="26" height="26" />
+            </div>
+            <h3 class="mb-3 text-xl font-bold text-coc-text">Visi Kami</h3>
+            <p class="leading-relaxed text-coc-muted">
+                Pengen jadi tempat sharing paling &ldquo;bersih&rdquo; dan relevan buat belajar coding, desain, dan AI secara sehat, mulai dari yang baru merintis sampai yang udah profesional.
+            </p>
+        </div>
+
+        <!-- Item 2 -->
+        <div>
+            <div class="mb-6 flex h-12 w-12 items-center justify-center rounded-xl bg-[#e6f7ea] text-[#16a34a]">
+                <BookOpen width="26" height="26" />
+            </div>
+            <h3 class="mb-3 text-xl font-bold text-coc-text">Apa yang Dibahas?</h3>
+            <p class="leading-relaxed text-coc-muted">
+                Kita bakal ngulik ekosistem Front-End (React, Next.js, CSS), UI/UX (Figma), sampai integrasi AI (ChatGPT &amp; Gemini) lewat Web App, Apps Script, dan Spreadsheet secara mendalam tapi
+                gampang dipahami.
+            </p>
+        </div>
     </div>
-  </div>
+
+    <section id="author" class="mx-auto mt-18 max-w-3xl border-t border-coc-line pt-12" aria-labelledby="author-title">
+        <p class="mb-3 text-sm font-semibold uppercase tracking-wide text-coc-accent">Editorial identity</p>
+        <h2 id="author-title" class="mb-4 font-coc-display text-3xl text-coc-text md:text-4xl">Tentang Penulis</h2>
+        <h3 class="text-xl font-bold text-coc-text">{AUTHOR_NAME}</h3>
+        <p class="mt-1 text-sm font-medium text-coc-muted">{AUTHOR_ROLE}</p>
+        <p class="mt-4 leading-relaxed text-coc-muted">{AUTHOR_BIO}</p>
+    </section>
 </BaseLayout>
