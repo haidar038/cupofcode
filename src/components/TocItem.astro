@@ -1,0 +1,62 @@
+---
+// One TOC entry: [toggle + link] when the entry has children, then its
+// children rendered recursively inside a collapsible panel. In flat mode
+// (nested=false) it renders the plain dot+link row used by non-nested lists.
+import { ChevronRight } from "@lucide/astro";
+import type { TocNode } from "../lib/markdown";
+import TocItem from "./TocItem.astro";
+
+interface Props {
+    node: TocNode;
+    nested?: boolean;
+}
+
+const { node, nested = false } = Astro.props;
+const { heading } = node;
+const hasChildren = node.children.length > 0;
+const panelId = `toc-panel-${heading.slug}`;
+---
+
+<li class="toc-item">
+    <div class="flex items-start gap-3">
+        {
+            nested && (hasChildren ? (
+                <button
+                    type="button"
+                    class="toc-toggle mt-1 flex size-5 shrink-0 items-center justify-center rounded-md text-coc-muted-soft hover:bg-coc-line-light hover:text-coc-text"
+                    aria-expanded="false"
+                    aria-controls={panelId}
+                    aria-label={`Buka sub-bagian: ${heading.text}`}
+                >
+                    <ChevronRight width="14" height="14" stroke-width="2" />
+                </button>
+            ) : (
+                <span class="mt-1 size-5 shrink-0" aria-hidden="true" />
+            ))
+        }
+        <a
+            href={`#${heading.slug}`}
+            class:list={[
+                "toc-link flex items-start gap-3 rounded-lg px-2 py-1 text-sm leading-6 transition-colors hover:bg-coc-line-light hover:text-coc-text",
+                nested && heading.depth <= 1 ? "font-medium text-coc-text" : "text-coc-muted",
+            ]}
+        >
+            <span class="toc-dot mt-2 size-1.5 shrink-0 rounded-full bg-coc-line transition-colors" />
+            <span class="toc-text">{heading.text}</span>
+        </a>
+    </div>
+
+    {
+        hasChildren && (
+            <div id={panelId} class="toc-children">
+                <div>
+                    <ul class="ml-4 mt-1 space-y-1 border-l border-coc-line pl-2">
+                        {node.children.map((child) => (
+                            <TocItem node={child} nested={nested} />
+                        ))}
+                    </ul>
+                </div>
+            </div>
+        )
+    }
+</li>

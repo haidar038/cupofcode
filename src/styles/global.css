@@ -223,6 +223,19 @@
 /* ------------------------------------------------------------------ */
 /* Shared article/asset prose typography (.prose-coc)                   */
 /* ------------------------------------------------------------------ */
+.prose-coc h1 {
+  font-family: var(--font-body);
+  font-size: 2rem;
+  line-height: 1.25;
+  font-weight: bold;
+  color: var(--color-text);
+  margin: 3rem 0 1.25rem;
+  scroll-margin-top: 6rem;
+}
+/* A leading h1 opens the article body — it must not carry a top gap. */
+.prose-coc h1:first-child {
+  margin-top: 0;
+}
 .prose-coc h2 {
   font-family: var(--font-body);
   font-size: 1.75rem;

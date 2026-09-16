@@ -1,5 +1,9 @@
 ---
-import type { Heading } from "../lib/markdown";
+// Nested "Daftar Isi": h1 entries are top-level items, h2/h3 render as
+// expandable children. Documents that only use h2 stay a flat list, so the
+// snippets/assets pages render exactly as before.
+import { buildHeadingTree, type Heading, type TocNode } from "../lib/markdown";
+import TocItem from "./TocItem.astro";
 
 interface Props {
     headings: Heading[];
@@ -7,21 +11,26 @@ interface Props {
 }
 
 const { headings, title = "Daftar Isi" } = Astro.props;
+
+const tree = buildHeadingTree(headings);
+// Nested mode only when there is real hierarchy; otherwise plain flat list.
+const nested = tree.some((node: TocNode) => node.children.length > 0);
 ---
 
-<div class="space-y-4" data-toc>
-    <h2 class="text-sm font-bold uppercase tracking-wider text-coc-text">{title}</h2>
-    <nav aria-label="Daftar isi" class="space-y-1">
-        {
-            headings.map((h) => (
-                <a href={`#${h.slug}`} class="toc-link flex items-start gap-3 rounded-lg px-2 py-1 text-sm leading-6 text-coc-muted transition-colors hover:bg-coc-line-light hover:text-coc-text">
-                    <span class="toc-dot mt-2 size-1.5 shrink-0 rounded-full bg-coc-line transition-colors" />
-                    <span class="toc-text">{h.text}</span>
-                </a>
-            ))
-        }
-    </nav>
-</div>
+{
+    tree.length > 0 && (
+        <div class="space-y-4" data-toc>
+            <h2 class="text-sm font-bold uppercase tracking-wider text-coc-text">{title}</h2>
+            <nav aria-label="Daftar isi" data-toc-nav>
+                <ul class="space-y-1">
+                    {tree.map((node) => (
+                        <TocItem node={node} nested={nested} />
+                    ))}
+                </ul>
+            </nav>
+        </div>
+    )
+}
 
 <style is:global>
     .toc-link {
@@ -35,84 +44,148 @@ const { headings, title = "Daftar Isi" } = Astro.props;
         background: var(--color-accent);
         border-color: transparent;
     }
-    /* Per-section scroll progress: an accent bar that fills as the reader
-     scrolls through each heading's section. */
-    /* .toc-link::after {
-        content: "";
-        position: absolute;
-        left: 0.5rem;
-        right: 0.5rem;
-        bottom: 0.1rem;
-        height: 2px;
-        border-radius: 2px;
-        background: var(--color-accent);
-        width: calc(var(--progress, 0) * 100%);
-        opacity: 0.85;
-        transform-origin: left;
-        transition: width 80ms linear;
-    } */
+    /* Collapsible children: animated with the 0fr -> 1fr grid trick so no JS
+       measurement is needed. */
+    .toc-children {
+        display: grid;
+        grid-template-rows: 0fr;
+        transition: grid-template-rows 200ms ease;
+    }
+    .toc-children > div {
+        overflow: hidden;
+    }
+    .toc-children.is-open {
+        grid-template-rows: 1fr;
+    }
+    .toc-toggle {
+        transition: transform 200ms ease;
+    }
+    .toc-toggle[aria-expanded="true"] {
+        transform: rotate(90deg);
+    }
 </style>
 
 <script>
-    const links = Array.from(document.querySelectorAll<HTMLAnchorElement>(".toc-link"));
-    const targets = links
-        .map((link) => {
-            const id = link.getAttribute("href")?.slice(1) ?? "";
-            const heading = document.getElementById(id);
-            return heading ? { id, link, heading } : null;
-        })
-        .filter(
-            (
-                t,
-            ): t is {
-                id: string;
-                link: HTMLAnchorElement;
-                heading: HTMLElement;
-            } => t !== null,
-        );
+    const nav = document.querySelector<HTMLElement>("[data-toc-nav]");
 
-    if (targets.length) {
-        const setActive = (id: string) => {
-            for (const { link, id: linkId } of targets) {
-                link.classList.toggle("is-active", linkId === id);
-            }
+    if (nav) {
+        const links = Array.from(nav.querySelectorAll<HTMLAnchorElement>(".toc-link"));
+
+        const expandGroup = (toggle: HTMLButtonElement, open: boolean) => {
+            toggle.setAttribute("aria-expanded", String(open));
+            const panelId = toggle.getAttribute("aria-controls");
+            if (!panelId) return;
+            document.getElementById(panelId)?.classList.toggle("is-open", open);
         };
 
-        let raf = 0;
-        let activeId = targets[0].id;
+        // Chevron buttons: manual expand/collapse.
+        for (const toggle of nav.querySelectorAll<HTMLButtonElement>(".toc-toggle")) {
+            toggle.addEventListener("click", () => {
+                const isOpen = toggle.getAttribute("aria-expanded") === "true";
+                expandGroup(toggle, !isOpen);
+            });
+        }
 
-        const update = () => {
-            raf = 0;
-            const doc = document.documentElement;
-            const scrollY = window.scrollY;
-            const viewportBottom = scrollY + window.innerHeight;
-            const nearBottom = viewportBottom >= doc.scrollHeight - 8;
-            const marker = scrollY + window.innerHeight * 0.35;
-
-            let current = targets[0].id;
-            for (const t of targets) {
-                const rect = t.heading.getBoundingClientRect();
-                const top = rect.top + scrollY;
-                const height = Math.max(1, rect.height);
-                const progress = Math.min(1, Math.max(0, (marker - top) / height));
-                t.link.style.setProperty("--progress", progress.toFixed(3));
-                if (top <= marker) current = t.id;
+        // Clicking a parent link scrolls and opens its own group.
+        for (const link of links) {
+            const toggleBtn = link.closest(".toc-item")?.querySelector<HTMLButtonElement>(".toc-toggle");
+            if (toggleBtn) {
+                link.addEventListener("click", () => expandGroup(toggleBtn, true));
             }
+        }
 
-            if (nearBottom) {
-                activeId = targets[targets.length - 1].id;
-            } else {
-                activeId = current;
-            }
-            setActive(activeId);
-        };
+        const targets = links
+            .map((link) => {
+                const id = link.getAttribute("href")?.slice(1) ?? "";
+                const heading = document.getElementById(id);
+                return heading ? { id, link, heading } : null;
+            })
+            .filter(
+                (
+                    t,
+                ): t is {
+                    id: string;
+                    link: HTMLAnchorElement;
+                    heading: HTMLElement;
+                } => t !== null,
+            );
 
-        const onScroll = () => {
-            if (raf === 0) raf = window.requestAnimationFrame(update);
-        };
+        if (targets.length) {
+            const setActive = (id: string) => {
+                for (const { link, id: linkId } of targets) {
+                    link.classList.toggle("is-active", linkId === id);
+                }
+            };
 
-        update();
-        window.addEventListener("scroll", onScroll, { passive: true });
-        window.addEventListener("resize", onScroll, { passive: true });
+            // When the active heading changes, keep exactly its branch open:
+            // the item's own children plus every ancestor panel. Other open
+            // branches collapse so the sidebar stays compact on long posts.
+            const syncPanels = (link: HTMLAnchorElement) => {
+                const activeItem = link.closest(".toc-item");
+                if (!activeItem) return;
+                const chain = new Set<Element>();
+                let el: Element | null = activeItem;
+                while (el) {
+                    chain.add(el);
+                    const ownPanel = el.querySelector<HTMLElement>(":scope > .toc-children");
+                    if (ownPanel) chain.add(ownPanel);
+                    const parentPanel: HTMLElement | null = el.parentElement?.closest<HTMLElement>(".toc-children") ?? null;
+                    if (!parentPanel) break;
+                    chain.add(parentPanel);
+                    el = parentPanel.closest<HTMLElement>(".toc-item");
+                }
+                for (const panel of nav.querySelectorAll<HTMLElement>(".toc-children")) {
+                    const open = chain.has(panel);
+                    panel.classList.toggle("is-open", open);
+                    const toggleBtn = panel.closest(".toc-item")?.querySelector<HTMLButtonElement>(".toc-toggle");
+                    if (toggleBtn) toggleBtn.setAttribute("aria-expanded", String(open));
+                }
+            };
+
+            let raf = 0;
+            let activeId = targets[0].id;
+            let lastSyncedId = "";
+            const update = () => {
+                raf = 0;
+                const doc = document.documentElement;
+                const scrollY = window.scrollY;
+                const viewportBottom = scrollY + window.innerHeight;
+                const nearBottom = viewportBottom >= doc.scrollHeight - 8;
+                const marker = scrollY + window.innerHeight * 0.35;
+
+                let current = targets[0].id;
+                for (const t of targets) {
+                    const rect = t.heading.getBoundingClientRect();
+                    const top = rect.top + scrollY;
+                    const height = Math.max(1, rect.height);
+                    const progress = Math.min(1, Math.max(0, (marker - top) / height));
+                    t.link.style.setProperty("--progress", progress.toFixed(3));
+                    if (top <= marker) current = t.id;
+                }
+
+                if (nearBottom) {
+                    activeId = targets[targets.length - 1].id;
+                } else {
+                    activeId = current;
+                }
+
+                // Re-sync expand/collapse only when the section changes, so a
+                // manually collapsed panel is not re-opened on every frame.
+                if (activeId !== lastSyncedId) {
+                    lastSyncedId = activeId;
+                    setActive(activeId);
+                    const activeLink = targets.find((t) => t.id === activeId)?.link;
+                    if (activeLink) syncPanels(activeLink);
+                }
+            };
+
+            const onScroll = () => {
+                if (raf === 0) raf = window.requestAnimationFrame(update);
+            };
+
+            update();
+            window.addEventListener("scroll", onScroll, { passive: true });
+            window.addEventListener("resize", onScroll, { passive: true });
+        }
     }
 </script>

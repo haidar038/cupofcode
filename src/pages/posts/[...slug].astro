@@ -31,12 +31,11 @@ const category = await getEntry("categories", post.data.category);
 const bodySegments = splitBody(post.body || "");
 const headings = extractHeadings(post.body || "");
 const toneClass: Record<string, string> = {
-    yellow: "bg-coc-tag-yellow",
     green: "bg-coc-tag-green",
     pink: "bg-coc-tag-pink",
 };
 
-const toc = headings.filter((h) => h.depth === 2);
+const toc = headings;
 
 const allPosts = await getCollection("posts");
 const sameCategory = allPosts.filter((p) => p.id !== post.id && p.data.category === post.data.category);

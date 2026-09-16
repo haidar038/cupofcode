@@ -82,6 +82,38 @@ export interface Heading {
   slug: string;
 }
 
+export interface TocNode {
+  heading: Heading;
+  children: TocNode[];
+}
+
+/**
+ * Build a nested tree from a flat heading list: each heading becomes a child
+ * of the closest preceding heading with a smaller depth. Headings with no
+ * possible parent (e.g. an h2 before any h1) are promoted to top level, so
+ * documents that only use `##` still render as a flat list.
+ */
+export function buildHeadingTree(headings: Heading[]): TocNode[] {
+  const roots: TocNode[] = [];
+  // Stack of (depth → node) pairs; depths are strictly increasing.
+  const stack: { depth: number; node: TocNode }[] = [];
+
+  for (const heading of headings) {
+    const node: TocNode = { heading, children: [] };
+    while (stack.length > 0 && stack[stack.length - 1].depth >= heading.depth) {
+      stack.pop();
+    }
+    if (stack.length > 0) {
+      stack[stack.length - 1].node.children.push(node);
+    } else {
+      roots.push(node);
+    }
+    stack.push({ depth: heading.depth, node });
+  }
+
+  return roots;
+}
+
 /** GitHub-style slug used for heading anchors (keeps unicode letters). */
 export function slugify(text: string): string {
   return text
@@ -96,14 +128,21 @@ export function slugify(text: string): string {
 export function extractHeadings(body: string): Heading[] {
   const headings: Heading[] = [];
   const seen = new Map<string, number>();
+  // Skip lines inside fenced code blocks so `# comments` in bash/js snippets
+  // are never mistaken for markdown headings.
+  let inFence = false;
   for (const line of body.split(/\r?\n/)) {
+    if (/^```/.test(line.trim())) {
+      inFence = !inFence;
+      continue;
+    }
+    if (inFence) continue;
     const match = line.match(/^(#{1,6})\s+(.+)$/);
     if (!match) continue;
     const text = match[2].trim();
     const base = slugify(text);
     const count = seen.get(base) ?? 0;
-    seen.set(base, count + 1);
-    headings.push({
+    seen.set(base, count + 1);      headings.push({
       depth: match[1].length,
       text,
       slug: count === 0 ? base : `${base}-${count + 1}`,
