@@ -6,6 +6,11 @@
  * is treated as "prose" and rendered by `renderProse` (a safe subset of
  * markdown: headings, paragraphs, lists — including nested lists — tables,
  * blockquotes, hr, and inline formatting).
+ *
+ * Heading levels: the page <h1> belongs to the post/asset title, so article
+ * bodies must never emit one. Bodies stored with an opening `#` heading (the
+ * document title) are shifted one level down everywhere (`#` -> h2, `##` ->
+ * h3, ...); bodies already starting at `##` are rendered unchanged.
  */
 
 export interface ProseSegment {
@@ -17,11 +22,32 @@ export interface CodeSegment {
   type: "code";
   lang: string;
   code: string;
-  /** The heading (## / ###) of the section this block belongs to, if any. */
+  /** The section heading (h2 / h3) this block belongs to, if any. */
   label?: string;
 }
 
 export type BodySegment = ProseSegment | CodeSegment;
+
+/**
+ * How many levels body headings must be shifted down so the document never
+ * renders an h1. Determined by the first heading outside fenced code blocks:
+ * a `#` opening heading means the body uses title-style levels and needs a
+ * shift of 1; anything else needs none.
+ */
+export function getHeadingShift(body: string): number {
+  let inFence = false;
+  for (const line of body.split(/\r?\n/)) {
+    if (/^```/.test(line.trim())) {
+      inFence = !inFence;
+      continue;
+    }
+    if (inFence) continue;
+    const match = line.match(/^(#{1,6})\s+(.+)$/);
+    if (!match) continue;
+    return Math.max(0, 2 - match[1].length);
+  }
+  return 0;
+}
 
 /**
  * Split a raw markdown body into alternating prose / code segments.
@@ -30,6 +56,7 @@ export type BodySegment = ProseSegment | CodeSegment;
 export function splitBody(body: string): BodySegment[] {
   const segments: BodySegment[] = [];
   const lines = body.split(/\r?\n/);
+  const shift = getHeadingShift(body);
   let prose: string[] = [];
   let currentLabel = "";
 
@@ -62,8 +89,13 @@ export function splitBody(body: string): BodySegment[] {
       });
       currentLabel = "";
     } else {
-      const heading = line.match(/^(#{2,3})\s+(.+)$/);
-      if (heading) currentLabel = heading[2].trim();
+      const heading = line.match(/^(#{1,6})\s+(.+)$/);
+      if (heading) {
+        // Track the section heading for code-block labels, considering the
+        // shifted level (labels exist for h2 / h3 sections only).
+        const level = Math.min(6, heading[1].length + shift);
+        if (level === 2 || level === 3) currentLabel = heading[2].trim();
+      }
       prose.push(line);
       i++;
     }
@@ -90,12 +122,12 @@ export interface TocNode {
 /**
  * Build a nested tree from a flat heading list: each heading becomes a child
  * of the closest preceding heading with a smaller depth. Headings with no
- * possible parent (e.g. an h2 before any h1) are promoted to top level, so
- * documents that only use `##` still render as a flat list.
+ * possible parent are promoted to top level, so documents that only use one
+ * heading level still render as a flat list.
  */
 export function buildHeadingTree(headings: Heading[]): TocNode[] {
   const roots: TocNode[] = [];
-  // Stack of (depth → node) pairs; depths are strictly increasing.
+  // Stack of (depth -> node) pairs; depths are strictly increasing.
   const stack: { depth: number; node: TocNode }[] = [];
 
   for (const heading of headings) {
@@ -128,6 +160,10 @@ export function slugify(text: string): string {
 export function extractHeadings(body: string): Heading[] {
   const headings: Heading[] = [];
   const seen = new Map<string, number>();
+  const shift = getHeadingShift(body);
+  // A body that opens with a `#` heading stores its article title there —
+  // keep it out of the table of contents (it duplicates the page <h1>).
+  let skippedTitle = shift === 0;
   // Skip lines inside fenced code blocks so `# comments` in bash/js snippets
   // are never mistaken for markdown headings.
   let inFence = false;
@@ -139,11 +175,16 @@ export function extractHeadings(body: string): Heading[] {
     if (inFence) continue;
     const match = line.match(/^(#{1,6})\s+(.+)$/);
     if (!match) continue;
+    if (!skippedTitle) {
+      skippedTitle = true;
+      continue;
+    }
     const text = match[2].trim();
     const base = slugify(text);
     const count = seen.get(base) ?? 0;
-    seen.set(base, count + 1);      headings.push({
-      depth: match[1].length,
+    seen.set(base, count + 1);
+    headings.push({
+      depth: Math.min(6, match[1].length + shift),
       text,
       slug: count === 0 ? base : `${base}-${count + 1}`,
     });
@@ -291,14 +332,14 @@ function renderTable(lines: string[]): string {
 /* Blocks                                                              */
 /* ------------------------------------------------------------------ */
 
-function renderBlock(lines: string[]): string {
+function renderBlock(lines: string[], headingShift: number): string {
   const first = lines[0];
 
   if (/^---+$/.test(first) || /^\*\*\*+$/.test(first)) return "<hr />";
 
   const heading = first.match(/^(#{1,6})\s+(.+)$/);
   if (heading) {
-    const level = heading[1].length;
+    const level = Math.min(6, heading[1].length + headingShift);
     const text = heading[2].trim();
     const id = slugify(text);
     return `<h${level} id="${id}">${inline(text)}</h${level}>`;
@@ -316,8 +357,11 @@ function renderBlock(lines: string[]): string {
   return `<p>${inline(lines.join(" "))}</p>`;
 }
 
-/** Render a prose segment into safe HTML. */
-export function renderProse(markdown: string): string {
+/**
+ * Render a prose segment into safe HTML. `headingShift` demotes heading
+ * levels (see getHeadingShift) so article bodies never emit an h1.
+ */
+export function renderProse(markdown: string, headingShift = 0): string {
   // Drop HTML comments (e.g. leftover duplicated frontmatter blocks) so they
   // never leak into the rendered prose.
   const cleaned = markdown.replace(/<!--[\s\S]*?-->/g, "");
@@ -362,5 +406,5 @@ export function renderProse(markdown: string): string {
   }
   flush();
 
-  return blocks.map((block) => renderBlock(block)).join("\n");
+  return blocks.map((block) => renderBlock(block, headingShift)).join("\n");
 }
