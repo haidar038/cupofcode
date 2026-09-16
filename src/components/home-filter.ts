@@ -77,7 +77,7 @@ function postCard(item: CatalogItem): HTMLElement {
 function assetCard(item: CatalogItem): HTMLElement {
   const card = el<HTMLElement>(
     "article",
-    "group flex h-full flex-col overflow-hidden rounded-2xl border border-coc-line bg-coc-surface transition-all duration-300 hover:shadow-md",
+    "group flex h-full flex-col overflow-hidden rounded-2xl border border-coc-line bg-coc-surface transition-all duration-300",
   );
   const body = el<HTMLElement>("div", "flex grow flex-col p-6");
   body.appendChild(

@@ -17,7 +17,7 @@ const categories = await getCollection("categories");
 const allPosts = await getCollection("posts");
 const featuredPosts = allPosts.filter((p) => p.data.featured);
 const featuredArticle = featuredPosts.length > 0 ? featuredPosts[0] : allPosts[0];
-const gridArticles = allPosts.filter((p) => p.id !== featuredArticle?.id).slice(0, 8);
+const gridArticles = allPosts.filter((p) => p.id !== featuredArticle?.id).slice(0, 4);
 
 // Filter sidebar: article categories (Aset Digital is handled as a special
 // "content type" filter that renders the digital assets grid in place).
@@ -55,12 +55,13 @@ const searchItems = allPosts.map((p) => ({
 <BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
     <section class="grid items-start gap-8 md:grid-cols-[minmax(0,1fr)_minmax(150px,240px)] lg:gap-12" aria-labelledby="hero-title">
         <div class="max-w-173.75">
+            <p class="mb-3 text-sm font-semibold uppercase tracking-wide text-coc-accent">Explore Everything. Your Journey Starts Here.</p>
             <h1 id="hero-title" class="font-coc-display text-5xl leading-1.2 text-coc-text sm:text-5xl lg:text-6xl lg:leading-18">
-                Belajar Coding, Web Development,<br />
-                UI/UX, dan AI<span class="text-coc-accent">.</span>
+                Belajar Coding, Web Development, UI/UX, dan AI Bareng<span class="text-coc-accent">.</span>
             </h1>
-            <p class="mt-4 max-w-170 text-base leading-7 text-coc-muted sm:text-lg lg:text-xl">
-                Tutorial, tips & trik, snippets, dan aset digital gratis untuk membantu kamu belajar, membangun, dan mengembangkan website serta aplikasi.
+            <p class="mt-4 max-w-170 text-base text-coc-muted lg:text-lg leading-7">
+                Cup of Code adalah publication dan resource gratis tentang software development, UI/UX design, dan AI-assisted development. Kami menyediakan tutorial, artikel, snippets, dan aset
+                digital untuk membantu developer belajar serta membangun produk dengan pemahaman yang lebih baik.
             </p>
         </div>
         <div class="pointer-events-none justify-self-end self-start hidden md:block" aria-hidden="true">
@@ -68,14 +69,14 @@ const searchItems = allPosts.map((p) => ({
         </div>
     </section>
 
-    <section class="mt-14 max-w-3xl lg:mt-18" aria-labelledby="about-cup-of-code">
+    <!-- <section class="mt-14 max-w-3xl lg:mt-18" aria-labelledby="about-cup-of-code">
         <p class="mb-3 text-sm font-semibold uppercase tracking-wide text-coc-accent">Explore Everything. Your Journey Starts Here.</p>
         <h2 id="about-cup-of-code" class="font-coc-display text-3xl text-coc-text md:text-4xl">Apa itu Cup of Code?</h2>
         <p class="mt-4 text-base leading-7 text-coc-muted md:text-lg">
             Cup of Code adalah publication dan resource gratis tentang software development, UI/UX design, dan AI-assisted development. Kami menyediakan tutorial, artikel, snippets, dan aset digital
             untuk membantu developer belajar serta membangun produk dengan pemahaman yang lebih baik.
         </p>
-    </section>
+    </section> -->
 
     <section id="artikel" class="mt-14 grid gap-10 lg:mt-18 lg:grid-cols-[306px_minmax(0,1fr)] lg:gap-14" aria-label="Artikel Cup of Code">
         <aside class="filter-sidebar grid gap-8 sm:grid-cols-[minmax(260px,360px)_minmax(0,1fr)] lg:sticky lg:top-6 lg:block lg:space-y-8">

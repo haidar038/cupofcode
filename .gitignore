@@ -31,4 +31,4 @@ pnpm-debug.log*
 .agent
 .kilo
 archive
-docs
+# docs

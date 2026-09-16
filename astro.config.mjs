@@ -112,7 +112,7 @@ export default defineConfig({
         plugins: [tailwindcss()],
         // Required for Sentry sourcemap upload; .map files land in dist/client/_astro/
         build: {
-            sourcemap: true,
+            sourcemap: Boolean(import.meta.env.SENTRY_AUTH_TOKEN),
         },
         define: {
             __SENTRY_DEBUG__: false,

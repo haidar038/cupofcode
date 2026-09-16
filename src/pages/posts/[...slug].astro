@@ -149,17 +149,9 @@ const jsonLd = {
     <div class="mt-8">
         {
             post.data.featured_image ? (
-                <Image
-                    src={post.data.featured_image}
-                    alt={post.data.title}
-                    width={1200}
-                    height={600}
-                    loading="eager"
-                    fetchpriority="high"
-                    class="aspect-2/1 w-full rounded-3xl object-cover shadow-var(--shadow-lg)"
-                />
+                <Image src={post.data.featured_image} alt={post.data.title} width={1200} height={600} loading="eager" fetchpriority="high" class="aspect-2/1 w-full rounded-3xl object-cover" />
             ) : (
-                <Image src={FeaturedImage} alt={post.data.title} loading="eager" fetchpriority="high" class="aspect-2/1 w-full rounded-3xl object-cover shadow-var(--shadow-lg)" />
+                <Image src={FeaturedImage} alt={post.data.title} loading="eager" fetchpriority="high" class="aspect-2/1 w-full rounded-3xl object-cover" />
             )
         }
     </div>

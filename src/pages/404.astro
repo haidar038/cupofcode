@@ -5,29 +5,24 @@ import { SITE_TITLE } from "../consts";
 import { ArrowLeft } from "@lucide/astro";
 ---
 
-<BaseLayout
-  title={`Halaman Tidak Ditemukan | ${SITE_TITLE}`}
-  description="Halaman yang Anda cari tidak ditemukan."
->
-  <div class="flex min-h-[70vh] flex-col items-center justify-center text-center">
-    <h1 class="select-none font-coc-display text-[120px] leading-none tracking-tighter text-gray-200 md:text-[180px]">
-      404<span class="text-coc-accent">.</span>
-    </h1>
+<BaseLayout title={`Halaman Tidak Ditemukan | ${SITE_TITLE}`} description="Halaman yang Anda cari tidak ditemukan.">
+    <div class="flex min-h-[70vh] flex-col items-center justify-center text-center">
+        <h1 class="select-none font-coc-display text-[120px] leading-none tracking-tighter text-gray-200 md:text-[180px]">
+            404<span class="text-coc-accent">.</span>
+        </h1>
 
-    <h2 class="mb-4 max-w-lg text-3xl leading-tight text-coc-text md:text-4xl">
-      <span class="font-bold">Oops!</span> Halaman Yang<br class="hidden md:block" />
-      Kamu Cari Gak Ada Nih!
-    </h2>
+        <h2 class="mb-4 max-w-lg text-3xl leading-tight text-coc-text md:text-4xl">
+            <span class="font-bold">Oops!</span> Halaman Yang<br class="hidden md:block" />
+            Kamu Cari Gak Ada Nih!
+        </h2>
 
-    <p class="mx-auto mb-10 max-w-md text-base leading-relaxed text-coc-muted md:text-lg">
-      Kayaknya tautan yang kamu tuju udah rusak atau halamannya udah dipindahin. Yuk balik ke jalan yang benar.
-    </p>
+        <p class="mx-auto mb-10 max-w-md text-base leading-relaxed text-coc-muted md:text-lg">
+            Kayaknya tautan yang kamu tuju udah rusak atau halamannya udah dipindahin. Yuk balik ke jalan yang benar.
+        </p>
 
-    <a href="/"
-      class="inline-flex items-center gap-2 rounded-full bg-coc-dark px-8 py-3.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-black"
-    >
-      <ArrowLeft width="20" height="20" />
-      <span>Kembali ke Beranda</span>
-    </a>
-  </div>
+        <a href="/" class="inline-flex items-center gap-2 rounded-full bg-coc-dark px-8 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-black">
+            <ArrowLeft width="20" height="20" />
+            <span>Kembali ke Beranda</span>
+        </a>
+    </div>
 </BaseLayout>
