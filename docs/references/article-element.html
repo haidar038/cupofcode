@@ -1,0 +1,845 @@
+<article class="post-content prose-coc min-w-0 lg:col-span-9">
+    <div>
+        <h2 id="kode-buatan-ai-kelihatan-bener-terus-kenapa-bisa-salah">Kode Buatan AI Kelihatan Bener. Terus, Kenapa
+            Bisa Salah?</h2>
+        <blockquote><strong>Masalah engineering yang sering nggak kelihatan di balik software yang “udah jalan” di era
+                AI generatif.</strong></blockquote>
+        <p>Kalau belakangan ini kamu sering lihat konten <strong>“bikin web app cuma pakai prompt”</strong>, mungkin
+            kamu pernah punya pikiran yang sama: <em>“Serius? Sekarang bikin aplikasi segampang ini?”</em></p>
+        <p>Jawabannya: <strong>untuk bikin sesuatu yang kelihatan jalan, iya, bisa sesimpel itu.</strong></p>
+        <p>Tapi justru di situlah bagian menariknya. Karena bikin sesuatu yang <strong>kelihatan bekerja</strong> dan
+            bikin software yang <strong>beneran bisa dipercaya</strong> adalah dua hal yang beda banget.</p>
+        <p>AI udah ngubah cara software dibuat. Sekarang, seseorang bisa cukup ngejelasin idenya pakai bahasa biasa,
+            lalu dalam waktu singkat mendapatkan interface, API, database, sampai aplikasi yang udah bisa di-deploy.</p>
+        <p>Dan itu jelas perkembangan yang nyata. Bahkan, menurut gue, ini salah satu perubahan paling menarik di dunia
+            software belakangan ini.</p>
+        <p>Tapi ada satu masalah yang sering banget ketutup oleh kemudahan itu:</p>
+        <blockquote><strong>Software yang bisa berjalan belum tentu software yang benar.</strong></blockquote>
+        <p>Sebuah aplikasi bisa kelihatan rapi, tombolnya jalan, data muncul, login berhasil, bahkan udah online, tapi
+            tetap bisa punya celah keamanan, business rule yang salah, struktur data yang rapuh, biaya operasional yang
+            nggak terkendali, atau arsitektur yang bikin pusing saat mau dikembangin lagi.</p>
+        <p>Artikel ini bukan tulisan <strong>anti-AI</strong>, dan juga bukan <strong>anti-no-code</strong>. Justru
+            sebaliknya. AI itu tool yang sangat berguna buat developer, creator, freelancer, founder, sampai product
+            builder.</p>
+        <p>Yang perlu dibenerin justru cara kita memahami kemampuan AI:</p>
+        <blockquote><strong>AI bisa nurunin hambatan buat bikin software. Tapi AI nggak menghapus kompleksitas software
+                engineering.</strong></blockquote>
+        <hr>
+        <h3 id="jadi-sebenarnya-artikel-ini-mau-menjawab-apa">Jadi, sebenarnya artikel ini mau menjawab apa?</h3>
+        <ul>
+            <li>Mengapa software buatan AI bisa bekerja tetapi tetap salah?</li>
+            <li>Apa sebenarnya yang dibuktikan oleh kalimat “aplikasinya udah jalan”?</li>
+            <li>Fundamental apa yang tetap penting ketika sebagian besar kode ditulis oleh AI?</li>
+            <li>Mengapa keamanan, integritas data, dan maintainability mudah terlewat?</li>
+            <li>Bagaimana pemula bisa menggunakan AI tanpa jadi bergantung kepadanya?</li>
+            <li>Seperti apa workflow pengembangan software berbantuan AI yang bertanggung jawab?</li>
+        </ul>
+        <hr>
+        <h2 id="1-demo-yang-terlalu-meyakinkan">1. Demo yang terlalu meyakinkan</h2>
+        <h3 id="saya-cuma-mengetik-prompt-dan-sekarang-udah-punya-aplikasi">“Saya cuma mengetik prompt, dan sekarang
+            udah punya aplikasi.”</h3>
+        <p>Ada alasan kenapa development berbasis AI terasa revolusioner.</p>
+        <p>Untuk pertama kalinya, jarak antara <strong>ide</strong> dan <strong>prototype software</strong> bisa
+            dipangkas cuma dengan bahasa sehari-hari. Kita tinggal jelasin dashboard, landing page, alur booking, CRUD
+            tool, atau sistem bisnis sederhana, lalu AI bisa ngeluarin kode yang kelihatannya udah lengkap banget.</p>
+        <p>Hasilnya bisa langsung terlihat.</p>
+        <p>Tombol berfungsi. Form bisa dikirim. Data muncul. Halaman login tersedia. Tampilan responsive. Bahkan
+            aplikasinya bisa di-deploy.</p>
+        <p>Buat pemula, pengalaman kayak gini memang bisa bikin mindset berubah total:</p>
+        <blockquote>“Ternyata saya juga bisa membuat software.”</blockquote>
+        <p>Dan, ya, kesimpulan itu <strong>sebagian memang bener</strong>.</p>
+        <p>Barrier buat bikin prototype memang turun drastis. Tapi barrier buat bikin software yang bisa
+            <strong>dioperasikan, diamankan, di-debug, dikembangin, dan dipertanggungjawabkan dengan benar</strong>
+            belum hilang begitu aja.</p>
+        <blockquote><strong>Bedanya di sini</strong> AI generatif ngubah biaya dan kecepatan bikin kode. Tapi problem
+            engineering yang harus diselesaikan kode itu tetap ada.</blockquote>
+        <p>Masalahnya, sebuah demo cuma nunjukin sebagian kecil dari proses software development.</p>
+        <p>Yang terlihat:</p>
+        <ul>
+            <li>UI</li>
+            <li>tombol</li>
+            <li>form</li>
+            <li>hasil query</li>
+            <li>halaman login</li>
+            <li>deployment</li>
+        </ul>
+        <p>Yang sering banget nggak kelihatan:</p>
+        <ul>
+            <li>data model</li>
+            <li>aturan bisnis</li>
+            <li>authorization</li>
+            <li>validasi input</li>
+            <li>failure recovery</li>
+            <li>dependency risk</li>
+            <li>backup</li>
+            <li>observability</li>
+            <li>biaya operasional</li>
+            <li>maintainability</li>
+        </ul>
+        <p>Makanya, kalimat seperti <strong>“tuh kan, AI bisa bikin aplikasi dalam 10 menit”</strong> sebenarnya nggak
+            cukup buat menilai kualitas engineering.</p>
+        <p>Demo 10 menit bisa kelihatan keren banget, tapi di saat yang sama hampir nggak memberi bukti bahwa sistemnya
+            beneran layak dipakai di production.</p>
+        <hr>
+        <h2 id="2-udah-jalan-bukan-standar-engineering">2. “Udah jalan” bukan standar engineering</h2>
+        <p>“Udah jalan” biasanya cuma berarti satu hal:</p>
+        <blockquote><strong>Happy path menghasilkan output yang terlihat benar.</strong></blockquote>
+        <p>Software engineering nanyanya jauh lebih luas dari itu.</p>
+        <div class="prose-table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Pertanyaan</th>
+                        <th>Apa yang sedang diuji?</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Apakah fitur ini bekerja?</td>
+                        <td>Fungsi dasar pada alur yang diharapkan.</td>
+                    </tr>
+                    <tr>
+                        <td>Apakah fitur ini gagal dengan aman?</td>
+                        <td>Perilaku ketika input invalid, service down, timeout, partial failure, atau state nggak
+                            terduga.</td>
+                    </tr>
+                    <tr>
+                        <td>Apakah fitur ini aman?</td>
+                        <td>Apakah user yang nggak berhak bisa mengakses, mengubah, atau mengetahui data/capability yang
+                            seharusnya terlindungi.</td>
+                    </tr>
+                    <tr>
+                        <td>Apakah implementasinya benar?</td>
+                        <td>Apakah perilakunya sesuai requirement, business rule, dan invariant yang sebenarnya.</td>
+                    </tr>
+                    <tr>
+                        <td>Apakah mudah dipelihara?</td>
+                        <td>Apakah developer lain bisa memahami, menguji, mengubah, dan mengembangkan sistem.</td>
+                    </tr>
+                    <tr>
+                        <td>Apakah sistemnya operable?</td>
+                        <td>Apakah sistem bisa di-deploy, dimonitor, di-backup, dipulihkan, dan didukung ketika terjadi
+                            masalah.</td>
+                    </tr>
+                    <tr>
+                        <td>Apakah arsitekturnya sesuai skala?</td>
+                        <td>Apakah pilihan arsitektur sesuai dengan load, volume data, constraint platform, dan arah
+                            perubahan produk.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <p>Cara gampang buat lihat bedanya adalah pisahin <strong>execution success</strong> dan <strong>engineering
+                success</strong>.</p>
+    </div>
+    <div class="code-viewer" data-code-viewer="">
+        <div class="code-viewer__header"><span class="code-viewer__dots"
+                aria-hidden="true"><i></i><i></i><i></i></span><span class="code-viewer__lang"><span
+                    class="code-viewer__label">2. “Udah jalan” bukan standar engineering</span><span
+                    class="code-viewer__lang-tag">text</span></span><button type="button" class="code-viewer__copy"
+                data-copy-all="" aria-label="Salin semua kode"><svg width="14" height="14" viewBox="0 0 24 24"
+                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    aria-hidden="true">
+                    <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                    <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+                </svg><span>Salin</span></button></div>
+        <div class="code-viewer__body">
+            <pre
+                class="code-viewer__pre"><code><div class="code-line"><span class="code-line__no" aria-hidden="true">1</span><span class="code-line__text"><span>Prompt</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">2</span><span class="code-line__text"><span>  ↓</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">3</span><span class="code-line__text"><span>Kode di-generate</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">4</span><span class="code-line__text"><span>  ↓</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">5</span><span class="code-line__text"><span>Aplikasi berjalan</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">6</span><span class="code-line__text"><span>  ↓</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">7</span><span class="code-line__text"><span>UI terlihat benar</span></span></div></code></pre>
+        </div>
+    </div>
+    <script type="module" src="/src/components/ui/CodeBlock.astro?astro&amp;type=script&amp;index=0&amp;lang.ts"
+        data-astro-exec=""></script>
+    <div>
+        <p>Itu membuktikan sangat sedikit.</p>
+        <p>Workflow yang lebih dekat dengan software engineering adalah:</p>
+    </div>
+    <div class="code-viewer" data-code-viewer="">
+        <div class="code-viewer__header"><span class="code-viewer__dots"
+                aria-hidden="true"><i></i><i></i><i></i></span><span class="code-viewer__lang"><span
+                    class="code-viewer__lang-tag">text</span></span><button type="button" class="code-viewer__copy"
+                data-copy-all="" aria-label="Salin semua kode"><svg width="14" height="14" viewBox="0 0 24 24"
+                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    aria-hidden="true">
+                    <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                    <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+                </svg><span>Salin</span></button></div>
+        <div class="code-viewer__body">
+            <pre
+                class="code-viewer__pre"><code><div class="code-line"><span class="code-line__no" aria-hidden="true">1</span><span class="code-line__text"><span>Requirements</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">2</span><span class="code-line__text"><span>  ↓</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">3</span><span class="code-line__text"><span>Design</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">4</span><span class="code-line__text"><span>  ↓</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">5</span><span class="code-line__text"><span>Architecture</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">6</span><span class="code-line__text"><span>  ↓</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">7</span><span class="code-line__text"><span>Data model</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">8</span><span class="code-line__text"><span>  ↓</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">9</span><span class="code-line__text"><span>Security model</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">10</span><span class="code-line__text"><span>  ↓</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">11</span><span class="code-line__text"><span>Implementation</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">12</span><span class="code-line__text"><span>  ↓</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">13</span><span class="code-line__text"><span>Testing</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">14</span><span class="code-line__text"><span>  ↓</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">15</span><span class="code-line__text"><span>Validation</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">16</span><span class="code-line__text"><span>  ↓</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">17</span><span class="code-line__text"><span>Deployment controls</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">18</span><span class="code-line__text"><span>  ↓</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">19</span><span class="code-line__text"><span>Observability</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">20</span><span class="code-line__text"><span>  ↓</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">21</span><span class="code-line__text"><span>Maintenance</span></span></div></code></pre>
+        </div>
+    </div>
+    <div>
+        <p>Aplikasi yang jalan itu <strong>baru syarat awal</strong>.</p>
+        <p>Bukan garis finish.</p>
+        <hr>
+        <h2 id="3-sebenarnya-ai-jago-di-bagian-mana">3. Sebenarnya AI jago di bagian mana?</h2>
+        <p>Ngomongin risiko AI-assisted development bukan berarti kita harus berhenti pakai AI.</p>
+        <p>Justru sebaliknya: ada bukti eksperimen bahwa coding assistant bisa ningkatin produktivitas secara signifikan
+            untuk tugas-tugas tertentu.</p>
+        <p>Dalam sebuah studi terkontrol ke 95 developer profesional yang mengerjakan tugas HTTP server menggunakan
+            JavaScript, kelompok yang menggunakan GitHub Copilot menyelesaikan tugas rata-rata <strong>55% lebih
+                cepat</strong> dan punya tingkat penyelesaian yang lebih tinggi. \[1\]</p>
+        <p>Tapi ada satu detail yang penting banget:</p>
+        <blockquote><strong>Peserta studinya adalah developer.</strong></blockquote>
+        <p>AI cuma jadi leverage buat mereka. Mereka tetap punya konteks, tetap bisa menilai solusi, dan tetap bisa
+            ngecek hasilnya lewat testing.</p>
+        <p>Dari sini, mental model yang lebih sehat untuk AI-assisted development mulai terlihat:</p>
+        <blockquote><strong>Gunakan AI untuk mengurangi pekerjaan mekanis, mempersempit search space, dan mempercepat
+                iterasi, tetapi tetap pertahankan ownership manusia ke requirement, trade-off, validasi, dan keputusan
+                release.</strong></blockquote>
+        <h3 id="ai-paling-berguna-buat-apa-sih">AI paling berguna buat apa, sih?</h3>
+        <p>AI sangat masuk akal dipakai buat:</p>
+        <ul>
+            <li>membuat scaffolding, boilerplate, dan test fixture;</li>
+            <li>menjelaskan API, library, code path, dan error message yang belum dikenal;</li>
+            <li>menghasilkan beberapa alternatif implementasi atau kandidat refactor;</li>
+            <li>membuat draft unit test, dokumentasi, migration, dan type definition;</li>
+            <li>membantu membandingkan pilihan arsitektur dan menemukan edge case;</li>
+            <li>mempercepat debugging setelah developer berhasil mengisolasi sumber masalah dan mampu mengevaluasi
+                solusi yang diusulkan.</li>
+        </ul>
+        <blockquote><strong>Aturan praktis</strong> Pakai AI ketika bikin draft dari nol itu makan waktu, sementara
+            ngecek draft hasil AI masih cukup gampang buat kamu lakukan sendiri. Semakin mahal konsekuensi dari jawaban
+            yang salah, dan semakin sulit bagi reviewer untuk memverifikasi jawaban itu secara independen, semakin
+            hati-hati kita harus menggunakannya.</blockquote>
+        <hr>
+        <h2 id="4-apa-aja-yang-tersembunyi-di-balik-sebuah-web-app">4. Apa aja yang tersembunyi di balik sebuah web app?
+        </h2>
+        <p>Web app modern itu bukan satu benda yang berdiri sendirian.</p>
+        <p>Ia adalah kumpulan kontrak antara user, interface, service, storage, infrastructure, dan proses operasional.
+        </p>
+    </div>
+    <div class="code-viewer" data-code-viewer="">
+        <div class="code-viewer__header"><span class="code-viewer__dots"
+                aria-hidden="true"><i></i><i></i><i></i></span><span class="code-viewer__lang"><span
+                    class="code-viewer__label">4. Apa aja yang tersembunyi di balik sebuah web app?</span><span
+                    class="code-viewer__lang-tag">text</span></span><button type="button" class="code-viewer__copy"
+                data-copy-all="" aria-label="Salin semua kode"><svg width="14" height="14" viewBox="0 0 24 24"
+                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    aria-hidden="true">
+                    <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                    <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+                </svg><span>Salin</span></button></div>
+        <div class="code-viewer__body">
+            <pre
+                class="code-viewer__pre"><code><div class="code-line"><span class="code-line__no" aria-hidden="true">1</span><span class="code-line__text"><span>Product requirements</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">2</span><span class="code-line__text"><span>        ↓</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">3</span><span class="code-line__text"><span>User flows / UX</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">4</span><span class="code-line__text"><span>        ↓</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">5</span><span class="code-line__text"><span>Application architecture</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">6</span><span class="code-line__text"><span>        ↓</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">7</span><span class="code-line__text"><span>Data model + invariants</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">8</span><span class="code-line__text"><span>        ↓</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">9</span><span class="code-line__text"><span>Authentication + authorization</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">10</span><span class="code-line__text"><span>        ↓</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">11</span><span class="code-line__text"><span>Business logic</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">12</span><span class="code-line__text"><span>        ↓</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">13</span><span class="code-line__text"><span>UI + API implementation</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">14</span><span class="code-line__text"><span>        ↓</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">15</span><span class="code-line__text"><span>Testing + validation</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">16</span><span class="code-line__text"><span>        ↓</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">17</span><span class="code-line__text"><span>Deployment + secrets + configuration</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">18</span><span class="code-line__text"><span>        ↓</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">19</span><span class="code-line__text"><span>Monitoring + backup + recovery</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">20</span><span class="code-line__text"><span>        ↓</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">21</span><span class="code-line__text"><span>Maintenance + change</span></span></div></code></pre>
+        </div>
+    </div>
+    <div>
+        <p>AI bisa membantu hampir di setiap kotak pada diagram itu.</p>
+        <p>Nah, justru di sinilah fundamental jadi penting.</p>
+        <p>Tanpa fundamental, kamu bisa aja nggak punya <strong>mental model</strong> yang cukup buat ngerti dan ngecek
+            apa yang baru aja dihasilkan AI.</p>
+        <p>Pemula mungkin bakal nanya:</p>
+        <blockquote>“Prompt apa yang harus saya pakai supaya halaman login-nya bisa bekerja?”</blockquote>
+        <p>Tapi pertanyaan engineering yang lebih penting justru:</p>
+        <blockquote>“Apa model authentication-nya? Di mana session state disimpan? Bagaimana permission ditegakkan? Apa
+            yang terjadi ketika token kedaluwarsa? Dan bagaimana kita mencegah satu user membaca data milik user lain?”
+        </blockquote>
+        <p>Pertanyaan kedua memang lebih ribet.</p>
+        <p>Karena yang dibahas adalah <strong>perilaku sistem</strong>, bukan cuma “gimana caranya bikin kodenya.”</p>
+        <p>Dan justru pertanyaan kayak inilah yang akhirnya melindungi user beneran.</p>
+        <hr>
+        <h2 id="5-lima-cara-kode-buatan-ai-bisa-salah">5. Lima cara kode buatan AI bisa salah</h2>
+        <h3 id="1-salah-secara-fungsional-tetapi-cuma-di-luar-happy-path">1. Salah secara fungsional tetapi cuma di luar
+            happy path</h3>
+        <p>Kode hasil AI sering banget fokus ke kasus yang kelihatan paling jelas dari prompt.</p>
+        <p>Misalnya requirement-nya:</p>
+        <blockquote>“User bisa meng-upload file.”</blockquote>
+        <p>Implementasi pertamanya mungkin cuma berhasil menangani:</p>
+        <ul>
+            <li>file PNG normal;</li>
+            <li>ukuran kecil;</li>
+            <li>koneksi normal;</li>
+            <li>satu kali upload.</li>
+        </ul>
+        <p>Tapi apakah sistemnya juga aman kalau ketemu:</p>
+        <ul>
+            <li>file 200 MB;</li>
+            <li>file dengan format nggak valid;</li>
+            <li>duplicate upload;</li>
+            <li>timeout;</li>
+            <li>payload berbahaya;</li>
+            <li>client yang terputus di tengah proses;</li>
+            <li>storage yang gagal?</li>
+        </ul>
+        <p>Belum tentu juga.</p>
+        <p><strong>Demo-nya kelihatan bener. Kontrak sistemnya belum tentu lengkap.</strong></p>
+        <hr>
+        <h3 id="2-salah-secara-keamanan">2. Salah secara keamanan</h3>
+        <p>Masalah keamanan bahaya banget karena aplikasi bisa berperilaku <strong>persis seperti yang
+                diharapkan</strong>, tapi aksesnya jatuh ke orang yang salah.</p>
+        <p>OWASP Top 10:2025 tetap menempatkan <strong>Broken Access Control</strong> sebagai risiko utama aplikasi web,
+            bersama dengan kategori seperti security misconfiguration, software supply-chain failures, cryptographic
+            failures, injection, insecure design, authentication failures, software/data integrity failures, logging and
+            alerting failures, serta mishandling exceptional conditions. \[2\]</p>
+        <p>Misalnya UI menampilkan:</p>
+        <blockquote>“kamu berhasil login.”</blockquote>
+        <p>Tapi engineering tetap harus nanya:</p>
+        <ul>
+            <li>Apa yang membuktikan identitas user?</li>
+            <li>Apa yang membuktikan permission?</li>
+            <li>Siapa yang bisa memanggil endpoint ini secara langsung?</li>
+            <li>Bisakah user mengganti ID di request?</li>
+            <li>Apakah secret terekspos ke client?</li>
+            <li>Apakah error message membocorkan informasi sensitif?</li>
+        </ul>
+        <hr>
+        <h3 id="3-salah-secara-arsitektur">3. Salah secara arsitektur</h3>
+        <p>Implementasi yang dihasilkan AI bisa memenuhi requirement saat ini sambil menciptakan coupling yang sangat
+            buruk.</p>
+        <p>Untuk prototype kecil, hal itu mungkin masih bisa diterima.</p>
+        <p>Namun ketika sistem tumbuh, fitur berikutnya bisa jadi jauh lebih mahal untuk dikembangkan.</p>
+        <p>Arsitektur bukan cuma soal “kodenya kelihatan keren”.</p>
+        <p>Arsitektur adalah kumpulan keputusan yang nentuin <strong>seberapa gampang sistem itu berubah</strong>.</p>
+        <p>Stack yang sangat masuk akal untuk internal tool kecil belum tentu tepat untuk:</p>
+        <ul>
+            <li>produk multi-tenant;</li>
+            <li>workload dengan volume tinggi;</li>
+            <li>sistem dengan requirement security ketat;</li>
+            <li>sistem yang memerlukan auditability;</li>
+            <li>aplikasi yang akan berkembang cepat.</li>
+        </ul>
+        <hr>
+        <h3 id="4-salah-secara-operasional">4. Salah secara operasional</h3>
+        <p>Software production itu hidup di dunia nyata, dan dunia nyata terus berubah.</p>
+        <p>Dependency di-update.</p>
+        <p>Credential expire.</p>
+        <p>Quota mentok.</p>
+        <p>API berubah.</p>
+        <p>Data makin banyak.</p>
+        <p>User berperilaku nggak terduga.</p>
+        <p>Service bisa outage.</p>
+        <p>Potongan kode bisa aja bener saat pertama kali dibuat, tapi ternyata nggak cukup buat kondisi production.</p>
+        <p>Hal ini sangat relevan pada managed platform yang punya quota, execution limit, storage behavior, atau
+            service rule tertentu.</p>
+        <p>Google, misalnya, mendokumentasikan quota dan limitation untuk Apps Script. Jika quota tertentu terlampaui,
+            eksekusi script bisa dihentikan. \[5\]</p>
+        <p>Jadi, <strong>“jalan sekarang” nggak sama dengan “aman dan tetap layak dipakai ketika kondisinya
+                berubah.”</strong></p>
+        <hr>
+        <h3 id="5-salah-secara-semantik">5. Salah secara semantik</h3>
+        <p>Ini justru salah satu kategori yang paling tricky.</p>
+        <p>Kodenya bisa valid secara syntax, logiknya masuk akal, dan tetap mengimplementasikan <strong>business rule
+                yang salah</strong>.</p>
+        <p>Misalnya requirement-nya:</p>
+        <blockquote>“Customer bisa membatalkan order sampai shipment diberangkatkan.”</blockquote>
+        <p>Implementasinya membutuhkan definisi domain yang jelas.</p>
+        <p>Bagaimana jika model mengasumsikan bahwa “diberangkatkan” berarti adanya <code>tracking_number</code>,
+            sementara sistem bisnis sebenarnya menggunakan field <code>shipment_status</code>?</p>
+        <p>Kodenya bisa kelihatan masuk akal banget.</p>
+        <p>Tapi tetap salah.</p>
+        <p>Kamu nggak bisa memperbaiki requirement yang ambigu cuma dengan terus-terusan ngecek syntax.</p>
+        <p>Informasi yang hilang itu seharusnya diberesin dari <strong>requirements dan data model</strong>.</p>
+        <hr>
+        <h2 id="6-security-bagian-yang-cukup-bagus-bisa-jadi-mahal-banget">6. Security: bagian yang “cukup bagus” bisa
+            jadi mahal banget</h2>
+        <p>Security perlu dibahas khusus karena dia bukan sesuatu yang bisa kamu lihat dari UI.</p>
+        <p>User nggak bisa mengetahui dari tampilan UI yang polished apakah authorization udah benar-benar ditegakkan.
+        </p>
+        <p>NIST melalui Secure Software Development Framework (SSDF) untuk generative AI dan dual-use foundation models
+            memberikan rekomendasi yang secara khusus menekankan secure coding practices, pengelolaan input dan output,
+            validation, testing ke komponen AI yang diperoleh, serta integrasi pertimbangan khusus AI ke dalam praktik
+            software development. \[3\]\[4\]</p>
+        <p>Jadi pelajarannya bukan:</p>
+        <blockquote>“Kode buatan AI pasti nggak aman.”</blockquote>
+        <p>Bukti yang ada nggak mendukung klaim sesederhana itu.</p>
+        <p>Klaim yang lebih tepat justru:</p>
+        <blockquote><strong>Output AI tetap harus masuk ke proses validasi. Makin besar dampak software-nya, makin ketat
+                juga proses validasinya.</strong></blockquote>
+        <h3 id="contoh-kecil-authentication-bukan-authorization">Contoh kecil: authentication bukan authorization</h3>
+        <p>Bayangin sebuah aplikasi punya endpoint:</p>
+    </div>
+    <div class="code-viewer" data-code-viewer="">
+        <div class="code-viewer__header"><span class="code-viewer__dots"
+                aria-hidden="true"><i></i><i></i><i></i></span><span class="code-viewer__lang"><span
+                    class="code-viewer__label">Contoh kecil: authentication bukan authorization</span><span
+                    class="code-viewer__lang-tag">http</span></span><button type="button" class="code-viewer__copy"
+                data-copy-all="" aria-label="Salin semua kode"><svg width="14" height="14" viewBox="0 0 24 24"
+                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    aria-hidden="true">
+                    <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                    <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+                </svg><span>Salin</span></button></div>
+        <div class="code-viewer__body">
+            <pre
+                class="code-viewer__pre"><code><div class="code-line"><span class="code-line__no" aria-hidden="true">1</span><span class="code-line__text">GET /api/orders/4821</span></div></code></pre>
+        </div>
+    </div>
+    <div>
+        <p>User udah login.</p>
+        <p>Request berhasil.</p>
+        <p>Halaman tampil normal.</p>
+        <p>Semuanya terlihat baik.</p>
+        <p>Tetapi apa yang terjadi apabila user lain yang juga udah login meminta:</p>
+    </div>
+    <div class="code-viewer" data-code-viewer="">
+        <div class="code-viewer__header"><span class="code-viewer__dots"
+                aria-hidden="true"><i></i><i></i><i></i></span><span class="code-viewer__lang"><span
+                    class="code-viewer__lang-tag">http</span></span><button type="button" class="code-viewer__copy"
+                data-copy-all="" aria-label="Salin semua kode"><svg width="14" height="14" viewBox="0 0 24 24"
+                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    aria-hidden="true">
+                    <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                    <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+                </svg><span>Salin</span></button></div>
+        <div class="code-viewer__body">
+            <pre
+                class="code-viewer__pre"><code><div class="code-line"><span class="code-line__no" aria-hidden="true">1</span><span class="code-line__text">GET /api/orders/4821</span></div></code></pre>
+        </div>
+    </div>
+    <div>
+        <p>Kalau server cuma ngecek:</p>
+    </div>
+    <div class="code-viewer" data-code-viewer="">
+        <div class="code-viewer__header"><span class="code-viewer__dots"
+                aria-hidden="true"><i></i><i></i><i></i></span><span class="code-viewer__lang"><span
+                    class="code-viewer__lang-tag">text</span></span><button type="button" class="code-viewer__copy"
+                data-copy-all="" aria-label="Salin semua kode"><svg width="14" height="14" viewBox="0 0 24 24"
+                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    aria-hidden="true">
+                    <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                    <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+                </svg><span>Salin</span></button></div>
+        <div class="code-viewer__body">
+            <pre
+                class="code-viewer__pre"><code><div class="code-line"><span class="code-line__no" aria-hidden="true">1</span><span class="code-line__text"><span>“User ini udah login belum?”</span></span></div></code></pre>
+        </div>
+    </div>
+    <div>
+        <p>dan nggak memeriksa:</p>
+    </div>
+    <div class="code-viewer" data-code-viewer="">
+        <div class="code-viewer__header"><span class="code-viewer__dots"
+                aria-hidden="true"><i></i><i></i><i></i></span><span class="code-viewer__lang"><span
+                    class="code-viewer__lang-tag">text</span></span><button type="button" class="code-viewer__copy"
+                data-copy-all="" aria-label="Salin semua kode"><svg width="14" height="14" viewBox="0 0 24 24"
+                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    aria-hidden="true">
+                    <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                    <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+                </svg><span>Salin</span></button></div>
+        <div class="code-viewer__body">
+            <pre
+                class="code-viewer__pre"><code><div class="code-line"><span class="code-line__no" aria-hidden="true">1</span><span class="code-line__text"><span>“User ini emang berhak ngakses order 4821 nggak?”</span></span></div></code></pre>
+        </div>
+    </div>
+    <div>
+        <p>maka aplikasi bisa kena <strong>broken access control</strong>.</p>
+        <p>UI-nya tetap bisa sempurna.</p>
+        <blockquote><strong>Apa yang nggak bisa dibuktikan cuma dari screenshot?</strong> Screenshot nggak bisa memberi
+            tahu apakah server menegakkan object-level authorization, apakah secret disimpan cuma di server, apakah
+            database policy benar, atau apakah race condition bisa merusak integritas data. Semua itu adalah
+            <strong>system-level properties</strong>.</blockquote>
+        <h3 id="kode-buatan-ai-membutuhkan-threat-model-bukan-sekadar-screenshot">Kode buatan AI membutuhkan threat
+            model, bukan sekadar screenshot</h3>
+        <p>Setiap kali bikin fitur yang nyentuh data atau permission, biasain nanya empat hal ini:</p>
+        <ol>
+            <li>Siapa yang diperbolehkan melakukan aksi ini?</li>
+            <li>Data apa yang boleh mereka baca atau ubah?</li>
+            <li>Apa yang bisa dikendalikan atau dimanipulasi oleh attacker?</li>
+            <li>Apa yang terjadi ketika proses gagal di tengah jalan?</li>
+        </ol>
+        <p>Empat pertanyaan ini kelihatannya sederhana, tapi cukup kuat buat nemuin banyak defect yang nggak bakal
+            kelihatan dari demo doang.</p>
+        <hr>
+        <h2 id="7-jebakan-ketergantungan-ketika-kita-nggak-ngerti-sistemnya">7. Jebakan ketergantungan: ketika kita
+            nggak ngerti sistemnya</h2>
+        <p>Ada beda besar antara:</p>
+        <blockquote><strong>“Saya menggunakan AI untuk coding.”</strong></blockquote>
+        <p>dan:</p>
+        <blockquote><strong>“Saya nggak bisa coding tanpa AI.”</strong></blockquote>
+        <p>Yang pertama itu pilihan engineering.</p>
+        <p>Yang kedua bisa berubah jadi <strong>single point of failure</strong>.</p>
+        <p>Bayangin freelancer ngirim aplikasi yang bahkan nggak bisa dia jelasin tanpa balik nanya ke model yang bikin
+            aplikasi itu.</p>
+        <p>Lalu proyek mengalami masalah yang nggak dijelaskan di prompt.</p>
+        <p>Apa yang terjadi?</p>
+        <p>Bagaimana jika AI memberikan dua solusi yang saling bertentangan?</p>
+        <p>Bagaimana jika platform berubah?</p>
+        <p>Bagaimana jika client meminta requirement baru yang nggak pernah dipikirkan ketika prompt pertama dibuat?</p>
+        <p>Masalah utamanya bukan sekadar bergantung ke satu tool.</p>
+        <p>Masalah besarnya adalah:</p>
+        <blockquote><strong>Ketergantungan tanpa mental model.</strong></blockquote>
+        <h3 id="loop-screenshot-lalu-tanyakan-ke-ai">Loop “screenshot lalu tanyakan ke AI”</h3>
+        <p>Pola yang sangat umum adalah:</p>
+    </div>
+    <div class="code-viewer" data-code-viewer="">
+        <div class="code-viewer__header"><span class="code-viewer__dots"
+                aria-hidden="true"><i></i><i></i><i></i></span><span class="code-viewer__lang"><span
+                    class="code-viewer__label">Loop “screenshot lalu tanyakan ke AI”</span><span
+                    class="code-viewer__lang-tag">text</span></span><button type="button" class="code-viewer__copy"
+                data-copy-all="" aria-label="Salin semua kode"><svg width="14" height="14" viewBox="0 0 24 24"
+                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    aria-hidden="true">
+                    <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                    <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+                </svg><span>Salin</span></button></div>
+        <div class="code-viewer__body">
+            <pre
+                class="code-viewer__pre"><code><div class="code-line"><span class="code-line__no" aria-hidden="true">1</span><span class="code-line__text"><span>Error</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">2</span><span class="code-line__text"><span>  ↓</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">3</span><span class="code-line__text"><span>Screenshot</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">4</span><span class="code-line__text"><span>  ↓</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">5</span><span class="code-line__text"><span>Prompt</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">6</span><span class="code-line__text"><span>  ↓</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">7</span><span class="code-line__text"><span>Patch</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">8</span><span class="code-line__text"><span>  ↓</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">9</span><span class="code-line__text"><span>Error lain</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">10</span><span class="code-line__text"><span>  ↓</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">11</span><span class="code-line__text"><span>AI fix</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">12</span><span class="code-line__text"><span>  ↓</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">13</span><span class="code-line__text"><span>Error lain</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">14</span><span class="code-line__text"><span>  ↓</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">15</span><span class="code-line__text"><span>AI fix</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">16</span><span class="code-line__text"><span>  ↓</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">17</span><span class="code-line__text"><span>“Sudah jalan?”</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">18</span><span class="code-line__text"><span>  ↓</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">19</span><span class="code-line__text"><span>Production</span></span></div></code></pre>
+        </div>
+    </div>
+    <div>
+        <p>Loop itu bisa bekerja untuk masalah yang dangkal.</p>
+        <p>Tetapi jadi berbahaya ketika developer nggak pernah bertanya:</p>
+        <blockquote><strong>“Invariant apa yang sedang dilanggar, dan di mana invariant itu seharusnya
+                ditegakkan?”</strong></blockquote>
+        <p>Nah, di sinilah beda antara <strong>ngobatin gejala</strong> dan <strong>memahami sistem</strong>.</p>
+        <p>Ketika developer memahami underlying model, AI bisa jadi debugging partner.</p>
+        <p>Ketika nggak, AI bisa berubah jadi <strong>mesin pembuat patch tanpa akhir</strong>.</p>
+        <p>Project-nya kelihatan produktif.</p>
+        <p>Padahal complexity tersembunyinya terus numpuk.</p>
+        <hr>
+        <h2 id="8-ai-seharusnya-memperkuat-pemahaman-bukan-menggantikannya">8. AI seharusnya memperkuat pemahaman, bukan
+            menggantikannya</h2>
+        <p>Mental model yang lebih sehat bukan:</p>
+        <blockquote><strong>AI versus programmer</strong></blockquote>
+        <p>melainkan:</p>
+        <blockquote><strong>Programmer dengan leverage yang lebih baik.</strong></blockquote>
+    </div>
+    <div class="code-viewer" data-code-viewer="">
+        <div class="code-viewer__header"><span class="code-viewer__dots"
+                aria-hidden="true"><i></i><i></i><i></i></span><span class="code-viewer__lang"><span
+                    class="code-viewer__label">8. AI seharusnya memperkuat pemahaman, bukan menggantikannya</span><span
+                    class="code-viewer__lang-tag">text</span></span><button type="button" class="code-viewer__copy"
+                data-copy-all="" aria-label="Salin semua kode"><svg width="14" height="14" viewBox="0 0 24 24"
+                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    aria-hidden="true">
+                    <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                    <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+                </svg><span>Salin</span></button></div>
+        <div class="code-viewer__body">
+            <pre
+                class="code-viewer__pre"><code><div class="code-line"><span class="code-line__no" aria-hidden="true">1</span><span class="code-line__text"><span>Fundamentals + AI</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">2</span><span class="code-line__text"><span>       ↓</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">3</span><span class="code-line__text"><span>Eksperimen lebih cepat</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">4</span><span class="code-line__text"><span>       ↓</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">5</span><span class="code-line__text"><span>Lebih banyak pilihan implementasi</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">6</span><span class="code-line__text"><span>       ↓</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">7</span><span class="code-line__text"><span>Feedback loop lebih cepat</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">8</span><span class="code-line__text"><span>       ↓</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">9</span><span class="code-line__text"><span>Software lebih baik</span></span></div></code></pre>
+        </div>
+    </div>
+    <div>
+        <p>Sebaliknya:</p>
+    </div>
+    <div class="code-viewer" data-code-viewer="">
+        <div class="code-viewer__header"><span class="code-viewer__dots"
+                aria-hidden="true"><i></i><i></i><i></i></span><span class="code-viewer__lang"><span
+                    class="code-viewer__lang-tag">text</span></span><button type="button" class="code-viewer__copy"
+                data-copy-all="" aria-label="Salin semua kode"><svg width="14" height="14" viewBox="0 0 24 24"
+                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    aria-hidden="true">
+                    <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                    <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+                </svg><span>Salin</span></button></div>
+        <div class="code-viewer__body">
+            <pre
+                class="code-viewer__pre"><code><div class="code-line"><span class="code-line__no" aria-hidden="true">1</span><span class="code-line__text"><span>Tanpa fundamental + AI</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">2</span><span class="code-line__text"><span>       ↓</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">3</span><span class="code-line__text"><span>Produksi kode lebih cepat</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">4</span><span class="code-line__text"><span>       ↓</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">5</span><span class="code-line__text"><span>Unknowns bertambah lebih cepat</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">6</span><span class="code-line__text"><span>       ↓</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">7</span><span class="code-line__text"><span>Debugging semakin sulit</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">8</span><span class="code-line__text"><span>       ↓</span></span></div><div class="code-line"><span class="code-line__no" aria-hidden="true">9</span><span class="code-line__text"><span>Hidden risk semakin tinggi</span></span></div></code></pre>
+        </div>
+    </div>
+    <div>
+        <p>Tujuan belajar fundamental bukan buat maksa orang hafal syntax dulu baru boleh bikin sesuatu.</p>
+        <p>Tujuannya adalah punya <strong>kosakata konsep</strong> yang cukup buat:</p>
+        <ul>
+            <li>mengajukan pertanyaan yang tepat;</li>
+            <li>menantang jawaban AI;</li>
+            <li>mengenali jawaban yang mencurigakan;</li>
+            <li>memahami batas sistem;</li>
+            <li>mengambil keputusan ketika AI salah.</li>
+        </ul>
+        <h3 id="cara-pakai-ai-yang-lebih-sehat-buat-pemula">Cara pakai AI yang lebih sehat buat pemula</h3>
+        <ul>
+            <li>Minta AI jelasin konsepnya dulu sebelum nyuruh AI ngerjain satu task penuh.</li>
+            <li>Minta AI bikin plan dan nyebutin asumsi sebelum masuk implementasi.</li>
+            <li>Minta model nyebutin edge case dan failure mode secara jelas.</li>
+            <li>Review kode sedikit demi sedikit, jangan langsung copas satu sistem penuh secara buta.</li>
+            <li>Jalankan test, inspect network layer, dan verifikasi perilaku aktual, jangan cuma mempercayai hasil
+                visual.</li>
+            <li>Pertahankan source of truth milik manusia untuk requirements, data rules, dan architecture decisions.
+            </li>
+        </ul>
+        <hr>
+        <h2 id="9-workflow-ai-assisted-development-yang-tetap-waras">9. Workflow AI-assisted development yang tetap
+            waras</h2>
+        <p>Workflow berbantuan AI nggak harus lambat.</p>
+        <p>Kuncinya adalah <strong>memindahkan validasi lebih awal</strong>, bukan menghilangkannya.</p>
+        <h3 id="1-definisikan-requirement">1. Definisikan requirement</h3>
+        <p>Tuliskan:</p>
+        <ul>
+            <li>apa yang bisa dilakukan user;</li>
+            <li>apa yang nggak boleh dilakukan;</li>
+            <li>apa yang harus selalu benar;</li>
+            <li>business rule apa yang berlaku.</li>
+        </ul>
+        <p>Jangan memulai dengan:</p>
+        <blockquote>“Tulis kodenya.”</blockquote>
+        <p>Mulailah dengan:</p>
+        <blockquote>“Inilah masalah yang harus diselesaikan.”</blockquote>
+        <h3 id="2-minta-ai-menemukan-asumsi">2. Minta AI menemukan asumsi</h3>
+        <p>Minta model mengidentifikasi:</p>
+        <ul>
+            <li>ambiguity;</li>
+            <li>dependency;</li>
+            <li>edge case;</li>
+            <li>failure mode;</li>
+            <li>requirement yang belum lengkap.</li>
+        </ul>
+        <h3 id="3-pilih-arsitektur">3. Pilih arsitektur</h3>
+        <p>Tentukan:</p>
+        <ul>
+            <li>frontend;</li>
+            <li>backend;</li>
+            <li>storage;</li>
+            <li>authentication;</li>
+            <li>deployment.</li>
+        </ul>
+        <p>Pilihan harus mengikuti <strong>problem</strong>, bukan sekadar tool yang sedang trending.</p>
+        <h3 id="4-rancang-data-dan-permission">4. Rancang data dan permission</h3>
+        <p>Sebelum mengandalkan generated CRUD, definisikan:</p>
+        <ul>
+            <li>entity;</li>
+            <li>relationship;</li>
+            <li>constraint;</li>
+            <li>ownership;</li>
+            <li>role;</li>
+            <li>access rule;</li>
+            <li>invariant.</li>
+        </ul>
+        <h3 id="5-generate-dalam-potongan-kecil">5. Generate dalam potongan kecil</h3>
+        <p>Bangun:</p>
+        <ul>
+            <li>satu feature;</li>
+            <li>satu module;</li>
+            <li>satu boundary;</li>
+        </ul>
+        <p>dalam satu waktu, dengan interface dan test yang jelas.</p>
+        <h3 id="6-validasi-output">6. Validasi output</h3>
+        <p>Lakukan:</p>
+        <ul>
+            <li>automated tests;</li>
+            <li>linting;</li>
+            <li>type checking;</li>
+            <li>security checks;</li>
+            <li>manual scenarios;</li>
+            <li>failure-case testing.</li>
+        </ul>
+        <h3 id="7-review-constraint-operasional">7. Review constraint operasional</h3>
+        <p>Periksa:</p>
+        <ul>
+            <li>quota;</li>
+            <li>platform limit;</li>
+            <li>cost;</li>
+            <li>dependency;</li>
+            <li>secrets;</li>
+            <li>backup;</li>
+            <li>logging;</li>
+            <li>rollback strategy.</li>
+        </ul>
+        <h3 id="8-ship-dengan-ownership">8. Ship dengan ownership</h3>
+        <p>Harus ada manusia yang cukup ngerti sistemnya buat:</p>
+        <ul>
+            <li>memperbaikinya;</li>
+            <li>menjelaskannya;</li>
+            <li>mengembangkannya;</li>
+            <li>dan mempertanggungjawabkannya;</li>
+        </ul>
+        <p>tanpa bergantung pada model yang sama yang menghasilkan kode itu.</p>
+        <blockquote><strong>Perubahan workflow yang paling penting</strong> Jangan minta AI menggantikan software
+            engineering process. Minta AI bikin setiap tahap software engineering process jadi lebih cepat.</blockquote>
+        <hr>
+        <h2 id="10-fundamental-minimum-yang-sebenarnya-perlu-kamu-pelajari">10. Fundamental minimum yang sebenarnya
+            perlu kamu pelajari</h2>
+        <p>“Belajar fundamental” kadang terdengar seperti gatekeeping kalau dibungkus sebagai daftar ribuan halaman yang
+            katanya harus dikuasai sebelum boleh bikin apa pun.</p>
+        <p>Padahal bukan itu intinya.</p>
+        <p>Pemula nggak perlu jadi master dulu.</p>
+        <p>Mereka cuma perlu punya <strong>mental model yang berguna</strong>, lalu mengembangkannya sambil jalan lewat
+            project yang mereka bangun.</p>
+        <div class="prose-table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Fundamental</th>
+                        <th>Kenapa penting?</th>
+                        <th>Pertanyaan awal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>HTML, CSS, dan browser basics</td>
+                        <td>Memahami apa yang benar-benar dirender dan diminta oleh browser.</td>
+                        <td>Apa yang berjalan di browser, dan apa yang terjadi di server?</td>
+                    </tr>
+                    <tr>
+                        <td>JavaScript / TypeScript</td>
+                        <td>Memahami flow program, state, data, dan contract.</td>
+                        <td>Data apa yang masuk ke function ini, dan apa yang dijaminnya?</td>
+                    </tr>
+                    <tr>
+                        <td>HTTP / API</td>
+                        <td>Memahami request, response, status code, dan boundary.</td>
+                        <td>Siapa yang memanggil endpoint ini, dan apa yang boleh dikembalikan?</td>
+                    </tr>
+                    <tr>
+                        <td>Data modeling / SQL</td>
+                        <td>Memahami persistence, relationship, constraint, dan query.</td>
+                        <td>Apa yang harus selalu benar mengenai data ini?</td>
+                    </tr>
+                    <tr>
+                        <td>Authentication / authorization</td>
+                        <td>Memahami perbedaan identity dan permission.</td>
+                        <td>Bagaimana server mengetahui apa yang boleh dilakukan user ini?</td>
+                    </tr>
+                    <tr>
+                        <td>Git / version control</td>
+                        <td>Membuat perubahan bisa dibalik dan memungkinkan kolaborasi.</td>
+                        <td>Apakah saya bisa dengan aman membatalkan perubahan ini?</td>
+                    </tr>
+                    <tr>
+                        <td>Testing</td>
+                        <td>Mengubah asumsi jadi pemeriksaan yang bisa diulang.</td>
+                        <td>Bagaimana saya tahu ini masih benar besok?</td>
+                    </tr>
+                    <tr>
+                        <td>Deployment / operations</td>
+                        <td>Memahami apa yang terjadi setelah “works on my machine”.</td>
+                        <td>Bagaimana saya mengamati, memulihkan, dan memperbarui sistem ini?</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <p>Segitu aja udah cukup buat ngubah AI dari <strong>oracle</strong> jadi <strong>tool</strong>.</p>
+        <p>Kita nggak perlu hafal atau kuasai setiap framework.</p>
+        <p>Kita butuh cukup fundamental buat ngerti <strong>boundary dari sistem yang kita bangun</strong>.</p>
+        <hr>
+        <h2 id="11-checklist-sebelum-nge-ship-kode-buatan-ai">11. Checklist sebelum nge-ship kode buatan AI</h2>
+        <p>Sebelum fitur hasil AI dilempar ke user beneran, pertanyaan-pertanyaan ini senggaknya harus bisa kamu jawab.
+        </p>
+        <p>Seberapa dalam kamu ngeceknya tentu tergantung risk level.</p>
+        <p>Tapi pertanyaannya tetap relevan hampir di semua project.</p>
+        <h3 id="requirements">Requirements</h3>
+        <ul>
+            <li>Apakah expected behavior bisa dijelaskan tanpa ambiguity?</li>
+            <li>Apakah assumption dan business rule penting udah didokumentasikan?</li>
+            <li>Apakah kita tahu apa yang harus terjadi pada input invalid atau unexpected?</li>
+        </ul>
+        <h3 id="code">Code</h3>
+        <ul>
+            <li>Apakah implementasi sesuai requirement, bukan cuma sesuai prompt?</li>
+            <li>Apakah human maintainer bisa menjelaskan code path yang penting?</li>
+            <li>Apakah setiap dependency memang dibutuhkan dan dipahami?</li>
+        </ul>
+        <h3 id="security">Security</h3>
+        <ul>
+            <li>Apakah authentication dan authorization ditegakkan di server ketika dibutuhkan?</li>
+            <li>Apakah secret nggak masuk ke client code atau source control?</li>
+            <li>Apakah input divalidasi dan output ditangani secara aman?</li>
+            <li>Apakah seorang user bisa mengakses data user lain cuma dengan mengganti identifier atau request?</li>
+            <li>Apakah abuse case udah dipertimbangkan, bukan cuma normal user flow?</li>
+        </ul>
+        <h3 id="data">Data</h3>
+        <ul>
+            <li>Apakah relationship, uniqueness rule, dan invariant penting benar-benar ditegakkan?</li>
+            <li>Apa yang terjadi jika dua request mengubah data yang sama secara bersamaan?</li>
+            <li>Apakah tersedia backup dan recovery plan untuk data yang penting?</li>
+        </ul>
+        <h3 id="testing">Testing</h3>
+        <ul>
+            <li>Apakah automated test mencakup behavior yang kritis?</li>
+            <li>Apakah failure path dan edge case udah diuji?</li>
+            <li>Apakah realistic user flow udah diuji secara manual?</li>
+        </ul>
+        <h3 id="operations">Operations</h3>
+        <ul>
+            <li>Apakah kita memahami quota, limit, cost, dan failure mode platform?</li>
+            <li>Apakah kita bisa melihat apa yang terjadi di production melalui logging atau monitoring?</li>
+            <li>Apakah kita tahu cara melakukan rollback ketika release bermasalah?</li>
+        </ul>
+        <hr>
+        <h2 id="12-kesimpulan-jadi-sebenarnya-masalahnya-di-mana">12. Kesimpulan: jadi, sebenarnya masalahnya di mana?
+        </h2>
+        <h3 id="standarnya-bukan-apakah-ai-yang-membuatnya">Standarnya bukan “Apakah AI yang membuatnya?”</h3>
+        <p>AI generatif udah bikin software creation jauh lebih gampang diakses.</p>
+        <p>Dan menurut gue, itu hal yang layak dirayakan.</p>
+        <p>AI bisa membantu pemula membuat prototype, membantu developer berpengalaman bekerja lebih cepat, dan membuat
+            eksperimen yang sebelumnya mahal jadi jauh lebih murah.</p>
+        <p>Tapi aksesibilitas juga bawa tanggung jawab baru:</p>
+        <blockquote><strong>Kita harus makin jago ngebedain output yang kelihatan meyakinkan dari sistem yang beneran
+                bisa dipercaya.</strong></blockquote>
+        <p>Sebuah aplikasi hasil generate AI bisa:</p>
+        <ul>
+            <li>berhasil di-compile;</li>
+            <li>berhasil di-deploy;</li>
+            <li>terlihat indah;</li>
+            <li>memenuhi kebutuhan demo;</li>
+            <li>dan tetap nggak aman.</li>
+        </ul>
+        <p>Ia juga bisa:</p>
+        <ul>
+            <li>salah secara semantic;</li>
+            <li>sulit dipelihara;</li>
+            <li>rapuh secara operasional;</li>
+            <li>buruk secara arsitektur;</li>
+            <li>atau dibangun di atas platform yang memang nggak cocok untuk problem itu.</li>
+        </ul>
+        <p>Semua ini bukan berarti pemula harus takut mulai bikin software.</p>
+        <p>Justru pemula butuh janji yang lebih jujur daripada:</p>
+        <blockquote>“Kamu nggak perlu belajar apa pun lagi.”</blockquote>
+        <p>Janji yang lebih sehat justru:</p>
+        <blockquote><strong>Kamu nggak perlu belajar semuanya sebelum mulai. Tapi makin penting software yang kamu
+                bangun, makin banyak hal yang harus kamu pahami supaya kamu tahu apa yang sebenarnya jadi tanggung
+                jawabmu.</strong></blockquote>
+        <h4 id="pertanyaan-yang-lebih-penting">Pertanyaan yang lebih penting</h4>
+        <p>Jangan berhenti di:</p>
+        <blockquote><strong>“Apakah aplikasinya udah bekerja?”</strong></blockquote>
+        <p>Tanya juga:</p>
+        <blockquote><strong>“Bisakah kita menjelaskannya, mengujinya, mengamankannya, memeliharanya, dan bertanggung
+                jawab atasnya?”</strong></blockquote>
+        <p>Karena pada akhirnya, AI seharusnya <strong>memperkuat pemahaman</strong>, bukan menggantikannya.</p>
+        <p>Dan standar software yang bagus bukan:</p>
+        <blockquote><strong>“AI berhasil membuatnya.”</strong></blockquote>
+        <p>Tapi:</p>
+        <blockquote><strong>“Kita memahami apa yang kita kirim.”</strong></blockquote>
+        <hr>
+        <h3 id="sumber-dan-bacaan-lanjutan">Sumber dan bacaan lanjutan</h3>
+        <p><strong>\[1\] GitHub Research - Quantifying GitHub Copilot’s impact on developer productivity and
+                happiness</strong> <a
+                href="https://github.blog/news-insights/research/research-quantifying-github-copilots-impact-on-developer-productivity-and-happiness/"
+                target="_blank"
+                rel="noopener noreferrer">https://github.blog/news-insights/research/research-quantifying-github-copilots-impact-on-developer-productivity-and-happiness/</a>
+        </p>
+        <p><strong>\[2\] OWASP - Top 10:2025</strong> <a href="https://owasp.org/Top10/2025/" target="_blank"
+                rel="noopener noreferrer">https://owasp.org/Top10/2025/</a></p>
+        <p><strong>\[3\] NIST SP 800-218A - Secure Software Development Practices for Generative AI and Dual-Use
+                Foundation Models</strong> <a href="https://csrc.nist.gov/pubs/sp/800/218/a/final" target="_blank"
+                rel="noopener noreferrer">https://csrc.nist.gov/pubs/sp/800/218/a/final</a></p>
+        <p><strong>\[4\] NIST - SP 800-218A publication overview and update history</strong> <a
+                href="https://www.nist.gov/publications/secure-software-development-practices-generative-ai-and-dual-use-foundation-models-ssdf"
+                target="_blank"
+                rel="noopener noreferrer">https://www.nist.gov/publications/secure-software-development-practices-generative-ai-and-dual-use-foundation-models-ssdf</a>
+        </p>
+        <p><strong>\[5\] Google Developers - Apps Script quotas and limitations</strong> <a
+                href="https://developers.google.com/apps-script/guides/services/quotas" target="_blank"
+                rel="noopener noreferrer">https://developers.google.com/apps-script/guides/services/quotas</a></p>
+        <p><strong>\[6\] Google Gemini Apps Help - Get started with Gems in Gemini Apps</strong> <a
+                href="https://support.google.com/gemini/answer/15236321?hl=en" target="_blank"
+                rel="noopener noreferrer">https://support.google.com/gemini/answer/15236321?hl=en</a></p>
+        <p><strong>\[7\] Google Gemini Apps Help - Tips for creating custom Gems</strong> <a
+                href="https://support.google.com/gemini/answer/15235603?hl=en" target="_blank"
+                rel="noopener noreferrer">https://support.google.com/gemini/answer/15235603?hl=en</a></p>
+        <p><strong>\[8\] OWASP GenAI Security Project - LLM09:2025 Misinformation</strong> <a
+                href="https://genai.owasp.org/llmrisk/llm092025-misinformation/" target="_blank"
+                rel="noopener noreferrer">https://genai.owasp.org/llmrisk/llm092025-misinformation/</a></p>
+        <p><strong>\[9\] OWASP GenAI Security Project - OWASP GenAI LLM Top 10 2026</strong> <a
+                href="https://genai.owasp.org/resource/owasp-genai-llm-top-10-2026/" target="_blank"
+                rel="noopener noreferrer">https://genai.owasp.org/resource/owasp-genai-llm-top-10-2026/</a></p>
+        <hr>
+        <blockquote><strong>Catatan sumber</strong> Artikel ini nggak menyatakan bahwa kode hasil AI secara inheren
+            nggak aman. Argumennya adalah bahwa output yang dihasilkan AI harus divalidasi karena correctness dan
+            security adalah property dari sistem, sementara language model bisa menghasilkan output yang salah,
+            misleading, atau nggak lengkap. Artikel ini juga nggak menyatakan bahwa Gemini Gems, Apps Script, atau
+            spreadsheet adalah teknologi yang buruk. Teknologi punya domain penggunaan, trade-off, constraint, dan
+            batasannya masing-masing. Pertanyaan yang lebih tepat adalah apakah sebuah teknologi sesuai dengan
+            requirement, risk profile, scale, dan kebutuhan operasional sistem tertentu.</blockquote>
+        <blockquote><strong>Catatan status</strong> Draft sumber disiapkan untuk editorial review pada <strong>8
+                September 2026</strong>. Kapabilitas produk, quota, security guidance, dan perilaku tool AI bisa
+            berubah. Verifikasi kembali dokumentasi yang ditautkan sebelum publikasi apabila sebuah klaim bergantung
+            pada kondisi produk atau kebijakan yang berlaku saat ini.</blockquote>
+    </div>
+</article>

@@ -1,7 +1,7 @@
 ---
-// Nested "Daftar Isi": h1 entries are top-level items, h2/h3 render as
-// expandable children. Documents that only use h2 stay a flat list, so the
-// snippets/assets pages render exactly as before.
+// Nested "Daftar Isi": h2 sections are the top-level items, their h3
+// sub-sections render as expandable children. Documents that only use h2 stay
+// a flat list, so the snippets/assets pages render exactly as before.
 import { buildHeadingTree, type Heading, type TocNode } from "../lib/markdown";
 import TocItem from "./TocItem.astro";
 
@@ -153,14 +153,11 @@ const nested = tree.some((node: TocNode) => node.children.length > 0);
                 const nearBottom = viewportBottom >= doc.scrollHeight - 8;
                 const marker = scrollY + window.innerHeight * 0.35;
 
+                // The active section is the last heading that has passed the
+                // marker (35% down the viewport).
                 let current = targets[0].id;
                 for (const t of targets) {
-                    const rect = t.heading.getBoundingClientRect();
-                    const top = rect.top + scrollY;
-                    const height = Math.max(1, rect.height);
-                    const progress = Math.min(1, Math.max(0, (marker - top) / height));
-                    t.link.style.setProperty("--progress", progress.toFixed(3));
-                    if (top <= marker) current = t.id;
+                    if (t.heading.getBoundingClientRect().top + scrollY <= marker) current = t.id;
                 }
 
                 if (nearBottom) {

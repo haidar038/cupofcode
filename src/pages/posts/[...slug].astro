@@ -12,7 +12,7 @@ import Breadcrumb from "../../components/Breadcrumb.astro";
 import BackToTop from "../../components/ui/BackToTop.tsx";
 import CodeBlock from "../../components/ui/CodeBlock.astro";
 import TableOfContents from "../../components/TableOfContents.astro";
-import { splitBody, renderProse, extractHeadings, getHeadingShift } from "../../lib/markdown";
+import { splitBody, renderProse, extractHeadings, normalizeBodyHeadings } from "../../lib/markdown";
 
 export async function getStaticPaths() {
     const posts = await getCollection("posts");
@@ -28,17 +28,16 @@ const category = await getEntry("categories", post.data.category);
 
 // Body is rendered through our own pipeline so every code block becomes a
 // Shiki-highlighted dark editor viewer and prose gets consistent typography.
-const bodySegments = splitBody(post.body || "");
-const headings = extractHeadings(post.body || "").filter((h) => h.depth === 2 || h.depth === 3);
-// Demote body headings one level when the post opens with a `#` title heading,
-// so the page keeps exactly one <h1> (the article title in the header).
-const headingShift = getHeadingShift(post.body || "");
+// Normalize heading levels once: a stored `#` title line is dropped and every
+// section lands on h2 (sub-sections on h3), so the rendered body and the table
+// of contents can never disagree and the body never emits a second <h1>.
+const body = normalizeBodyHeadings(post.body || "");
+const bodySegments = splitBody(body);
+const toc = extractHeadings(body).filter((h) => h.depth === 2 || h.depth === 3);
 const toneClass: Record<string, string> = {
     green: "bg-coc-tag-green",
     pink: "bg-coc-tag-pink",
 };
-
-const toc = headings;
 
 const allPosts = await getCollection("posts");
 const sameCategory = allPosts.filter((p) => p.id !== post.id && p.data.category === post.data.category);
@@ -175,7 +174,7 @@ const jsonLd = {
         <article class:list={["post-content prose-coc min-w-0 lg:col-span-9", toc.length > 0 ? "" : "lg:col-start-3"]}>
             {
                 bodySegments.map((segment) =>
-                    segment.type === "code" ? <CodeBlock code={segment.code} language={segment.lang} label={segment.label} /> : <div set:html={renderProse(segment.markdown, headingShift)} />,
+                    segment.type === "code" ? <CodeBlock code={segment.code} language={segment.lang} label={segment.label} /> : <div set:html={renderProse(segment.markdown)} />,
                 )
             }
         </article>

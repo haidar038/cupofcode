@@ -10,7 +10,7 @@ import Breadcrumb from "../../components/Breadcrumb.astro";
 import BackToTop from "../../components/ui/BackToTop.tsx";
 import CodeBlock from "../../components/ui/CodeBlock.astro";
 import TableOfContents from "../../components/TableOfContents.astro";
-import { splitBody, renderProse, extractHeadings } from "../../lib/markdown";
+import { splitBody, renderProse, extractHeadings, normalizeBodyHeadings } from "../../lib/markdown";
 import { AUTHOR_ID, AUTHOR_NAME, ORGANIZATION_ID } from "../../lib/seo";
 
 export async function getStaticPaths() {
@@ -22,8 +22,11 @@ export async function getStaticPaths() {
 }
 
 const { snippet } = Astro.props;
-const bodySegments = splitBody(snippet.body || "");
-const toc = extractHeadings(snippet.body || "").filter((h) => h.depth === 2);
+// Heading levels are normalized once so the body and its table of contents are
+// derived from the exact same levels (snippets author sections as `##`).
+const body = normalizeBodyHeadings(snippet.body || "");
+const bodySegments = splitBody(body);
+const toc = extractHeadings(body).filter((h) => h.depth === 2);
 
 const langColors: Record<string, string> = {
     typescript: "border-blue-200 bg-blue-50 text-blue-700",

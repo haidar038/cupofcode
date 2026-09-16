@@ -11,7 +11,7 @@ import CodeBlock from "../../components/ui/CodeBlock.astro";
 import TableOfContents from "../../components/TableOfContents.astro";
 import PromptFiller from "../../components/digital-assets/PromptFiller.tsx";
 import GemsViewer from "../../components/digital-assets/GemsViewer.astro";
-import { splitBody, renderProse, extractHeadings, type CodeSegment } from "../../lib/markdown";
+import { splitBody, renderProse, extractHeadings, normalizeBodyHeadings, type CodeSegment } from "../../lib/markdown";
 import { AUTHOR_ID, AUTHOR_NAME, ORGANIZATION_ID } from "../../lib/seo";
 
 export async function getStaticPaths() {
@@ -31,9 +31,10 @@ const isGem = asset.data.type === "gem";
 // Parse the raw body once into prose + code segments. Every fenced block
 // becomes a dark editor-style viewer; prose is rendered with a small markdown
 // renderer so typography (headings, tables, bold, lists) stays proper.
-const segments = splitBody(asset.body || "");
+const assetBody = normalizeBodyHeadings(asset.body || "");
+const segments = splitBody(assetBody);
 const codeSegments = segments.filter((s): s is CodeSegment => s.type === "code");
-const toc = extractHeadings(asset.body || "").filter((h) => h.depth === 2);
+const toc = extractHeadings(assetBody).filter((h) => h.depth === 2);
 
 // -- Asset-specific payloads --
 let promptTemplate = "";

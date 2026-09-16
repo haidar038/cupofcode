@@ -1,7 +1,9 @@
 ---
 // One TOC entry: [toggle + link] when the entry has children, then its
-// children rendered recursively inside a collapsible panel. In flat mode
-// (nested=false) it renders the plain dot+link row used by non-nested lists.
+// children rendered recursively inside a collapsible panel. h2 (depth 2) items
+// are the emphasized section links; deeper ones read as sub-section links. In
+// flat mode (nested=false) it renders the plain dot+link row used by
+// non-nested lists.
 import { ChevronRight } from "@lucide/astro";
 import type { TocNode } from "../lib/markdown";
 import TocItem from "./TocItem.astro";
