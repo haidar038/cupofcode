@@ -52,11 +52,12 @@ const searchItems = sortedSnippets.map((s) => ({
         sortedSnippets.length > 0 ? (
             <div class="mx-auto max-w-7xl pb-18">
                 <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-                    {pageSnippets.map((snippet) => (
+                    {pageSnippets.map((snippet, i) => (
                         <a
                             data-animate
                             href={`/snippets/${snippet.id}`}
                             class="group flex flex-col rounded-3xl border border-coc-line bg-coc-surface transition-all duration-300 md:p-0 hover:scale-[1.01]"
+                            style={`--d:${(i % 6) * 60}ms`}
                         >
                             <div class="relative aspect-391/249 w-full overflow-hidden rounded-t-3xl bg-[#d9d9d9]">
                                 {snippet.data.featured_image ? (

@@ -2,17 +2,18 @@
 export const prerender = true;
 import { Image } from "astro:assets";
 import { getCollection, getEntry } from "astro:content";
-import BaseLayout from "../../layouts/BaseLayout.astro";
-import AuthorAvatar from "../../assets/coc-avatar.svg";
+import PostBaseLayout from "../../layouts/PostBaseLayout.astro";
+import AuthorAvatar from "../../assets/coc-emblem.svg";
 import FeaturedImage from "../../assets/blog-placeholder-1.jpg";
 import { SITE_TITLE, SITE_URL } from "../../consts";
-import { AUTHOR_BIO, AUTHOR_ID, AUTHOR_NAME, AUTHOR_ROLE, AUTHOR_URL, ORGANIZATION_ID } from "../../lib/seo";
+import { AUTHOR_BIO, AUTHOR_ID, AUTHOR_NAME, AUTHOR_ROLE, AUTHOR_URL, ORGANIZATION_ID, resolveOgImage } from "../../lib/seo";
 import { Clock, ImageIcon } from "@lucide/astro";
 import Breadcrumb from "../../components/Breadcrumb.astro";
-import BackToTop from "../../components/ui/BackToTop.tsx";
+import FloatingDock from "../../components/ui/FloatingDock.tsx";
+import ScrollAnimations from "../../components/ScrollAnimations.astro";
 import CodeBlock from "../../components/ui/CodeBlock.astro";
 import TableOfContents from "../../components/TableOfContents.astro";
-import { splitBody, renderProse, extractHeadings, normalizeBodyHeadings } from "../../lib/markdown";
+import { splitBody, renderProse, extractHeadings, normalizeBodyHeadings, linkCitations, type CodeSegment } from "../../lib/markdown";
 
 export async function getStaticPaths() {
     const posts = await getCollection("posts");
@@ -33,6 +34,14 @@ const category = await getEntry("categories", post.data.category);
 // of contents can never disagree and the body never emits a second <h1>.
 const body = normalizeBodyHeadings(post.body || "");
 const bodySegments = splitBody(body);
+// Render prose first so citation links ([N] -> #ref-N) resolve across
+// segment boundaries; code blocks ride along as placeholders and are
+// swapped back to CodeBlock components when rendering below.
+const CODE_PH = (i: number) => `\u0000CODE${i}\u0000`;
+const articleHtml = linkCitations(bodySegments.map((s, i) => (s.type === "code" ? CODE_PH(i) : renderProse(s.markdown))).join("\n"));
+const articleParts = articleHtml
+    .split(/\u0000CODE(\d+)\u0000/)
+    .map((part, pi) => (pi % 2 === 0 ? { kind: "prose" as const, html: part } : { kind: "code" as const, seg: bodySegments[Number(part)] as CodeSegment }));
 const toc = extractHeadings(body).filter((h) => h.depth === 2 || h.depth === 3);
 const toneClass: Record<string, string> = {
     green: "bg-coc-tag-green",
@@ -53,6 +62,7 @@ const relatedWithCategories = await Promise.all(
 
 const abs = (u: string) => new URL(u, SITE_URL).href;
 const pageUrl = abs(Astro.url.pathname);
+const ogImage = resolveOgImage(post.data);
 const formattedDate = post.data.publishDate
     ? new Intl.DateTimeFormat("id-ID", {
           day: "numeric",
@@ -72,7 +82,7 @@ const jsonLd = {
     "@id": `${pageUrl}#article`,
     headline: post.data.title,
     description: post.data.description || "",
-    image: [abs(post.data.featured_image || FeaturedImage.src)],
+    image: [ogImage.startsWith("http") ? ogImage : abs(ogImage)],
     ...(publishedISO ? { datePublished: publishedISO, dateModified: publishedISO } : {}),
     url: pageUrl,
     inLanguage: "id-ID",
@@ -102,16 +112,11 @@ const jsonLd = {
 };
 ---
 
-<BaseLayout
-    title={`${post.data.title} | ${SITE_TITLE}`}
-    description={post.data.description ?? post.data.title}
-    image={post.data.featured_image ? post.data.featured_image : FeaturedImage.src}
-    type="article"
->
+<PostBaseLayout title={`${post.data.title} | ${SITE_TITLE}`} description={post.data.description ?? post.data.title} image={ogImage} type="article">
     <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
     <Breadcrumb items={[{ label: "Artikel", href: "/posts" }, ...(category ? [{ label: category.data.label, href: `/posts/${post.data.category}` }] : []), { label: post.data.title }]} />
     <!-- Article header -->
-    <header class="mx-auto max-w-3xl justify-start items-center flex flex-col">
+    <header class="mx-auto max-w-3xl justify-start items-center flex flex-col" data-animate="fade-up">
         {
             category && (
                 <p class:list={["mb-5 inline-block rounded-full px-3 py-1 text-xs font-semibold leading-4 text-[#212121]", toneClass[category.data.tone] ?? "bg-coc-tag-yellow"]}>
@@ -147,7 +152,7 @@ const jsonLd = {
     </header>
 
     <!-- Hero image -->
-    <div class="mt-8">
+    <div class="mt-8" data-animate="scale" style="--d:120ms">
         {
             post.data.featured_image ? (
                 <Image src={post.data.featured_image} alt={post.data.title} width={1200} height={600} loading="eager" fetchpriority="high" class="aspect-2/1 w-full rounded-3xl object-cover" />
@@ -159,10 +164,10 @@ const jsonLd = {
 
     <!-- Content + Table of contents -->
     <div class="mt-12 grid grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-14">
-        <!-- Sidebar TOC -->
+        <!-- Sidebar TOC (desktop) -->
         {
             toc.length > 0 && (
-                <aside class="hidden lg:col-span-3 lg:block">
+                <aside class="hidden lg:col-span-4 lg:block">
                     <div class="sticky top-6">
                         <TableOfContents headings={toc} />
                     </div>
@@ -171,12 +176,8 @@ const jsonLd = {
         }
 
         <!-- Article body -->
-        <article class:list={["post-content prose-coc min-w-0 lg:col-span-9", toc.length > 0 ? "" : "lg:col-start-3"]}>
-            {
-                bodySegments.map((segment) =>
-                    segment.type === "code" ? <CodeBlock code={segment.code} language={segment.lang} label={segment.label} /> : <div set:html={renderProse(segment.markdown)} />,
-                )
-            }
+        <article class:list={["post-content prose-coc min-w-0 lg:col-span-8", toc.length > 0 ? "" : "lg:col-start-3"]}>
+            {articleParts.map((part) => (part.kind === "prose" ? <div set:html={part.html} /> : <CodeBlock code={part.seg.code} language={part.seg.lang} label={part.seg.label} />))}
         </article>
     </div>
     <!-- Author Bio -->
@@ -284,5 +285,6 @@ const jsonLd = {
             </section>
         )
     }
-    <BackToTop client:idle />
-</BaseLayout>
+    <FloatingDock headings={toc} client:idle />
+    <ScrollAnimations />
+</PostBaseLayout>

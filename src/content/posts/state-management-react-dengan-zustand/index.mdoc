@@ -1,6 +1,6 @@
 ---
 title: "State Management React dengan Zustand"
-featured_image: https://res.cloudinary.com/dpthmmblu/image/upload/v1788714243/react-management-zustand_nqd9gx.avif
+featured_image: https://res.cloudinary.com/dpthmmblu/image/upload/v1788714243/react-management-zustand_nqd9gx.webp
 category: tutorial
 description: "Redux terlalu ribet? Zustand menawarkan state management ringan dengan API sederhana. Pelajari cara implementasi state management React menggunakan Zustand."
 publishDate: 2026-07-15
@@ -94,7 +94,7 @@ export const useUserStore = create<UserState>((set) => ({
 
 ## Best Practices
 
-### 1. Gunakan Selector untuk Performa
+#### 1. Gunakan Selector untuk Performa
 
 Selalu gunakan selector untuk menghindari re-render tidak perlu:
 
@@ -106,7 +106,7 @@ const store = useCounterStore();
 const count = useCounterStore((s) => s.count);
 ```
 
-### 2. Pisahkan Store Berdasarkan Domain
+#### 2. Pisahkan Store Berdasarkan Domain
 
 Buat store terpisah untuk fitur yang berbeda:
 
@@ -116,7 +116,7 @@ Buat store terpisah untuk fitur yang berbeda:
 // store/theme.ts
 ```
 
-### 3. Kombinasikan dengan Persist Middleware
+#### 3. Kombinasikan dengan Persist Middleware
 
 ```typescript
 import { persist } from 'zustand/middleware';

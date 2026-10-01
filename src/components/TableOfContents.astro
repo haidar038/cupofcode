@@ -19,9 +19,9 @@ const nested = tree.some((node: TocNode) => node.children.length > 0);
 
 {
     tree.length > 0 && (
-        <div class="space-y-4" data-toc>
-            <h2 class="text-sm font-bold uppercase tracking-wider text-coc-text">{title}</h2>
-            <nav aria-label="Daftar isi" data-toc-nav>
+        <div class="flex max-h-[calc(100dvh-3rem)] flex-col gap-4 rounded-3xl border border-coc-line bg-coc-surface p-6" data-toc>
+            <h2 class="shrink-0 text-sm font-bold uppercase tracking-wider text-coc-text">{title}</h2>
+            <nav aria-label="Daftar isi" data-toc-nav class="toc-scroll min-h-0 flex-1 overflow-y-auto overscroll-contain pr-1">
                 <ul class="space-y-1">
                     {tree.map((node) => (
                         <TocItem node={node} nested={nested} />
@@ -62,6 +62,21 @@ const nested = tree.some((node: TocNode) => node.children.length > 0);
     }
     .toc-toggle[aria-expanded="true"] {
         transform: rotate(90deg);
+    }
+    /* Thin scrollbars for the scrollable ToC card. */
+    .toc-scroll {
+        scrollbar-width: thin;
+        scrollbar-color: var(--color-line) transparent;
+    }
+    .toc-scroll::-webkit-scrollbar {
+        width: 6px;
+    }
+    .toc-scroll::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    .toc-scroll::-webkit-scrollbar-thumb {
+        background: var(--color-line);
+        border-radius: 9999px;
     }
 </style>
 
@@ -142,6 +157,18 @@ const nested = tree.some((node: TocNode) => node.children.length > 0);
                 }
             };
 
+            // Keep the active link inside the visible part of the scrollable
+            // nav without moving the page: adjust only nav.scrollTop.
+            const keepActiveVisible = (link: HTMLAnchorElement) => {
+                const navRect = nav.getBoundingClientRect();
+                const linkRect = link.getBoundingClientRect();
+                if (linkRect.top < navRect.top) {
+                    nav.scrollTop -= navRect.top - linkRect.top + 8;
+                } else if (linkRect.bottom > navRect.bottom) {
+                    nav.scrollTop += linkRect.bottom - navRect.bottom + 8;
+                }
+            };
+
             let raf = 0;
             let activeId = targets[0].id;
             let lastSyncedId = "";
@@ -172,7 +199,10 @@ const nested = tree.some((node: TocNode) => node.children.length > 0);
                     lastSyncedId = activeId;
                     setActive(activeId);
                     const activeLink = targets.find((t) => t.id === activeId)?.link;
-                    if (activeLink) syncPanels(activeLink);
+                    if (activeLink) {
+                        syncPanels(activeLink);
+                        keepActiveVisible(activeLink);
+                    }
                 }
             };
 

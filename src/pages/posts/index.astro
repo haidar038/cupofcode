@@ -8,6 +8,7 @@ import SearchBar from "../../components/ui/SearchBar.tsx";
 import BackToTop from "../../components/ui/BackToTop.tsx";
 import ScrollAnimations from "../../components/ScrollAnimations.astro";
 import Pagination from "../../components/Pagination.astro";
+import CategoryFilter from "../../components/CategoryFilter.astro";
 
 const POSTS_PER_PAGE = 6;
 
@@ -45,6 +46,10 @@ const searchItems = posts.map((p) => ({
     url: `/posts/${p.id}`,
     category: categoryLabel.get(p.data.category) ?? "",
 }));
+
+// Filter pills only cover article categories — "Aset Digital" is a content
+// type with its own hub page, so it is excluded (same rule as [category].astro).
+const filterCategories = categories.filter((c) => c.id !== "aset-digital");
 ---
 
 <BaseLayout
@@ -68,12 +73,13 @@ const searchItems = posts.map((p) => ({
         <SearchBar items={searchItems} placeholder="Cari artikel..." client:idle />
     </div>
 
+    <CategoryFilter categories={filterCategories} active={cat ?? undefined} basePath="/posts" />
     {
         sortedPosts.length > 0 ? (
             <section class="mx-auto max-w-7xl pb-18">
                 <div class="grid grid-cols-1 gap-y-14 gap-x-8 md:grid-cols-2 lg:grid-cols-3">
-                    {pagePosts.map((post) => (
-                        <a data-animate href={`/posts/${post.id}`} class="group block overflow-hidden transition-all duration-300">
+                    {pagePosts.map((post, i) => (
+                        <a data-animate href={`/posts/${post.id}`} class="group block overflow-hidden transition-all duration-300" style={`--d:${(i % 6) * 60}ms`}>
                             <div class="relative mb-6 aspect-391/249 w-full overflow-hidden rounded-xl bg-[#d9d9d9]">
                                 {post.data.featured_image ? (
                                     <Image

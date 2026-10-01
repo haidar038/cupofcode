@@ -457,3 +457,76 @@ export function renderProse(markdown: string): string {
 
   return blocks.map((block) => renderBlock(block)).join("\n");
 }
+
+/* ------------------------------------------------------------------ */
+/* Citations                                                           */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Link numeric citations to a reference list, Wikipedia-style.
+ *
+ * Convention (no content changes needed when authors follow it):
+ * - in-text citation: a bare `[N]` (e.g. `...lebih cepat. [1]`, `[3][4]`)
+ * - reference entry: a bold marker `**[N] Title**` followed by its URL
+ *
+ * Rendered output: every `[N]` that has a matching reference becomes
+ * `<sup><a href="#ref-N">[N]</a></sup>` (first occurrence also gets
+ * `id="cite-N"`), each reference marker gets `id="ref-N"`, and cited
+ * references grow a `↩` backlink to the text. Numbers without a matching
+ * reference (e.g. `arr[0]`) are left untouched.
+ */
+export function linkCitations(html: string): string {
+  // Split into tags / code blocks (left alone) and text runs (processed).
+  const tokens = html.split(/(<pre[\s\S]*?<\/pre>|<[^>]+>)/g);
+  const isRefMarker = (i: number): RegExpMatchArray | null =>
+    tokens[i - 1] === "<strong>" ? (tokens[i].match(/^\[(\d+)\]\s*([\s\S]*)$/) ?? null) : null;
+
+  // Pass 1: collect references (N -> title).
+  const refs = new Map<string, string>();
+  for (let i = 0; i < tokens.length; i++) {
+    if (tokens[i].startsWith("<")) continue;
+    const m = isRefMarker(i);
+    if (m) refs.set(m[1], m[2].trim());
+  }
+  if (refs.size === 0) return html;
+
+  // Pass 2: collect which references are actually cited (ref markers excluded).
+  const cited = new Set<string>();
+  const citeRe = /\[(\d+)\](?!\()/g;
+  for (let i = 0; i < tokens.length; i++) {
+    if (tokens[i].startsWith("<") || isRefMarker(i)) continue;
+    for (const m of tokens[i].matchAll(citeRe)) {
+      if (refs.has(m[1])) cited.add(m[1]);
+    }
+  }
+
+  const escAttr = (s: string) =>
+    s.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  const seen = new Set<string>();
+
+  // Pass 3: rewrite.
+  for (let i = 0; i < tokens.length; i++) {
+    if (tokens[i].startsWith("<")) continue;
+    const marker = isRefMarker(i);
+    if (marker && refs.has(marker[1])) {
+      const n = marker[1];
+      tokens[i - 1] = `<strong id="ref-${n}">`;
+      if (cited.has(n)) {
+        tokens[i] = `${tokens[i]} <a class="cite-back" href="#cite-${n}" aria-label="Kembali ke sitasi ${n}" title="Kembali ke teks">↩</a>`;
+      }
+      continue;
+    }
+    if (marker) continue;
+    tokens[i] = tokens[i].replace(citeRe, (full, n: string) => {
+      if (!refs.has(n)) return full;
+      const first = !seen.has(n);
+      seen.add(n);
+      const title = refs.get(n) ?? "";
+      const titleAttr = title ? ` title="${escAttr(title)}"` : "";
+      const idAttr = first ? ` id="cite-${n}"` : "";
+      return `<sup class="cite-ref"><a href="#ref-${n}"${idAttr}${titleAttr}>[${n}]</a></sup>`;
+    });
+  }
+
+  return tokens.join("");
+}

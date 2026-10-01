@@ -39,12 +39,12 @@ const panelId = `toc-panel-${heading.slug}`;
         <a
             href={`#${heading.slug}`}
             class:list={[
-                "toc-link flex items-start gap-3 rounded-lg px-2 py-1 text-sm leading-6 transition-colors hover:bg-coc-line-light hover:text-coc-text",
+                "toc-link flex min-w-0 flex-1 items-start gap-3 rounded-lg px-2 py-1 text-sm leading-6 transition-colors hover:bg-coc-line-light hover:text-coc-text",
                 nested && heading.depth <= 2 ? "font-medium text-coc-text" : "text-coc-muted",
             ]}
         >
             <span class="toc-dot mt-2 size-1.5 shrink-0 rounded-full bg-coc-line transition-colors" />
-            <span class="toc-text">{heading.text}</span>
+            <span class="toc-text min-w-0 break-words">{heading.text}</span>
         </a>
     </div>
 

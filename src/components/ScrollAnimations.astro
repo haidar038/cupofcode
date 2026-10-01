@@ -1,29 +1,58 @@
 <script>
-  const els = document.querySelectorAll("[data-animate]");
-  if (els.length) {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("is-visible");
-            observer.unobserve(entry.target);
-          }
-        }
-      },
-      { threshold: 0.1, rootMargin: "0px 0px -40px 0px" },
-    );
-    els.forEach((el) => observer.observe(el));
-  }
+    // Re-run on every ClientRouter navigation (astro:page-load fires on both
+    // the initial load and subsequent client-side navigations).
+    const init = () => {
+        const els = document.querySelectorAll<HTMLElement>("[data-animate]:not(.is-visible)");
+        if (!els.length) return;
+        const observer = new IntersectionObserver(
+            (entries) => {
+                for (const entry of entries) {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add("is-visible");
+                        observer.unobserve(entry.target);
+                    }
+                }
+            },
+            { threshold: 0.1, rootMargin: "0px 0px -40px 0px" },
+        );
+        els.forEach((el) => observer.observe(el));
+    };
+
+    init();
+    document.addEventListener("astro:page-load", init);
 </script>
 
 <style>
-  [data-animate] {
-    opacity: 0;
-    transform: translateY(24px);
-    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
-  }
-  [data-animate].is-visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
+    [data-animate] {
+        opacity: 0;
+        transition:
+            opacity 0.5s ease-out,
+            transform 0.5s ease-out;
+        transition-delay: var(--d, 0ms);
+    }
+    /* Variants: data-animate="fade-up" (default) | "fade" | "scale" | "slide-left" */
+    [data-animate="fade-up"],
+    [data-animate]:not([data-animate="fade"]):not([data-animate="scale"]):not([data-animate="slide-left"]) {
+        transform: translateY(24px);
+    }
+    [data-animate="fade"] {
+        transform: none;
+    }
+    [data-animate="scale"] {
+        transform: scale(0.96);
+    }
+    [data-animate="slide-left"] {
+        transform: translateX(24px);
+    }
+    [data-animate].is-visible {
+        opacity: 1;
+        transform: none;
+    }
+    @media (prefers-reduced-motion: reduce) {
+        [data-animate] {
+            opacity: 1;
+            transform: none;
+            transition: none;
+        }
+    }
 </style>

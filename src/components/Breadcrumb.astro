@@ -30,24 +30,33 @@ const breadcrumbLd = {
 };
 ---
 
-<nav class="mb-8 flex items-center gap-2 text-sm font-medium text-coc-muted" aria-label="Breadcrumb">
-    <a href="/" class="transition-colors hover:text-coc-text">Beranda</a>
-    {
-        items.map((item) => (
-            <>
-                <span class="text-xs text-coc-line" aria-hidden="true">
-                    /
-                </span>
-                {item.href ? (
-                    <a href={item.href} class="transition-colors hover:text-coc-text">
-                        {item.label}
-                    </a>
-                ) : (
-                    <span class="text-coc-text">{item.label}</span>
-                )}
-            </>
-        ))
-    }
+<nav class="mb-8 flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1 text-sm font-medium text-coc-muted" aria-label="Breadcrumb">
+    <ol class="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
+        <li class="shrink-0">
+            <a href="/" class="whitespace-nowrap transition-colors hover:text-coc-text">Beranda</a>
+        </li>
+        {
+            items.map((item, i) => {
+                const isLast = i === items.length - 1;
+                return (
+                    <li class:list={["flex min-w-0 items-center gap-2", isLast && "flex-1 basis-32"]}>
+                        <span class="shrink-0 text-xs text-coc-line" aria-hidden="true">
+                            /
+                        </span>
+                        {item.href && !isLast ? (
+                            <a href={item.href} class="shrink-0 whitespace-nowrap transition-colors hover:text-coc-text">
+                                {item.label}
+                            </a>
+                        ) : (
+                            <span class="truncate text-coc-text" title={item.label} aria-current={isLast ? "page" : undefined}>
+                                {item.label}
+                            </span>
+                        )}
+                    </li>
+                );
+            })
+        }
+    </ol>
 </nav>
 
 <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbLd)} />

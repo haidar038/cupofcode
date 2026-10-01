@@ -10,6 +10,7 @@ const posts = defineCollection({
 		description: z.string().optional(),
 		publishDate: z.coerce.date().optional(),
 		featured_image: z.string().optional(),
+		og_image: z.string().optional(),
 		featured: z.boolean().optional(),
 	}),
 });
@@ -31,6 +32,7 @@ const snippets = defineCollection({
 		description: z.string(),
 		language: z.enum(["typescript", "javascript", "css", "html"]).default("typescript"),
 		featured_image: z.string().optional(),
+		og_image: z.string().optional(),
 	}),
 });
 
@@ -49,6 +51,7 @@ const digitalAssets = defineCollection({
 		fileSize: z.string().optional(), // Untuk Component / Gem (misal: "2.4 MB")
 		variables: z.array(z.string()).optional(), // Untuk Prompt (misal: ["Tone", "Topik"])
 		featured_image: z.string().optional(),
+		og_image: z.string().optional(),
 		// URL/file download asset (dipakai untuk gate premium + tracking event)
 		downloadUrl: z
 			.string()

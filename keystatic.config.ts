@@ -39,6 +39,7 @@ export default config({
                 publishDate: fields.date({ label: "Publish Date" }),
                 featured: fields.checkbox({ label: "Featured Article", defaultValue: false }),
                 featured_image: fields.text({ label: "Featured Image URL (optional)" }),
+                og_image: fields.text({ label: "OG Image URL (optional, fallback: featured image)" }),
                 content: fields.markdoc({ label: "Content" }),
             },
         }),
@@ -82,6 +83,7 @@ export default config({
                 content: fields.markdoc({
                     label: 'Isi Kode & Dokumentasi',
                 }),
+                og_image: fields.text({ label: 'OG Image URL (Opsional, fallback: default)' }),
             },
         }),
         digitalAssets: collection({
@@ -129,6 +131,7 @@ export default config({
                 content: fields.markdoc({
                     label: 'Dokumentasi / Instruksi Utama',
                 }),
+                og_image: fields.text({ label: 'OG Image URL (Opsional, fallback: featured image)' }),
             }
         }),
     },

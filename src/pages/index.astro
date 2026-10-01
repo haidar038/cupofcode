@@ -54,8 +54,13 @@ const searchItems = allPosts.map((p) => ({
 
 <BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
     <section class="grid items-start gap-8 md:grid-cols-[minmax(0,1fr)_minmax(150px,240px)] lg:gap-12" aria-labelledby="hero-title">
-        <div class="max-w-173.75">
-            <p class="mb-3 text-sm font-semibold uppercase tracking-wide text-coc-accent">Explore Everything. Your Journey Starts Here.</p>
+        <div class="max-w-173.75" data-animate="fade-up">
+            <p class="mb-3">
+                <span class="rounded bg-coc-tag-yellow px-1 py-0.5 text-sm font-medium text-[#7a5a00] md:hidden">Explore Everything. Your Journey Starts Here.</span>
+                <span class="hidden rounded-full bg-coc-tag-yellow px-3 py-1 text-sm font-semibold uppercase tracking-wide text-coc-text md:inline-block"
+                    >Explore Everything. Your Journey Starts Here.</span
+                >
+            </p>
             <h1 id="hero-title" class="font-coc-display text-5xl leading-1.2 text-coc-text sm:text-5xl lg:text-6xl lg:leading-18">
                 Belajar Coding, Web Development, UI/UX, dan AI Bareng<span class="text-coc-accent">.</span>
             </h1>
@@ -64,7 +69,7 @@ const searchItems = allPosts.map((p) => ({
                 digital untuk membantu developer belajar serta membangun produk dengan pemahaman yang lebih baik.
             </p>
         </div>
-        <div class="pointer-events-none justify-self-end self-start hidden md:block" aria-hidden="true">
+        <div class="pointer-events-none justify-self-end self-start hidden md:block" aria-hidden="true" data-animate="scale" style="--d:120ms">
             <Image src={AvatarSVG} alt="" class="h-auto w-30 max-w-none object-contain sm:w-38 md:w-48 lg:w-60" loading="eager" />
         </div>
     </section>
@@ -177,11 +182,11 @@ const searchItems = allPosts.map((p) => ({
             <div data-home-grid>
                 <div class="grid gap-10 sm:grid-cols-2 lg:gap-x-14 lg:gap-y-12">
                     {
-                        gridArticles.map((article) => {
+                        gridArticles.map((article, i) => {
                             const gCat = categories.find((c) => c.id === article.data.category);
                             const gTone: Tone = (gCat?.data.tone as Tone) || "yellow";
                             return (
-                                <article data-animate class="flex flex-col items-start gap-5 transition hover:-translate-y-0.5">
+                                <article data-animate class="flex flex-col items-start gap-5 transition hover:-translate-y-0.5" style={`--d:${(i % 4) * 70}ms`}>
                                     <a
                                         class="flex aspect-391/249 w-full items-center justify-center overflow-hidden rounded-3xl bg-[#d9d9d9] text-[#aaa]"
                                         href={`/posts/${article.id}`}

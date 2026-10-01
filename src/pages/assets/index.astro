@@ -59,11 +59,12 @@ const searchItems = sortedAssets.map((a) => ({
         sortedAssets.length > 0 ? (
             <div class="mx-auto max-w-6xl pb-18">
                 <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-                    {pageAssets.map((asset) => (
+                    {pageAssets.map((asset, i) => (
                         <a
                             data-animate
                             href={`/assets/${asset.id}`}
                             class="group flex h-full flex-col overflow-hidden rounded-2xl border border-coc-line bg-coc-surface transition-all duration-300 hover:scale-[1.01]"
+                            style={`--d:${(i % 6) * 60}ms`}
                         >
                             <div class="relative aspect-391/249 w-full overflow-hidden bg-[#d9d9d9]">
                                 {asset.data.featured_image ? (

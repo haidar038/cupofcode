@@ -1,4 +1,4 @@
-import { SITE_DESCRIPTION, SITE_LOCALE, SITE_TITLE, SITE_URL } from "../consts";
+import { DEFAULT_OG_IMAGE, SITE_DESCRIPTION, SITE_LOCALE, SITE_TITLE, SITE_URL } from "../consts";
 
 export const AUTHOR_NAME = "Haidar";
 export const AUTHOR_ROLE = "Founder, Software Developer, dan UI/UX Designer";
@@ -11,6 +11,12 @@ export const WEBSITE_ID = `${SITE_URL}/#website`;
 export const AUTHOR_ID = `${SITE_URL}/#haidar`;
 
 export const absoluteUrl = (path: string) => new URL(path, SITE_URL).href;
+
+// OG image resolution for content pages: a custom per-entry `og_image`
+// wins, then the entry's featured image, then the global default.
+export function resolveOgImage(entry: { og_image?: string; featured_image?: string }): string {
+	return entry.og_image || entry.featured_image || DEFAULT_OG_IMAGE;
+}
 
 export function buildWebsiteGraph() {
     return {

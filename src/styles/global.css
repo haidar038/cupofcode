@@ -233,8 +233,11 @@
   margin: 2.75rem 0 1rem;
   scroll-margin-top: 6rem;
 }
-/* A heading that opens the body needs no lead-in gap. */
-.prose-coc h2:first-child {
+/* A heading that opens the body needs no lead-in gap. Scoped to the first
+   prose block of the article: prose renders as one <div> per segment
+   (split by code blocks), so a bare :first-child would also match any h2
+   that merely opens a later segment (e.g. right after a code block). */
+.prose-coc > div:first-child > h2:first-child {
   margin-top: 0;
 }
 .prose-coc h3 {
@@ -301,6 +304,53 @@
 .prose-coc a:hover {
   color: var(--color-accent);
 }
+.prose-coc .cite-ref a {
+  color: var(--color-accent);
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.prose-coc .cite-ref a:hover {
+  text-decoration: underline;
+}
+.prose-coc .cite-back {
+  margin-left: 0.5rem;
+  font-size: 0.8em;
+  white-space: nowrap;
+}
+.prose-coc [id^="ref-"],
+.prose-coc [id^="cite-"] {
+  /* Deep offset so jump targets land near the viewport center. */
+  scroll-margin-top: 42vh;
+}
+/* Citation flash: fired by native :target when a citation/backlink is
+   clicked. One-shot bounce + highlight fade so the eye catches it. */
+@keyframes cite-pop {
+  0% {
+    transform: scale(1);
+    background-color: color-mix(in srgb, var(--color-accent) 30%, transparent);
+  }
+  35% {
+    transform: scale(1.12);
+    background-color: color-mix(in srgb, var(--color-accent) 30%, transparent);
+  }
+  100% {
+    transform: scale(1);
+    background-color: transparent;
+  }
+}
+.prose-coc strong[id^="ref-"]:target,
+.prose-coc a[id^="cite-"]:target {
+  display: inline-block;
+  border-radius: 6px;
+  animation: cite-pop 1.2s ease-out 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .prose-coc strong[id^="ref-"]:target,
+  .prose-coc a[id^="cite-"]:target {
+    animation: none;
+  }
+}
 .prose-coc code {
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   font-size: 0.875em;
@@ -323,7 +373,7 @@
 }
 .prose-coc table {
   width: 100%;
-  margin: 1.5rem 0;
+  margin: 0;
   border-collapse: collapse;
   font-size: 0.9rem;
   line-height: 1.6;

@@ -12,7 +12,7 @@ import TableOfContents from "../../components/TableOfContents.astro";
 import PromptFiller from "../../components/digital-assets/PromptFiller.tsx";
 import GemsViewer from "../../components/digital-assets/GemsViewer.astro";
 import { splitBody, renderProse, extractHeadings, normalizeBodyHeadings, type CodeSegment } from "../../lib/markdown";
-import { AUTHOR_ID, AUTHOR_NAME, ORGANIZATION_ID } from "../../lib/seo";
+import { AUTHOR_ID, AUTHOR_NAME, ORGANIZATION_ID, resolveOgImage } from "../../lib/seo";
 
 export async function getStaticPaths() {
   const assets = await getCollection("digitalAssets");
@@ -92,12 +92,14 @@ const typeBadgeColors: Record<string, string> = {
 
 const siteUrl = import.meta.env.PUBLIC_SITE_URL || "https://cupofcode.cc";
 const pageUrl = new URL(`/assets/${asset.id}`, siteUrl).href;
+const ogImage = resolveOgImage(asset.data);
 const assetLd = {
   "@context": "https://schema.org",
   "@type": asset.data.type === "component" ? "SoftwareSourceCode" : "CreativeWork",
   "@id": `${pageUrl}#resource`,
   name: asset.data.title,
   description: asset.data.description,
+  image: ogImage,
   url: pageUrl,
   inLanguage: "id-ID",
   author: { "@id": AUTHOR_ID, name: AUTHOR_NAME },
@@ -110,6 +112,7 @@ const assetLd = {
 <BaseLayout
   title={`${asset.data.title} | ${SITE_TITLE}`}
   description={asset.data.description}
+  image={ogImage}
   type="article"
 >
   <script is:inline type="application/ld+json" set:html={JSON.stringify(assetLd)} />
@@ -207,7 +210,7 @@ const assetLd = {
     <div class="space-y-6 lg:col-span-4 lg:sticky lg:top-6 lg:self-start">
       {
         toc.length > 0 && (
-          <div class="hidden rounded-3xl border border-coc-line bg-coc-surface p-6 md:p-8 lg:block">
+          <div class="hidden lg:block">
             <TableOfContents headings={toc} />
           </div>
         )
