@@ -33,8 +33,8 @@
 
 ### Prasyarat
 
-- **Node.js** ≥ 22.12.0
-- **pnpm** (direkomendasikan) atau npm
+- **Node.js** ≥ 24 (sesuai `engines`)
+- **bun** (lockfile resmi: `bun.lock`)
 - **Git** untuk clone & Keystatic storage
 
 ### Instalasi
@@ -42,10 +42,10 @@
 ```bash
 git clone https://github.com/cupofcode/cupofcode.git
 cd cupofcode
-pnpm install
+bun install
 cp .env.example .env
 # Edit .env: isi PUBLIC_SITE_URL, KEYSTATIC_*, RESEND_API_KEY, dll.
-pnpm dev
+bun dev
 ```
 
 Server lokal: <http://localhost:4321>
@@ -58,7 +58,7 @@ CMS Keystatic: <http://localhost:4321/keystatic>
 
 | Layer       | Teknologi         | Catatan |
 |-------------|-------------------|---------|
-| Framework   | Astro 7.1         | SSR (server output) + Node standalone adapter |
+| Framework   | Astro 7           | SSR (server output) + Vercel adapter |
 | UI Library  | React 19          | Hanya untuk komponen interaktif (island) |
 | Styling     | Tailwind CSS 4    | CSS-first via `@tailwindcss/vite` + design tokens |
 | CMS         | Keystatic 5.1     | Dual-mode (local dev / GitHub OAuth prod) |
@@ -121,6 +121,9 @@ Salin `.env.example` ke `.env` lalu isi:
 | `RESEND_API_KEY`            | Prod   | API key Resend (tanpa ini form jadi mock) |
 | `EMAIL_FROM`                | Prod   | Sender email (mis. `Cup of Code <newsletter@cupofcode.cc>`) |
 | `EMAIL_ADMIN`               | Prod   | Email admin untuk receive contact form |
+| `RESEND_AUDIENCE_ID`        | Prod   | Audience ID Resend — simpan subscriber newsletter |
+| `UPSTASH_REDIS_REST_URL`    | Prod   | Upstash Redis REST URL — rate limit shared antar instance |
+| `UPSTASH_REDIS_REST_TOKEN`  | Prod   | Upstash Redis REST token |
 | `NEWSLETTER_RATE_LIMIT`     | Opt    | Default: `1/min` |
 | `CONTACT_RATE_LIMIT`        | Opt    | Default: `5/hour` |
 
@@ -132,17 +135,17 @@ Lihat `.env.example` untuk template lengkap.
 
 | Command            | Aksi |
 |--------------------|------|
-| `pnpm install`     | Install dependencies |
-| `pnpm dev`         | Jalankan dev server di `localhost:4321` |
-| `pnpm build`       | Build production ke `./dist/` |
-| `pnpm preview`     | Preview build lokal |
-| `pnpm astro check` | Type-check (.astro & .ts files) |
+| `bun install`      | Install dependencies |
+| `bun dev`          | Jalankan dev server di `localhost:4321` |
+| `bun run build`    | Build production ke `./dist/` |
+| `bun run preview`  | Preview build lokal |
+| `bunx astro check` | Type-check (.astro & .ts files) |
 
 ---
 
 ## ✍️ Kontribusi Konten (via Keystatic)
 
-1. Jalankan `pnpm dev`
+1. Jalankan `bun dev`
 2. Buka <http://localhost:4321/keystatic>
 3. Login (mode local dev: tanpa OAuth)
 4. Buat/edit post / snippet / digital asset
@@ -154,19 +157,13 @@ Untuk production, Keystatic menggunakan GitHub OAuth — kontributor non-develop
 
 ## 🚢 Deployment
 
-Project ini menggunakan **PM2 + nginx** di VPS. Lihat [`docs/PRE-PRODUCTION-SPRINTS.md`](docs/PRE-PRODUCTION-SPRINTS.md) untuk detail.
+Project ini di-deploy ke **Vercel** (SSR via `@astrojs/vercel`): setiap push ke `main` otomatis di-build dan di-deploy.
 
-```bash
-# Di server produksi
-cd /var/www/cupofcode
-git pull origin main
-pnpm install --frozen-lockfile
-pnpm build
-pm2 restart ecosystem.config.cjs
-sudo nginx -s reload
-```
+- **Security headers & CSP** diset di [`vercel.json`](vercel.json) agar menjangkau SEMUA response, termasuk halaman prerendered yang bypass middleware Astro (`src/middleware.ts` hanya backup `X-Robots-Tag` untuk route SSR).
+- **Environment variables** diset di Vercel dashboard — `UPSTASH_*` + `RESEND_AUDIENCE_ID` wajib diisi agar rate limit & newsletter berfungsi di production.
+- **CI** (`.github/workflows/ci-cd.yml`) hanya quality gate: `bun install --frozen-lockfile` → `astro check` → `build`.
 
-**Nginx wajib** mirror SEMUA security headers dari `src/middleware.ts` — middleware Astro hanya cover route SSR, halaman prerendered served sebagai static file bypass middleware.
+> Catatan: sebagian besar file di `docs/` ter-track di git, tapi rule `docs` di `.gitignore` membuat file docs **baru** (mis. `docs/cupofcode-feed-integration.md`) tidak ikut ter-commit — kondisi setengah jadi yang perlu dirapikan (track semua atau untrack semua).
 
 Lihat [Codebase Review 2026-08-30](docs/review/CODEBASE-REVIEW-2026-08-30.md) untuk checklist produksi lengkap.
 

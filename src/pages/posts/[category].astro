@@ -1,5 +1,4 @@
 ---
-export const prerender = true;
 import { Image } from "astro:assets";
 import { getCollection } from "astro:content";
 import { getPublishedPosts } from "../../lib/content";
@@ -15,25 +14,26 @@ import { SITE_TITLE, SITE_URL } from "../../consts";
 
 const POSTS_PER_PAGE = 6;
 
-export async function getStaticPaths() {
-    const [categories, posts] = await Promise.all([getCollection("categories"), getPublishedPosts()]);
+// SSR (bukan prerender): halaman ini membaca `?page=` dari searchParams,
+// yang selalu kosong saat build statis sehingga pagination tidak pernah
+// maju dari halaman 1 (audit 2026-10-29, M1).
+const { category: categoryId } = Astro.params;
 
-    return categories
-        .filter((category) => category.id !== "aset-digital")
-        .map((category) => ({
-            params: { category: category.id },
-            props: {
-                category,
-                posts: posts.filter((post) => post.data.category === category.id).sort((a, b) => (b.data.publishDate?.getTime() ?? 0) - (a.data.publishDate?.getTime() ?? 0)),
-            },
-        }));
+// "Aset Digital" is a content type, not a post category — route it to /assets.
+if (categoryId === "aset-digital") {
+    return Astro.redirect("/assets");
 }
 
-const { category, posts } = Astro.props;
+const categories = await getCollection("categories");
+const category = categories.find((c) => c.id === categoryId);
+// Kategori tak dikenal: balik ke daftar artikel.
+if (!category) {
+    return Astro.redirect("/posts");
+}
 
 // Same sidebar-free layout as /posts: search + category pills + thumbnail grid.
 const allPosts = await getPublishedPosts();
-const categories = await getCollection("categories");
+const posts = allPosts.filter((p) => p.data.category === category.id);
 const filterCategories = categories.filter((c) => c.id !== "aset-digital");
 const categoryLabel = new Map(categories.map((c) => [c.id, c.data.label] as const));
 const searchItems = allPosts.map((p) => ({

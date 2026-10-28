@@ -83,7 +83,7 @@
 - [x] **3.4** Populate Digital Assets — Gems: `ux-writing-assistant` dengan system instructions, cara penggunaan, contoh transformasi teks, knowledge base
 - [x] **3.5** Add Blog Posts — 3 artikel baru: setup Tailwind CSS di Vite, state management Zustand, best practices keamanan Node.js (total 5 artikel)
 - [x] **3.6** Featured Image Strategy — Standarisasi featured_image dengan fallback, tampilkan gambar real dari Unsplash di card listing
-- [x] **3.7** Author Bio — Section author di footer artikel (avatar, bio, social links)
+- [x] **3.7** Author Bio — Section author di footer artikel (avatar, bio, social links) *(di-revert: block dikomentarkan lalu dihapus pada Sprint Audit Remediation 2026-10-29 — fitur tidak pernah aktif di UI)*
 - [x] **3.8** Table of Contents — Auto-generate dari heading h2 (sudah berfungsi)
 - [x] **3.9** Reading Time Estimator — Hitung estimasi baca dari word count (200 kata/menit), tampilkan di header artikel
 - [x] **3.10** Related Posts — Priority berdasarkan kategori yang sama, fallback ke post lain
@@ -134,7 +134,7 @@
 - **Structured data** (JSON-LD Article) ditambahkan di post detail page dengan properti headline, description, image, datePublished, author, publisher, wordCount, timeRequired
 - **RSS Feed** tersedia di `/rss.xml` dengan semua blog posts
 - **Halaman legal** (`/privacy`, `/terms`) sudah terhubung di Footer
-- **Footer** diperbarui: link Privacy Policy dan Terms of Services现在 menjadi link aktif menuju halaman masing-masing
+- **Footer** diperbarui: link Privacy Policy dan Terms of Services kini menjadi link aktif menuju halaman masing-masing
 - **`ecosystem.config.cjs`** dibuat untuk PM2 production deployment
 
 ---
@@ -257,6 +257,35 @@
 
 ---
 
+## [Audit Remediation Sprint] — Critical, High, Medium & Low (2026-10-29)
+
+**Status:** ✅ Selesai (2026-10-29)
+**Sumber:** Audit codebase 2026-10-29 (Critical C1–C2, High H1–H4, Medium M1–M5, Low) — lanjutan `docs/review/CODEBASE-REVIEW-2026-08-30.md`
+
+### Task List
+
+- [x] **C1** Contact form — isi pesan kini dikirim ke admin (`to: EMAIL_ADMIN`, `reply_to` = pengunjung); response Resend dicek, gagal → 500 + Sentry (sebelumnya: email hanya balik ke pengunjung & kegagalan diabaikan)
+- [x] **C2** CSP-lite di `vercel.json` — script/style masih `'unsafe-inline'` (upgrade strict = backlog), tapi `object-src 'none'`, `base-uri 'self'`, `frame-ancestors 'none'`, `form-action 'self'` + allowlist img/connect/font/script origin
+- [x] **H1** Rate limit → Upstash Redis (`@upstash/ratelimit`, sliding window) — efektif di Vercel serverless; fallback in-memory saat env kosong/error; limit kini baca `NEWSLETTER_RATE_LIMIT` / `CONTACT_RATE_LIMIT`
+- [x] **H2** Newsletter simpan subscriber ke Resend Audience (`RESEND_AUDIENCE_ID`) — duplikat = sukses; gagal simpan non-blocking + Sentry (sebelumnya tidak ada penyimpanan sama sekali)
+- [x] **H3** CI jadi quality gate (bun, Node 24) — job deploy SCP+PM2 dihapus (deployment kini Vercel; `ecosystem.config.cjs` sudah lama dihapus); `package-lock.json` stale dihapus, `bun.lock` jadi lockfile resmi
+- [x] **H4** Filter post terbit terpusat (`src/lib/content.ts` → `getPublishedPosts()`) di RSS, catalog API, portfolio-feed, dan semua route prerendered — post future-date tidak bocor lagi (diverifikasi: catalog/RSS/home/detail 404)
+- [x] **M1** `/posts/[category]` → SSR agar `?page=` berfungsi (prerender + searchParams = pagination mati di halaman 1)
+- [x] **M2** Helper API diekstrak ke `src/lib/http.ts` (`json`, `rateLimit`, `getClientIp`, `parseRateLimit`)
+- [x] **M3** Dead code commented-out dihapus (author bio di post detail, "Dibuat oleh" di asset detail); klaim Fase 3.7 dikoreksi
+- [x] **M4** Keystatic: posts `path: 'src/content/posts/*/'` & digitalAssets `'**/'` — **bug nyata**: dengan pola lama, admin Keystatic tidak melihat 6 post & 3 aset existing (diverifikasi via `reader()`: 6/3/2)
+- [x] **M5** Typo CJK ("现在") di dokumen ini dihapus
+- [x] **Low** Hint `astro check` (unused `focusAreas` & `AUTHOR_ROLE` di `about.astro`) dibersihkan → target 0 error / 0 warning / 0 hint
+- [x] **Docs** Deployment README ditulis ulang (Vercel, bukan PM2/nginx VPS); `.env.example` + tabel env diperbarui; `SITE_VERSION` di `consts.ts` jadi single source untuk `/api/health`
+
+### Catatan penting
+
+- **Prasyarat production (manual):** set `UPSTASH_REDIS_REST_URL` + `UPSTASH_REDIS_REST_TOKEN` (Upstash) dan `RESEND_AUDIENCE_ID` (Resend → Audiences) di Vercel.
+- CSP masih `-lite`: upgrade ke strict hash/nonce via Astro `security.csp` ada di backlog (JSON-LD dinamis per halaman + `define:vars` perlu hash per-render).
+- `/keystatic` ikut kena CSP `/(.*)` — diverifikasi setelah deploy; kalau admin UI melanggar, evaluasi rule terpisah.
+
+---
+
 ## Riwayat Rilis
 
 | Versi | Tanggal | Fase | Deskripsi |
@@ -270,6 +299,7 @@
 | `v1.1.1` | 2026-07-30 | Scope | **De-scope:** hapus Learning Pathways & Roadmap (arah = content-driven blog, bukan LMS) |
 | `v1.1.2` | 2026-07-30 | Scope | Hapus dark mode (branding light-only); hapus ThemeToggle, FOUC script, palet dark CSS |
 | `v1.0.0-rc.3` | 2026-07-30 | Pre-Prod S1–S5 | Bug fix, SEO deep fix, performance, polish, pre-launch verification (0 error, CSP, rekonsiliasi dokumen) |
+| `v1.2.0` | 2026-10-29 | Audit Remediation | C1 contact ke admin, CSP-lite, Upstash rate limit, Resend Audience subscriber, published filter terpusat, Keystatic path fix, SSR kategori, CI quality gate |
 
 ---
 

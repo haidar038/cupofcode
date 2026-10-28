@@ -4,17 +4,9 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import { Image } from "astro:assets";
 import { BookOpen, Eye, Globe } from "@lucide/astro";
 import { SITE_TITLE } from "../consts";
-import { AUTHOR_BIO, AUTHOR_NAME, AUTHOR_ROLE } from "../lib/seo";
+import { AUTHOR_BIO, AUTHOR_NAME } from "../lib/seo";
 
 const heroImage = "https://res.cloudinary.com/dpthmmblu/image/upload/v1789532617/coc-about_ret6to.avif";
-const focusAreas = [
-    "Full-Stack & Web Development",
-    "React, TypeScript & Modern JavaScript",
-    "UI/UX & Interface Design",
-    "AI & AI-assisted Development",
-    "Product Engineering",
-    "Developer Tools & Workflow",
-];
 ---
 
 <BaseLayout title={`Tentang - ${SITE_TITLE}`} description="Kenali Cup of Code, visi, dan fokus konten yang dibagikan.">

@@ -6,14 +6,15 @@
  * @route GET /api/health
  */
 
+import { SITE_VERSION } from "../../consts";
+
 const BOOT_TIME = Date.now();
-const VERSION = "1.1.2";
 
 export async function GET(): Promise<Response> {
   return new Response(
     JSON.stringify({
       status: "ok",
-      version: VERSION,
+      version: SITE_VERSION,
       uptime: Math.floor((Date.now() - BOOT_TIME) / 1000),
       ts: new Date().toISOString(),
     }),
