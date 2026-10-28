@@ -1,7 +1,7 @@
 import { defineMiddleware } from 'astro:middleware';
 
 /**
- * Catatan: Di Vercel, security headers (HSTS, X-Frame-Options, CSP, dll.)
+ * Catatan: Di Vercel, security headers (CSP-lite, HSTS, X-Frame-Options, dll.)
  * diset via `vercel.json` agar menjangkau SEMUA response — termasuk
  * halaman prerendered. Middleware Astro ini hanya jalan untuk route
  * SSR, jadi tidak bisa menjadi sumber tunggal.

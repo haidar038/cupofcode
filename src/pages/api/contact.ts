@@ -1,16 +1,17 @@
 import type { APIRoute } from "astro";
 import * as Sentry from "@sentry/astro";
+import { getClientIp, json, rateLimit } from "../../lib/http";
 
 const ALLOWED_SUBJECTS = ["diskusi", "kerjasama", "lainnya"] as const;
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const RESEND_ENDPOINT = "https://api.resend.com/emails";
 
-function json(data: unknown, status: number) {
-  return new Response(JSON.stringify(data), {
-    status,
-    headers: { "Cache-Control": "no-store", "Content-Type": "application/json" },
-  });
-}
+const escapeHtml = (s: string) =>
+	s
+		.replace(/&/g, "&amp;")
+		.replace(/</g, "&lt;")
+		.replace(/>/g, "&gt;")
+		.replace(/"/g, "&quot;");
 
 export const POST: APIRoute = async ({ request }) => {
   try {
@@ -49,15 +50,18 @@ export const POST: APIRoute = async ({ request }) => {
       return json({ success: true, message: `Halo ${cleanName}! Mock success.` }, 200);
     }
 
+    // Isi pesan dikirim ke admin (reply_to = pengunjung, biar tinggal reply).
+    // Sebelumnya email hanya dikirim balik ke pengunjung, jadi admin tidak
+    // pernah menerima pesannya.
     const payload = {
       from: emailFrom,
-      to: cleanEmail,
-      reply_to: emailAdmin,
-      subject: "Kami terima pesanmu 🙌",
-      html: `<p>Halo ${cleanName},</p><p>Pesan kamu sudah kami teruskan, kami akan balas secepatnya.</p>`,
+      to: emailAdmin,
+      reply_to: cleanEmail,
+      subject: `[Contact] ${cleanSubject} — ${cleanName}`,
+      html: `<p><strong>Nama:</strong> ${escapeHtml(cleanName)}</p><p><strong>Email:</strong> ${escapeHtml(cleanEmail)}</p><p><strong>Subjek:</strong> ${escapeHtml(cleanSubject)}</p><p><strong>Pesan:</strong></p><p>${escapeHtml(cleanMessage).replace(/\n/g, "<br>")}</p>`,
     };
 
-    await fetch(RESEND_ENDPOINT, {
+    const resp = await fetch(RESEND_ENDPOINT, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -66,6 +70,12 @@ export const POST: APIRoute = async ({ request }) => {
       body: JSON.stringify(payload),
     });
 
+    if (!resp.ok) {
+      const errText = await resp.text();
+      Sentry.captureException(new Error(`Resend Error ${resp.status}: ${errText}`));
+      return json({ success: false, message: "Terjadi kesalahan koneksi." }, 500);
+    }
+
     return json({ success: true, message: "Pesan berhasil dikirim." }, 200);
   } catch (err) {
     console.error("[Contact] Exception:", err);
@@ -73,24 +83,3 @@ export const POST: APIRoute = async ({ request }) => {
     return json({ success: false, message: "Terjadi kesalahan koneksi." }, 500);
   }
 };
-
-function rateLimit(key: string, limit: number, windowMs: number): boolean {
-  const store = (globalThis as any).__rateLimitStore ??= new Map();
-  const now = Date.now();
-  const bucket = store.get(key);
-  if (!bucket || bucket.resetAt <= now) {
-    store.set(key, { count: 1, resetAt: now + windowMs });
-    return true;
-  }
-  if (bucket.count >= limit) return false;
-  bucket.count += 1;
-  return true;
-}
-
-function getClientIp(request: Request): string {
-  return (
-    request.headers.get("x-forwarded-for")?.split(",")[0].trim() ??
-    request.headers.get("x-real-ip") ??
-    "unknown"
-  );
-}

@@ -1,5 +1,6 @@
 import type { APIRoute } from "astro";
 import * as Sentry from "@sentry/astro";
+import { getClientIp, json, rateLimit } from "../../lib/http";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const RESEND_ENDPOINT = "https://api.resend.com/emails";
@@ -15,27 +16,18 @@ export const POST: APIRoute = async ({ request }) => {
     const emailFrom = import.meta.env.EMAIL_FROM ?? "Cup of Code <newsletter@cupofcode.cc>";
 
     if (!email || !EMAIL_RE.test(email)) {
-      return new Response(JSON.stringify({ success: false, message: "Email tidak valid." }), {
-        status: 400,
-        headers: { "Content-Type": "application/json" },
-      });
+      return json({ success: false, message: "Email tidak valid." }, 400);
     }
 
     // Rate limit newsletter: 1/minute per IP
     if (!rateLimit(`newsletter:${ip}`, 1, 60_000)) {
-      return new Response(JSON.stringify({ success: false, message: "Terlalu banyak request." }), {
-        status: 429,
-        headers: { "Content-Type": "application/json" },
-      });
+      return json({ success: false, message: "Terlalu banyak request." }, 429);
     }
 
     // Mock Mode jika env tidak setup
     if (!resendApiKey) {
       console.log(`[Newsletter] API Key belum aktif: ${email} pada IP ${ip}`);
-      return new Response(JSON.stringify({ success: true, message: "Registrasi sukses (Mock)." }), {
-        status: 200,
-        headers: { "Content-Type": "application/json" },
-      });
+      return json({ success: true, message: "Registrasi sukses (Mock)." }, 200);
     }
 
     const payload = {
@@ -67,38 +59,10 @@ export const POST: APIRoute = async ({ request }) => {
       throw new Error(`Gagal kirim email penyedia: ${errText}`);
     }
 
-    return new Response(JSON.stringify({ success: true, message: "Konfirmasi email berhasil dikirim!" }), {
-      status: 200,
-      headers: { "Content-Type": "application/json" },
-    });
+    return json({ success: true, message: "Konfirmasi email berhasil dikirim!" }, 200);
   } catch (err) {
     console.error("[Newsletter] Exception:", err);
     Sentry.captureException(err);
-    return new Response(JSON.stringify({ success: false, message: "Terjadi kesalahan internal." }), {
-      status: 500,
-      headers: { "Content-Type": "application/json" },
-    });
+    return json({ success: false, message: "Terjadi kesalahan internal." }, 500);
   }
 };
-
-function rateLimit(key: string, limit: number, windowMs: number): boolean {
-  const store = (globalThis as any).__rateLimitStore ??= new Map();
-  const now = Date.now();
-  const bucket = store.get(key);
-
-  if (!bucket || bucket.resetAt <= now) {
-    store.set(key, { count: 1, resetAt: now + windowMs });
-    return true;
-  }
-  if (bucket.count >= limit) return false;
-  bucket.count += 1;
-  return true;
-}
-
-function getClientIp(request: Request): string {
-  return (
-    request.headers.get("x-forwarded-for")?.split(",")[0].trim() ??
-    request.headers.get("x-real-ip") ??
-    "unknown"
-  );
-}
