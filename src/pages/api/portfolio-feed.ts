@@ -1,6 +1,7 @@
 import type { APIRoute } from "astro";
 import { getCollection } from "astro:content";
 import { SITE_URL } from "../../consts";
+import { getPublishedPosts } from "../../lib/content";
 
 const DEFAULT_LIMIT = 6;
 const MAX_LIMIT = 10;
@@ -12,12 +13,9 @@ export const GET: APIRoute = async ({ url }) => {
   const limit = Number.isFinite(requestedLimit)
     ? Math.min(Math.max(requestedLimit, 1), MAX_LIMIT)
     : DEFAULT_LIMIT;
-  const now = new Date();
 
   const [posts, categories] = await Promise.all([
-    getCollection("posts", ({ data }) =>
-      Boolean(data.publishDate && data.publishDate <= now),
-    ),
+    getPublishedPosts(),
     getCollection("categories"),
   ]);
 
@@ -25,12 +23,7 @@ export const GET: APIRoute = async ({ url }) => {
     categories.map((category) => [category.id, category.data.label]),
   );
 
-  const items = [...posts]
-    .sort(
-      (a, b) =>
-        (b.data.publishDate?.getTime() ?? 0) -
-        (a.data.publishDate?.getTime() ?? 0),
-    )
+  const items = posts
     .slice(0, limit)
     .map((post) => ({
       id: post.id,

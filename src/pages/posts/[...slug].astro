@@ -1,7 +1,8 @@
 ---
 export const prerender = true;
 import { Image } from "astro:assets";
-import { getCollection, getEntry } from "astro:content";
+import { getEntry } from "astro:content";
+import { getPublishedPosts } from "../../lib/content";
 import PostBaseLayout from "../../layouts/PostBaseLayout.astro";
 import AuthorAvatar from "../../assets/coc-emblem.svg";
 import FeaturedImage from "../../assets/blog-placeholder-1.jpg";
@@ -16,7 +17,7 @@ import TableOfContents from "../../components/TableOfContents.astro";
 import { splitBody, renderProse, extractHeadings, normalizeBodyHeadings, linkCitations, type CodeSegment } from "../../lib/markdown";
 
 export async function getStaticPaths() {
-    const posts = await getCollection("posts");
+    const posts = await getPublishedPosts();
     return posts.map((post) => ({
         params: { slug: post.id },
         props: { post },
@@ -48,7 +49,7 @@ const toneClass: Record<string, string> = {
     pink: "bg-coc-tag-pink",
 };
 
-const allPosts = await getCollection("posts");
+const allPosts = await getPublishedPosts();
 const sameCategory = allPosts.filter((p) => p.id !== post.id && p.data.category === post.data.category);
 const otherPosts = allPosts.filter((p) => p.id !== post.id && p.data.category !== post.data.category);
 const related = [...sameCategory, ...otherPosts].slice(0, 3);

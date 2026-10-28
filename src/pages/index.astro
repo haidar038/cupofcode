@@ -6,6 +6,7 @@ import AvatarSVG from "../assets/avatar.svg";
 import { SITE_DESCRIPTION, SITE_TITLE } from "../consts";
 import { ImageIcon } from "@lucide/astro";
 import { getCollection } from "astro:content";
+import { getPublishedPosts } from "../lib/content";
 import { Image } from "astro:assets";
 import SearchBar from "../components/ui/SearchBar.tsx";
 import BackToTop from "../components/ui/BackToTop.tsx";
@@ -14,7 +15,7 @@ import ScrollAnimations from "../components/ScrollAnimations.astro";
 type Tone = "yellow" | "green" | "pink";
 
 const categories = await getCollection("categories");
-const allPosts = await getCollection("posts");
+const allPosts = await getPublishedPosts();
 const featuredPosts = allPosts.filter((p) => p.data.featured);
 const featuredArticle = featuredPosts.length > 0 ? featuredPosts[0] : allPosts[0];
 const gridArticles = allPosts.filter((p) => p.id !== featuredArticle?.id).slice(0, 4);

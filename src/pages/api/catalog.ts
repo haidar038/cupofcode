@@ -1,5 +1,6 @@
 import type { APIRoute } from "astro";
 import { getCollection } from "astro:content";
+import { getPublishedPosts } from "../../lib/content";
 
 const typeLabels: Record<string, string> = {
   component: "UI Component",
@@ -33,7 +34,7 @@ export const GET: APIRoute = async ({ url }) => {
   }
 
   const [posts, categories] = await Promise.all([
-    getCollection("posts"),
+    getPublishedPosts(),
     getCollection("categories"),
   ]);
 

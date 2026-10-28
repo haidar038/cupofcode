@@ -1,6 +1,6 @@
 import type { APIRoute } from "astro";
 import * as Sentry from "@sentry/astro";
-import { getClientIp, json, rateLimit } from "../../lib/http";
+import { getClientIp, json, parseRateLimit, rateLimit } from "../../lib/http";
 
 const ALLOWED_SUBJECTS = ["diskusi", "kerjasama", "lainnya"] as const;
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -40,8 +40,12 @@ export const POST: APIRoute = async ({ request }) => {
     const emailFrom = import.meta.env.EMAIL_FROM ?? "Cup of Code <hello@cupofcode.cc>";
     const emailAdmin = import.meta.env.EMAIL_ADMIN ?? "admin@cupofcode.cc";
 
-    // Rate limit contact: 5 reqs/hour
-    if (!rateLimit(`contact:${ip}`, 5, 3_600_000)) {
+    // Rate limit contact: default 5 reqs/hour per IP (env CONTACT_RATE_LIMIT)
+    const { limit, windowMs } = parseRateLimit(import.meta.env.CONTACT_RATE_LIMIT, {
+      limit: 5,
+      windowMs: 3_600_000,
+    });
+    if (!(await rateLimit(`contact:${ip}`, limit, windowMs))) {
       return json({ success: false, message: "Jumlah pengiriman terlalu banyak." }, 429);
     }
 

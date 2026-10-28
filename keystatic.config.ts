@@ -22,7 +22,10 @@ export default config({
         posts: collection({
             label: "Posts",
             slugField: "title",
-            path: "src/content/posts/*",
+            // Trailing slash = layout direktori `<slug>/index.mdoc` (sama dengan
+            // snippets & disk). Tanpa slash, Keystatic mengharapkan file flat
+            // `<slug>.mdoc` dan list admin jadi kosong.
+            path: "src/content/posts/*/",
             format: { contentField: "content" },
             schema: {
                 title: fields.slug({ name: { label: "Title" } }),
@@ -89,7 +92,9 @@ export default config({
         digitalAssets: collection({
             label: 'Digital Assets',
             slugField: 'title',
-            path: 'src/content/digital-assets/*/',
+            // `**/` untuk layout nested `<type>/<slug>/index.mdoc`
+            // (gems/…, prompts/…, ui-components/…); `*/` hanya satu level.
+            path: 'src/content/digital-assets/**/',
             format: { contentField: 'content' },
             schema: {
                 title: fields.slug({ name: { label: 'Nama Aset' } }),

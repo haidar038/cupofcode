@@ -1,9 +1,10 @@
 import type { APIRoute } from "astro";
 import * as Sentry from "@sentry/astro";
-import { getClientIp, json, rateLimit } from "../../lib/http";
+import { getClientIp, json, parseRateLimit, rateLimit } from "../../lib/http";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const RESEND_ENDPOINT = "https://api.resend.com/emails";
+const RESEND_CONTACTS_ENDPOINT = "https://api.resend.com/contacts";
 
 export const POST: APIRoute = async ({ request }) => {
   try {
@@ -19,8 +20,12 @@ export const POST: APIRoute = async ({ request }) => {
       return json({ success: false, message: "Email tidak valid." }, 400);
     }
 
-    // Rate limit newsletter: 1/minute per IP
-    if (!rateLimit(`newsletter:${ip}`, 1, 60_000)) {
+    // Rate limit newsletter: default 1/minute per IP (env NEWSLETTER_RATE_LIMIT)
+    const { limit, windowMs } = parseRateLimit(import.meta.env.NEWSLETTER_RATE_LIMIT, {
+      limit: 1,
+      windowMs: 60_000,
+    });
+    if (!(await rateLimit(`newsletter:${ip}`, limit, windowMs))) {
       return json({ success: false, message: "Terlalu banyak request." }, 429);
     }
 
@@ -28,6 +33,40 @@ export const POST: APIRoute = async ({ request }) => {
     if (!resendApiKey) {
       console.log(`[Newsletter] API Key belum aktif: ${email} pada IP ${ip}`);
       return json({ success: true, message: "Registrasi sukses (Mock)." }, 200);
+    }
+
+    // Simpan subscriber ke Resend Audience agar ada mailing list yang
+    // persisten (sebelumnya email welcome dikirim tanpa menyimpan alamat).
+    // Duplikat dianggap sukses; kegagalan lain non-blocking — welcome email
+    // tetap terkirim dan error dicatat ke Sentry.
+    const audienceId = import.meta.env.RESEND_AUDIENCE_ID;
+    if (audienceId) {
+      try {
+        const contactResp = await fetch(RESEND_CONTACTS_ENDPOINT, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${resendApiKey}`,
+          },
+          body: JSON.stringify({ email, audience_id: audienceId, unsubscribed: false }),
+        });
+        if (!contactResp.ok) {
+          const contactErr = await contactResp.text();
+          if (contactResp.status === 409 || /already (exists|subscribed)/i.test(contactErr)) {
+            // Sudah terdaftar — bukan error.
+          } else {
+            Sentry.captureException(
+              new Error(`Resend Contacts Error ${contactResp.status}: ${contactErr}`),
+            );
+          }
+        }
+      } catch (contactErr) {
+        Sentry.captureException(contactErr);
+      }
+    } else {
+      console.warn(
+        "[Newsletter] RESEND_AUDIENCE_ID tidak diset — subscriber tidak disimpan ke Audience.",
+      );
     }
 
     const payload = {

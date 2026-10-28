@@ -3,6 +3,9 @@
  * extraction, and rate limiting.
  */
 
+import { Ratelimit } from "@upstash/ratelimit";
+import { Redis } from "@upstash/redis";
+
 export function json(data: unknown, status: number): Response {
 	return new Response(JSON.stringify(data), {
 		status,
@@ -18,17 +21,30 @@ export function getClientIp(request: Request): string {
 	);
 }
 
+/* ------------------------------------------------------------------ */
+/* Rate limiting                                                       */
+/* ------------------------------------------------------------------ */
+
+const UPSTASH_URL = import.meta.env.UPSTASH_REDIS_REST_URL;
+const UPSTASH_TOKEN = import.meta.env.UPSTASH_REDIS_REST_TOKEN;
+
+let redis: Redis | null = null;
+function getRedis(): Redis | null {
+	if (!UPSTASH_URL || !UPSTASH_TOKEN) return null;
+	redis ??= new Redis({ url: UPSTASH_URL, token: UPSTASH_TOKEN });
+	return redis;
+}
+
 interface RateBucket {
 	count: number;
 	resetAt: number;
 }
 
 /**
- * Fixed-window rate limiter. Without Upstash env vars this runs on an
- * in-memory Map — per serverless instance, wiped on cold start (fine for
- * local dev; see docs for the production caveat).
+ * In-memory fallback: per serverless instance, wiped on cold start. Fine for
+ * local dev; not an effective limit in production (that's Upstash's job).
  */
-export function rateLimit(key: string, limit: number, windowMs: number): boolean {
+function memoryRateLimit(key: string, limit: number, windowMs: number): boolean {
 	const store = ((globalThis as any).__rateLimitStore ??= new Map<string, RateBucket>()) as Map<
 		string,
 		RateBucket
@@ -43,6 +59,36 @@ export function rateLimit(key: string, limit: number, windowMs: number): boolean
 	if (bucket.count >= limit) return false;
 	bucket.count += 1;
 	return true;
+}
+
+/**
+ * Fixed-window rate limiter keyed per endpoint + IP ("newsletter:1.2.3.4").
+ * With `UPSTASH_REDIS_REST_URL`/`UPSTASH_REDIS_REST_TOKEN` set, buckets live
+ * in Redis so the limit holds across serverless instances and cold starts.
+ * Falls back to the in-memory Map when Upstash is not configured — and on
+ * transient Upstash errors, so an outage never bricks the forms.
+ */
+export async function rateLimit(
+	key: string,
+	limit: number,
+	windowMs: number,
+): Promise<boolean> {
+	const r = getRedis();
+	if (!r) return memoryRateLimit(key, limit, windowMs);
+
+	try {
+		const limiter = new Ratelimit({
+			redis: r,
+			// Upstash duration tokens are seconds-resolution ("10 s").
+			limiter: Ratelimit.slidingWindow(limit, `${Math.max(1, Math.ceil(windowMs / 1000))} s`),
+			prefix: "coc:rl",
+		});
+		const { success } = await limiter.limit(key);
+		return success;
+	} catch (err) {
+		console.error("[RateLimit] Upstash error, falling back to in-memory:", err);
+		return memoryRateLimit(key, limit, windowMs);
+	}
 }
 
 const RATE_LIMIT_RE = /^(\d+)\s*\/\s*(min(?:ute)?|hour|jam)$/i;
