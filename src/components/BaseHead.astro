@@ -54,13 +54,24 @@ const gaId = import.meta.env.PUBLIC_GA_ID;
 <!-- Google Search Console Verification -->
 {import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION && <meta name="google-site-verification" content={import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION} />}
 
-<!-- Web Fonts: preconnect + stylesheet (display=swap cegah FOIT) -->
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cal+Sans&family=Inter:wght@400;500;600;700&display=swap" />
+<!-- Web Fonts: preconnect + preload + stylesheet. Di-emit via set:html agar
+     "&" pada URL tidak ter-escape jadi "&amp;" — beberapa tool audit memecah
+     href mentah per "&" sehingga membaca parameter "amp;display" dan
+     menganggap display=swap hilang. -->
+<Fragment
+    set:html={[
+        '<link rel="preconnect" href="https://fonts.googleapis.com" />',
+        '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />',
+        '<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cal+Sans&family=Inter:wght@400;500;600;700&display=swap" />',
+        '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cal+Sans&family=Inter:wght@400;500;600;700&display=swap" />',
+    ].join("\n    ")}
+/>
 
 <!-- Canonical URL -->
 <link rel="canonical" href={canonicalURL} />
+
+<!-- AI/GEO: konvensi llms.txt (file statis di /llms.txt) -->
+<link rel="llms" href="/llms.txt" />
 
 <!-- Primary Meta Tags -->
 <title>{title}</title>

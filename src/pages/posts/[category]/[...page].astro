@@ -1,7 +1,8 @@
 ---
 export const prerender = true;
+import type { GetStaticPaths, Page } from "astro";
 import { Image } from "astro:assets";
-import { getCollection } from "astro:content";
+import { getCollection, type CollectionEntry } from "astro:content";
 import { getPublishedPosts } from "../../../lib/content";
 import BaseLayout from "../../../layouts/BaseLayout.astro";
 import { ImageIcon } from "@lucide/astro";
@@ -13,6 +14,11 @@ import BackToTop from "../../../components/ui/BackToTop.tsx";
 import ScrollAnimations from "../../../components/ScrollAnimations.astro";
 import { SITE_TITLE, SITE_URL } from "../../../consts";
 
+type Props = {
+    category: CollectionEntry<"categories">;
+    page: Page<CollectionEntry<"posts">>;
+};
+
 // Prerendered path-based pagination (/posts/{kategori}, /posts/{kategori}/2).
 // Halaman kategori sebelumnya SSR sehingga tidak pernah masuk sitemap
 // (integrasi @astrojs/sitemap hanya mencakup route prerendered); dengan
@@ -21,7 +27,7 @@ import { SITE_TITLE, SITE_URL } from "../../../consts";
 // hub sendiri di /assets. Kategori tak dikenal kini 404 (sebelumnya redirect).
 // Catatan: konstanta didefinisikan di dalam getStaticPaths — deklarasi
 // top-level frontmatter tidak ikut ter-bundle ke chunk prerender Astro.
-export async function getStaticPaths({ paginate }) {
+export const getStaticPaths = (async ({ paginate }) => {
     const POSTS_PER_PAGE = 6;
 
     const [posts, categories] = await Promise.all([getPublishedPosts(), getCollection("categories")]);
@@ -33,9 +39,9 @@ export async function getStaticPaths({ paginate }) {
             { params: { category: category.id }, pageSize: POSTS_PER_PAGE, props: { category } },
         ),
     );
-}
+}) satisfies GetStaticPaths;
 
-const { category, page } = Astro.props;
+const { category, page } = Astro.props as Props;
 
 const allPosts = await getPublishedPosts();
 const categoryPosts = allPosts.filter((p) => p.data.category === category.id);

@@ -3,7 +3,7 @@ import BaseHead from "../components/BaseHead.astro";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import { ClientRouter } from "astro:transitions";
-import { buildWebsiteGraph } from "../lib/seo";
+import { buildWebsiteSchemas } from "../lib/seo";
 
 export interface Props {
     title: string;
@@ -14,7 +14,7 @@ export interface Props {
 }
 
 const { title, description, image, type, robots } = Astro.props;
-const websiteGraph = buildWebsiteGraph();
+const websiteSchemas = buildWebsiteSchemas();
 ---
 
 <!doctype html>
@@ -22,7 +22,8 @@ const websiteGraph = buildWebsiteGraph();
     <head>
         <ClientRouter />
         <BaseHead {title} {description} {image} {type} {robots} />
-        <script is:inline type="application/ld+json" set:html={JSON.stringify(websiteGraph)} />
+        <slot name="head" />
+        {websiteSchemas.map((schema) => <script is:inline type="application/ld+json" set:html={JSON.stringify(schema)} />)}
     </head>
     <body class="bg-coc-bg text-coc-text">
         <a

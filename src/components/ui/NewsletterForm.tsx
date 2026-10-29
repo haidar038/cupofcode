@@ -45,6 +45,7 @@ export default function NewsletterForm() {
         className="min-w-0 flex-1 border-0 bg-transparent px-3 text-sm text-coc-surface outline-none placeholder:text-coc-muted-soft"
         type="email"
         placeholder="Masukkan email kamu..."
+        aria-label="Alamat email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         disabled={status === "loading" || status === "success"}

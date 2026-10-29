@@ -8,7 +8,7 @@ export const SITE_DESCRIPTION =
 	'Belajar coding, web development, UI/UX, dan AI lewat tutorial praktis, panduan teknologi, code snippets, serta aset digital gratis untuk developer.';
 
 // Single source of truth — sinkron dengan `version` di package.json.
-export const SITE_VERSION = '1.3.0';
+export const SITE_VERSION = '1.3.1';
 
 export const SITE_URL = import.meta.env.PUBLIC_SITE_URL || 'https://cupofcode.cc';
 export const SITE_AUTHOR = 'cup of code';

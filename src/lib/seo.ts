@@ -18,45 +18,48 @@ export function resolveOgImage(entry: { og_image?: string; featured_image?: stri
 	return entry.og_image || entry.featured_image || DEFAULT_OG_IMAGE;
 }
 
-export function buildWebsiteGraph() {
-    return {
-        "@context": "https://schema.org",
-        "@graph": [
-            {
-                "@type": "WebSite",
-                "@id": WEBSITE_ID,
-                url: absoluteUrl("/"),
-                name: SITE_TITLE,
-                description: SITE_DESCRIPTION,
-                inLanguage: SITE_LOCALE.replace("_", "-"),
-                publisher: { "@id": ORGANIZATION_ID },
+// Satu blok per entitas (bukan @graph): tiap blok punya @context + @type
+// sendiri sehingga validator sederhana tidak menandai "schema missing @type".
+// Referensi antar-entitas tetap jalan via @id (Google menggabungkannya).
+export function buildWebsiteSchemas() {
+    return [
+        {
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "@id": WEBSITE_ID,
+            url: absoluteUrl("/"),
+            name: SITE_TITLE,
+            description: SITE_DESCRIPTION,
+            inLanguage: SITE_LOCALE.replace("_", "-"),
+            publisher: { "@id": ORGANIZATION_ID },
+        },
+        {
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "@id": ORGANIZATION_ID,
+            name: "Cup of Code",
+            url: absoluteUrl("/"),
+            description:
+                "Publication dan resource gratis tentang software development, UI/UX design, dan AI-assisted development.",
+            logo: {
+                "@type": "ImageObject",
+                url: absoluteUrl("/favicon.svg"),
             },
-            {
-                "@type": "Organization",
-                "@id": ORGANIZATION_ID,
-                name: "Cup of Code",
-                url: absoluteUrl("/"),
-                description:
-                    "Publication dan resource gratis tentang software development, UI/UX design, dan AI-assisted development.",
-                logo: {
-                    "@type": "ImageObject",
-                    url: absoluteUrl("/favicon.svg"),
-                },
-                founder: { "@id": AUTHOR_ID },
-                sameAs: [
-                    "https://github.com/cupofcode",
-                    "https://twitter.com/cupofcode",
-                ],
-            },
-            {
-                "@type": "Person",
-                "@id": AUTHOR_ID,
-                name: AUTHOR_NAME,
-                url: absoluteUrl(AUTHOR_URL),
-                jobTitle: AUTHOR_ROLE,
-                description: AUTHOR_BIO,
-                worksFor: { "@id": ORGANIZATION_ID },
-            },
-        ],
-    };
+            founder: { "@id": AUTHOR_ID },
+            sameAs: [
+                "https://github.com/cupofcode",
+                "https://twitter.com/cupofcode",
+            ],
+        },
+        {
+            "@context": "https://schema.org",
+            "@type": "Person",
+            "@id": AUTHOR_ID,
+            name: AUTHOR_NAME,
+            url: absoluteUrl(AUTHOR_URL),
+            jobTitle: AUTHOR_ROLE,
+            description: AUTHOR_BIO,
+            worksFor: { "@id": ORGANIZATION_ID },
+        },
+    ];
 }
