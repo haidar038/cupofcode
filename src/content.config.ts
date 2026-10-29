@@ -9,6 +9,7 @@ const posts = defineCollection({
 		category: z.string(),
 		description: z.string().optional(),
 		publishDate: z.coerce.date().optional(),
+		updateDate: z.coerce.date().optional(),
 		featured_image: z.string().optional(),
 		og_image: z.string().optional(),
 		featured: z.boolean().optional(),

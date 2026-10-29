@@ -1,5 +1,6 @@
 // @ts-check
 
+import { readdirSync } from "node:fs";
 import sitemap from '@astrojs/sitemap';
 import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
@@ -9,6 +10,11 @@ import markdoc from '@astrojs/markdoc';
 import keystatic from '@keystatic/astro';
 import vercel from '@astrojs/vercel';
 import sentry from '@sentry/astro';
+
+// Id kategori = nama file JSON di src/content/categories (slug Keystatic).
+const categoryIds = readdirSync('./src/content/categories')
+    .filter((f) => f.endsWith('.json'))
+    .map((f) => f.replace(/\.json$/, ''));
 
 // https://astro.build/config
 export default defineConfig({
@@ -56,6 +62,11 @@ export default defineConfig({
                     priority = 0.8;
                     changefreq = 'weekly';
                 }
+                // Category pages (+ halaman pagination-nya) — level listing
+                else if (categoryIds.some((id) => path === `/posts/${id}` || path.startsWith(`/posts/${id}/`))) {
+                    priority = 0.8;
+                    changefreq = 'weekly';
+                }
                 // Detail pages (posts/articles) — high value
                 else if (path.startsWith('/posts/')) {
                     priority = 0.9;
@@ -67,7 +78,7 @@ export default defineConfig({
                     changefreq = 'monthly';
                 }
                 // Static info pages
-                else if (path === '/about' || path === '/contact') {
+                else if (path === '/about' || path === '/contact' || path === '/editorial-policy') {
                     priority = 0.5;
                     changefreq = 'yearly';
                 }
@@ -77,9 +88,13 @@ export default defineConfig({
                     changefreq = 'yearly';
                 }
 
+                // Emit URL tanpa trailing slash agar konsisten dengan canonical
+                // yang dihasilkan BaseHead (Astro.url.pathname non-trailing).
+                const finalUrl = path === '/' ? url : url.replace(/\/$/, '');
+
                 return /** @type {import('@astrojs/sitemap').SitemapItem} */ ({
                     ...item,
-                    url,
+                    url: finalUrl,
                     lastmod,
                     changefreq,
                     priority,

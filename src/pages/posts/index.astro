@@ -73,7 +73,7 @@ const filterCategories = categories.filter((c) => c.id !== "aset-digital");
         <SearchBar items={searchItems} placeholder="Cari artikel..." client:idle />
     </div>
 
-    <CategoryFilter categories={filterCategories} active={cat ?? undefined} basePath="/posts" />
+    <CategoryFilter categories={filterCategories} active={cat ?? undefined} basePath="/posts" linkFor={(id) => `/posts/${id}`} />
     {
         sortedPosts.length > 0 ? (
             <section class="mx-auto max-w-7xl pb-18">

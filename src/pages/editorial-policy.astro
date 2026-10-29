@@ -1,0 +1,66 @@
+---
+export const prerender = true;
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { SITE_TITLE } from "../consts";
+import { AUTHOR_NAME } from "../lib/seo";
+---
+
+<BaseLayout
+    title={`Kebijakan Editorial | ${SITE_TITLE}`}
+    description="Bagaimana konten Cup of Code diriset, diuji, dikoreksi, dan diperbarui — proses editorial di balik setiap artikel dan aset digital."
+>
+    <header class="mx-auto mb-10 flex max-w-3xl flex-col items-center text-center">
+        <p class="mb-6 inline-block rounded-full bg-coc-tag-yellow px-3 py-1 text-xs font-semibold text-[#212121]">Transparansi</p>
+        <h1 class="mb-3 font-coc-display text-4xl leading-tight tracking-tight text-coc-text md:text-5xl">
+            Kebijakan Editorial<span class="text-coc-accent">.</span>
+        </h1>
+        <p class="mx-auto max-w-2xl text-base leading-relaxed text-coc-muted md:text-lg">
+            Cup of Code adalah publikasi independen. Halaman ini menjelaskan proses di balik setiap artikel dan aset digital yang kami terbitkan, supaya kamu tahu dari mana isinya berasal dan bagaimana
+            menjaganya tetap akurat.
+        </p>
+    </header>
+
+    <article class="prose-coc mx-auto max-w-3xl space-y-8 text-[17px] leading-[1.8] text-coc-muted">
+        <section>
+            <h2 class="mb-3 text-2xl font-bold text-coc-text">Riset dan sumber</h2>
+            <p>
+                Setiap tutorial dan artikel disusun dari kombinasi dokumentasi resmi (framework, library, atau API yang dibahas), pengalaman langsung saat membangun sesuatu, dan eksperimen yang kami
+                jalankan sendiri. Kalau sebuah klaim teknis penting untuk keputusan pembaca, kami tautkan ke dokumentasi atau sumber primernya di dalam artikel.
+            </p>
+        </section>
+
+        <section>
+            <h2 class="mb-3 text-2xl font-bold text-coc-text">Pengujian sebelum terbit</h2>
+            <p>
+                Kode dan langkah-langkah dalam tutorial diuji di environment yang disebutkan di artikelnya sebelum dipublikasikan. Kalau ada perbedaan perilaku antar versi tools, kami tandai secara
+                eksplisit alih-alih menyembunyikannya. Snippets dan aset digital (UI components, prompt, Gems) juga melewati pemakaian nyata dulu sebelum dibagikan.
+            </p>
+        </section>
+
+        <section>
+            <h2 class="mb-3 text-2xl font-bold text-coc-text">Atribusi penulis</h2>
+            <p>
+                Setiap artikel menampilkan nama penulis dan tanggal terbitnya. Saat ini konten ditulis dan ditinjau oleh {AUTHOR_NAME} — founder Cup of Code — dan profil lengkapnya bisa kamu lihat di
+                <a class="font-semibold text-coc-accent transition-colors hover:text-coc-text hover:underline" href="/about#author">halaman Tentang</a>.
+            </p>
+        </section>
+
+        <section>
+            <h2 class="mb-3 text-2xl font-bold text-coc-text">Koreksi dan pembaruan</h2>
+            <p>
+                Konten teknis cepat basi: versi framework berubah, API di-update. Ketika sebuah artikel kami perbarui secara materi (bukan typo kecil), tanggal pembaruannya ditampilkan di halaman artikel
+                tersebut bersama tanggal terbitnya. Menemukan kesalahan? Laporkan lewat
+                <a class="font-semibold text-coc-accent transition-colors hover:text-coc-text hover:underline" href="/contact">halaman Kontak</a> — koreksi kami proses dan cantumkan dengan jujur.
+            </p>
+        </section>
+
+        <section>
+            <h2 class="mb-3 text-2xl font-bold text-coc-text">Kemandirian konten</h2>
+            <p>
+                Semua materi di Cup of Code gratis dan tidak dijual. Kami tidak menerima artikel bayaran atau link tersembunyi; kalau suatu saat ada kerja sama atau tautan afiliasi, itu akan dinyatakan
+                terbuka di halaman yang relevan sesuai <a class="font-semibold text-coc-accent transition-colors hover:text-coc-text hover:underline" href="/terms">Syarat &amp; Ketentuan</a> dan
+                <a class="font-semibold text-coc-accent transition-colors hover:text-coc-text hover:underline" href="/privacy">Kebijakan Privasi</a> kami.
+            </p>
+        </section>
+    </article>
+</BaseLayout>

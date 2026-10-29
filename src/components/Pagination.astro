@@ -5,11 +5,15 @@ interface Props {
   basePath: string;
   /** Extra query params to preserve on every page link (e.g. { cat: "tutorial" }). */
   query?: Record<string, string>;
+  /** Custom href resolver untuk pagination berbasis path (mis. /posts/tutorial/2).
+   *  Tanpa prop ini, link memakai pola query `?page=N` (dipakai listing SSR). */
+  hrefFor?: (page: number) => string;
 }
 
-const { page, totalPages, basePath, query = {} } = Astro.props;
+const { page, totalPages, basePath, query = {}, hrefFor } = Astro.props;
 
 const buildUrl = (p: number) => {
+  if (hrefFor) return hrefFor(p);
   const params = new URLSearchParams(query);
   if (p > 1) params.set("page", String(p));
   const qs = params.toString();

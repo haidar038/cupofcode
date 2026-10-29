@@ -76,6 +76,16 @@ const wordCount = post.body ? post.body.trim().split(/\s+/).length : 0;
 const readingTimeMinutes = Math.max(1, Math.ceil(wordCount / 200));
 
 const publishedISO = post.data.publishDate?.toISOString();
+// dateModified hanya melompat bila artikel benar-benar direvisi
+// (updateDate diisi via Keystatic); tanpa revisi, sama dengan terbit.
+const modifiedISO = (post.data.updateDate ?? post.data.publishDate)?.toISOString();
+const formattedUpdateDate = post.data.updateDate
+    ? new Intl.DateTimeFormat("id-ID", {
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+      }).format(post.data.updateDate)
+    : null;
 
 const jsonLd = {
     "@context": "https://schema.org",
@@ -84,7 +94,7 @@ const jsonLd = {
     headline: post.data.title,
     description: post.data.description || "",
     image: [ogImage.startsWith("http") ? ogImage : abs(ogImage)],
-    ...(publishedISO ? { datePublished: publishedISO, dateModified: publishedISO } : {}),
+    ...(publishedISO ? { datePublished: publishedISO, dateModified: modifiedISO } : {}),
     url: pageUrl,
     inLanguage: "id-ID",
     author: {
@@ -141,6 +151,14 @@ const jsonLd = {
                         <span class="h-1 w-1 rounded-full bg-coc-muted-soft" />
                         <Clock width="15" height="15" />
                         {formattedDate}
+                    </span>
+                )
+            }
+            {
+                formattedUpdateDate && (
+                    <span class="inline-flex items-center gap-1.5">
+                        <span class="h-1 w-1 rounded-full bg-coc-muted-soft" />
+                        Diperbarui {formattedUpdateDate}
                     </span>
                 )
             }

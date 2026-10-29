@@ -13,6 +13,21 @@ import { defineMiddleware } from 'astro:middleware';
  */
 
 export const onRequest = defineMiddleware(async (context, next) => {
+	// 301 legacy filter URL `/posts?cat=X` ke route kategori bersih
+	// `/posts/X` (footer & filter pill sudah memakai URL bersih; redirect ini
+	// menyatukan sinyal untuk tautan lama). Kategori tak dikenal akan mendarat
+	// di 404 lewat route kategori.
+	if (context.url.pathname === '/posts' || context.url.pathname === '/posts/') {
+		const cat = context.url.searchParams.get('cat');
+		if (cat) {
+			const destination = cat === 'aset-digital' ? '/assets' : `/posts/${cat}`;
+			return new Response(null, {
+				status: 301,
+				headers: { Location: new URL(destination, context.url).href },
+			});
+		}
+	}
+
 	const response = await next();
 
 	if (

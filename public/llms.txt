@@ -1,0 +1,27 @@
+# Cup of Code
+
+> Publication dan resource gratis berbahasa Indonesia tentang software development, UI/UX design, dan AI-assisted development. Berisi tutorial langkah demi langkah, tips & trik, code snippets siap pakai, serta aset digital gratis (UI components, prompt AI, Gems) untuk developer dan pembelajar.
+
+Situs ini dikelola oleh Haidar (founder, software developer, dan UI/UX designer). Semua materi bisa dibaca tanpa registrasi. Bahasa konten: Indonesia.
+
+## Halaman utama
+
+- [Beranda](https://cupofcode.cc/): ringkasan publikasi, artikel unggulan, dan navigasi kategori.
+- [Artikel](https://cupofcode.cc/posts): daftar semua artikel, dapat difilter per kategori.
+- [Tutorial](https://cupofcode.cc/posts/tutorial): panduan langkah demi langkah web development dan tools.
+- [Tips & Trik](https://cupofcode.cc/posts/tips-trik): solusi cepat dan praktik ringkas.
+- [Aset Digital](https://cupofcode.cc/assets): UI components, racikan prompt AI, dan Gems gratis yang bisa diunduh.
+- [Snippets](https://cupofcode.cc/snippets): potongan kode siap pakai (TypeScript, JavaScript, CSS, HTML).
+- [Tentang](https://cupofcode.cc/about): kisah, visi, dan profil pendiri.
+- [Kebijakan Editorial](https://cupofcode.cc/editorial-policy): proses riset, pengujian, koreksi, dan atribusi konten.
+- [Kontak](https://cupofcode.cc/contact): kanal pesan dan koreksi.
+
+## Sumber data terstruktur
+
+- [Sitemap](https://cupofcode.cc/sitemap-index.xml): indeks semua URL publik.
+- [RSS](https://cupofcode.cc/rss.xml): feed artikel terbaru.
+
+## Profil
+
+- [GitHub](https://github.com/cupofcode)
+- [X (Twitter)](https://twitter.com/cupofcode)

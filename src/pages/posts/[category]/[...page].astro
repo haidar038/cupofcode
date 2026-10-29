@@ -1,39 +1,45 @@
 ---
+export const prerender = true;
 import { Image } from "astro:assets";
 import { getCollection } from "astro:content";
-import { getPublishedPosts } from "../../lib/content";
-import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getPublishedPosts } from "../../../lib/content";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
 import { ImageIcon } from "@lucide/astro";
-import Breadcrumb from "../../components/Breadcrumb.astro";
-import Pagination from "../../components/Pagination.astro";
-import CategoryFilter from "../../components/CategoryFilter.astro";
-import SearchBar from "../../components/ui/SearchBar.tsx";
-import BackToTop from "../../components/ui/BackToTop.tsx";
-import ScrollAnimations from "../../components/ScrollAnimations.astro";
-import { SITE_TITLE, SITE_URL } from "../../consts";
+import Breadcrumb from "../../../components/Breadcrumb.astro";
+import Pagination from "../../../components/Pagination.astro";
+import CategoryFilter from "../../../components/CategoryFilter.astro";
+import SearchBar from "../../../components/ui/SearchBar.tsx";
+import BackToTop from "../../../components/ui/BackToTop.tsx";
+import ScrollAnimations from "../../../components/ScrollAnimations.astro";
+import { SITE_TITLE, SITE_URL } from "../../../consts";
 
-const POSTS_PER_PAGE = 6;
+// Prerendered path-based pagination (/posts/{kategori}, /posts/{kategori}/2).
+// Halaman kategori sebelumnya SSR sehingga tidak pernah masuk sitemap
+// (integrasi @astrojs/sitemap hanya mencakup route prerendered); dengan
+// pagination berbasis path tiap halaman juga punya canonical sendiri.
+// Kategori `aset-digital` sengaja tidak digenerate: itu content type dengan
+// hub sendiri di /assets. Kategori tak dikenal kini 404 (sebelumnya redirect).
+// Catatan: konstanta didefinisikan di dalam getStaticPaths — deklarasi
+// top-level frontmatter tidak ikut ter-bundle ke chunk prerender Astro.
+export async function getStaticPaths({ paginate }) {
+    const POSTS_PER_PAGE = 6;
 
-// SSR (bukan prerender): halaman ini membaca `?page=` dari searchParams,
-// yang selalu kosong saat build statis sehingga pagination tidak pernah
-// maju dari halaman 1 (audit 2026-10-29, M1).
-const { category: categoryId } = Astro.params;
+    const [posts, categories] = await Promise.all([getPublishedPosts(), getCollection("categories")]);
+    const articleCategories = categories.filter((c) => c.id !== "aset-digital");
 
-// "Aset Digital" is a content type, not a post category — route it to /assets.
-if (categoryId === "aset-digital") {
-    return Astro.redirect("/assets");
+    return articleCategories.flatMap((category) =>
+        paginate(
+            posts.filter((p) => p.data.category === category.id),
+            { params: { category: category.id }, pageSize: POSTS_PER_PAGE, props: { category } },
+        ),
+    );
 }
 
-const categories = await getCollection("categories");
-const category = categories.find((c) => c.id === categoryId);
-// Kategori tak dikenal: balik ke daftar artikel.
-if (!category) {
-    return Astro.redirect("/posts");
-}
+const { category, page } = Astro.props;
 
-// Same sidebar-free layout as /posts: search + category pills + thumbnail grid.
 const allPosts = await getPublishedPosts();
-const posts = allPosts.filter((p) => p.data.category === category.id);
+const categoryPosts = allPosts.filter((p) => p.data.category === category.id);
+const categories = await getCollection("categories");
 const filterCategories = categories.filter((c) => c.id !== "aset-digital");
 const categoryLabel = new Map(categories.map((c) => [c.id, c.data.label] as const));
 const searchItems = allPosts.map((p) => ({
@@ -43,11 +49,9 @@ const searchItems = allPosts.map((p) => ({
     category: categoryLabel.get(p.data.category) ?? "",
 }));
 
-const rawPage = Number.parseInt(Astro.url.searchParams.get("page") ?? "1", 10);
-const totalPages = Math.max(1, Math.ceil(posts.length / POSTS_PER_PAGE));
-const page = Number.isNaN(rawPage) ? 1 : Math.min(Math.max(rawPage, 1), totalPages);
-const pagePosts = posts.slice((page - 1) * POSTS_PER_PAGE, page * POSTS_PER_PAGE);
 const categoryUrl = new URL(`/posts/${category.id}`, SITE_URL).href;
+const pageUrl = page.currentPage > 1 ? `${categoryUrl}/${page.currentPage}` : categoryUrl;
+const pageTitle = page.currentPage > 1 ? `${category.data.label} — Halaman ${page.currentPage} | ${SITE_TITLE}` : `${category.data.label} | ${SITE_TITLE}`;
 const breadcrumbItems = [
     { name: "Beranda", url: new URL("/", SITE_URL).href },
     { name: "Artikel", url: new URL("/posts", SITE_URL).href },
@@ -56,15 +60,15 @@ const breadcrumbItems = [
 const collectionLd = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
-    "@id": `${categoryUrl}#collection`,
-    url: categoryUrl,
-    name: `${category.data.label} | ${SITE_TITLE}`,
+    "@id": `${pageUrl}#collection`,
+    url: pageUrl,
+    name: pageTitle,
     description: category.data.description,
     isPartOf: { "@id": `${SITE_URL}/#website` },
-    breadcrumb: { "@id": `${categoryUrl}#breadcrumb` },
+    breadcrumb: { "@id": `${pageUrl}#breadcrumb` },
     mainEntity: {
         "@type": "ItemList",
-        itemListElement: posts.map((post, index) => ({
+        itemListElement: categoryPosts.map((post, index) => ({
             "@type": "ListItem",
             position: index + 1,
             url: new URL(`/posts/${post.id}`, SITE_URL).href,
@@ -75,7 +79,7 @@ const collectionLd = {
 const breadcrumbLd = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
-    "@id": `${categoryUrl}#breadcrumb`,
+    "@id": `${pageUrl}#breadcrumb`,
     itemListElement: breadcrumbItems.map((item, index) => ({
         "@type": "ListItem",
         position: index + 1,
@@ -90,7 +94,7 @@ const dateFormatter = new Intl.DateTimeFormat("id-ID", {
 });
 ---
 
-<BaseLayout title={`${category.data.label} | ${SITE_TITLE}`} description={category.data.description} robots={page > 1 ? "noindex,follow" : undefined}>
+<BaseLayout title={pageTitle} description={category.data.description}>
     <script is:inline type="application/ld+json" set:html={JSON.stringify(collectionLd)} />
     <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbLd)} />
 
@@ -111,13 +115,13 @@ const dateFormatter = new Intl.DateTimeFormat("id-ID", {
     <CategoryFilter categories={filterCategories} active={category.id} basePath="/posts" linkFor={(id) => `/posts/${id}`} />
 
     {
-        posts.length > 0 ? (
+        categoryPosts.length > 0 ? (
             <section class="mx-auto max-w-7xl pb-18" aria-labelledby="category-articles">
                 <h2 id="category-articles" class="sr-only">
                     Artikel dalam kategori {category.data.label}
                 </h2>
                 <div class="grid grid-cols-1 gap-y-14 gap-x-8 md:grid-cols-2 lg:grid-cols-3">
-                    {pagePosts.map((post, i) => (
+                    {page.data.map((post, i) => (
                         <a data-animate href={`/posts/${post.id}`} class="group block overflow-hidden transition-all duration-300" style={`--d:${(i % 6) * 60}ms`}>
                             <div class="relative mb-6 aspect-391/249 w-full overflow-hidden rounded-xl bg-[#d9d9d9]">
                                 {post.data.featured_image ? (
@@ -148,7 +152,12 @@ const dateFormatter = new Intl.DateTimeFormat("id-ID", {
                     ))}
                 </div>
 
-                <Pagination page={page} totalPages={totalPages} basePath={`/posts/${category.id}`} />
+                <Pagination
+                    page={page.currentPage}
+                    totalPages={page.lastPage}
+                    basePath={`/posts/${category.id}`}
+                    hrefFor={(p: number) => (p === 1 ? `/posts/${category.id}` : `/posts/${category.id}/${p}`)}
+                />
             </section>
         ) : (
             <div class="flex flex-col items-center justify-center py-20 text-center">

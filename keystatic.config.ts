@@ -40,6 +40,7 @@ export default config({
                     validation: { isRequired: true },
                 }),
                 publishDate: fields.date({ label: "Publish Date" }),
+                updateDate: fields.date({ label: "Update Date (optional)" }),
                 featured: fields.checkbox({ label: "Featured Article", defaultValue: false }),
                 featured_image: fields.text({ label: "Featured Image URL (optional)" }),
                 og_image: fields.text({ label: "OG Image URL (optional, fallback: featured image)" }),

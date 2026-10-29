@@ -25,8 +25,14 @@ const websiteGraph = buildWebsiteGraph();
         <script is:inline type="application/ld+json" set:html={JSON.stringify(websiteGraph)} />
     </head>
     <body class="bg-coc-bg text-coc-text">
+        <a
+            href="#main-content"
+            class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-xl focus:bg-coc-dark focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-white"
+        >
+            Lewati ke konten utama
+        </a>
         <Header />
-        <main transition:animate="fade" class="mx-auto w-full max-w-360 overflow-x-clip px-4 py-8 sm:px-6 sm:py-10 lg:px-20 lg:py-12 xl:px-30">
+        <main id="main-content" tabindex="-1" transition:animate="fade" class="mx-auto w-full max-w-360 overflow-x-clip px-4 py-8 sm:px-6 sm:py-10 lg:px-20 lg:py-12 xl:px-30 focus:outline-hidden">
             <slot />
         </main>
         <Footer />
